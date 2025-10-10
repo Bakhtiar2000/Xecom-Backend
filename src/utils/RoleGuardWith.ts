@@ -1,7 +1,7 @@
 import { Reflector } from '@nestjs/core';
-import { Role } from '@prisma/client';
+import { UserRole } from '@prisma/client';
 import { RolesGuard } from 'src/guard/roles.guard';
 
-export function RoleGuardWith(role: Role[]) {
+export function RoleGuardWith(role: UserRole[]) {
   return new RolesGuard(new Reflector(), role);
 }

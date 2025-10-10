@@ -6,7 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Role } from '@prisma/client';
+import { UserRole } from '@prisma/client';
 import { Request } from 'express';
 import { ROLES_KEY } from 'src/decorator/roles.decorator';
 
@@ -14,12 +14,12 @@ import { ROLES_KEY } from 'src/decorator/roles.decorator';
 export class RolesGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
-    private role?: Role[],
+    private role?: UserRole[],
   ) {}
 
   canActivate(context: ExecutionContext): boolean | Promise<boolean> {
     const requiredRoles =
-      this.reflector.get<Role[]>(ROLES_KEY, context.getHandler()) || [];
+      this.reflector.get<UserRole[]>(ROLES_KEY, context.getHandler()) || [];
 
     // Include the role passed as a parameter (if provided)
     if (this.role) {

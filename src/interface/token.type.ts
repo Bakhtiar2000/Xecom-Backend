@@ -1,8 +1,8 @@
-import { Role } from "@prisma/client";
+import { UserRole } from "@prisma/client";
 
 export type TUser = {
   id: string;
   email: string;
-  userType: Role;
+  userType: UserRole;
   iat: number;
 };

@@ -11,7 +11,10 @@ CREATE TYPE "SubscriptionStatus" AS ENUM ('ACTIVE', 'PAST_DUE', 'CANCELLED', 'UN
 CREATE TYPE "Role" AS ENUM ('SUPER_ADMIN', 'ADMIN', 'STAFF', 'CUSTOMER');
 
 -- CreateEnum
-CREATE TYPE "UserStatus" AS ENUM ('ACTIVE', 'INACTIVE', 'SUSPENDED', 'BANNED');
+CREATE TYPE "UserStatus" AS ENUM ('ACTIVE', 'INACTIVE', 'SUSPENDED', 'BLOCKED');
+
+-- CreateEnum
+CREATE TYPE "CustomerType" AS ENUM ('REGULAR', 'PREMIUM', 'VIP', 'BUSINESS', 'WHOLESALE');
 
 -- CreateEnum
 CREATE TYPE "ProductStatus" AS ENUM ('ACTIVE', 'INACTIVE', 'DRAFT', 'OUT_OF_STOCK', 'DISCONTINUED');
@@ -119,21 +122,135 @@ CREATE TABLE "users" (
 );
 
 -- CreateTable
-CREATE TABLE "Address" (
+CREATE TABLE "admins" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "fullName" TEXT NOT NULL,
-    "phone" TEXT NOT NULL,
-    "addressLine1" TEXT NOT NULL,
-    "addressLine2" TEXT,
-    "city" TEXT NOT NULL,
-    "state" TEXT NOT NULL,
-    "postalCode" TEXT NOT NULL,
-    "country" TEXT NOT NULL,
-    "isDefault" BOOLEAN NOT NULL DEFAULT false,
+    "permissions" JSONB NOT NULL DEFAULT '[]',
+    "canManageUsers" BOOLEAN NOT NULL DEFAULT false,
+    "canManageProducts" BOOLEAN NOT NULL DEFAULT false,
+    "canManageOrders" BOOLEAN NOT NULL DEFAULT false,
+    "canViewReports" BOOLEAN NOT NULL DEFAULT false,
+    "canManageSettings" BOOLEAN NOT NULL DEFAULT false,
+    "department" TEXT,
+    "employeeId" TEXT,
+    "hireDate" TIMESTAMP(3),
+    "salary" DECIMAL(65,30),
+    "notes" TEXT,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Address_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "admins_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "staff" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "permissions" JSONB NOT NULL DEFAULT '[]',
+    "canManageOrders" BOOLEAN NOT NULL DEFAULT false,
+    "canManageInventory" BOOLEAN NOT NULL DEFAULT false,
+    "canViewReports" BOOLEAN NOT NULL DEFAULT false,
+    "department" TEXT,
+    "employeeId" TEXT,
+    "managerId" TEXT,
+    "hireDate" TIMESTAMP(3),
+    "hourlyRate" DECIMAL(65,30),
+    "workSchedule" JSONB,
+    "notes" TEXT,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "staff_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "customers" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "dateOfBirth" TIMESTAMP(3),
+    "gender" TEXT,
+    "customerType" "CustomerType" NOT NULL DEFAULT 'REGULAR',
+    "loyaltyPoints" INTEGER NOT NULL DEFAULT 0,
+    "totalSpent" DECIMAL(65,30) NOT NULL DEFAULT 0,
+    "preferredLanguage" TEXT DEFAULT 'en',
+    "preferredCurrency" TEXT DEFAULT 'USD',
+    "marketingOptIn" BOOLEAN NOT NULL DEFAULT false,
+    "referralCode" TEXT,
+    "referredBy" TEXT,
+    "vatNumber" TEXT,
+    "companyName" TEXT,
+    "lastPurchaseAt" TIMESTAMP(3),
+    "isVip" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "customers_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "countries" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "code" TEXT,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "countries_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "divisions" (
+    "id" TEXT NOT NULL,
+    "countryId" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "code" TEXT,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "divisions_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "districts" (
+    "id" TEXT NOT NULL,
+    "divisionId" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "code" TEXT,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "districts_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "thanas" (
+    "id" TEXT NOT NULL,
+    "districtId" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "code" TEXT,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "thanas_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "addresses" (
+    "id" TEXT NOT NULL,
+    "customerId" TEXT NOT NULL,
+    "thanaId" TEXT NOT NULL,
+    "street" TEXT NOT NULL,
+    "postalCode" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "addresses_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -282,7 +399,7 @@ CREATE TABLE "ProductImage" (
 CREATE TABLE "orders" (
     "id" TEXT NOT NULL,
     "tenantId" TEXT,
-    "userId" TEXT NOT NULL,
+    "customerId" TEXT NOT NULL,
     "addressId" TEXT NOT NULL,
     "orderNumber" TEXT NOT NULL,
     "status" "OrderStatus" NOT NULL DEFAULT 'PENDING',
@@ -405,7 +522,7 @@ CREATE TABLE "InventoryLog" (
 CREATE TABLE "Review" (
     "id" TEXT NOT NULL,
     "productId" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
+    "customerId" TEXT NOT NULL,
     "rating" INTEGER NOT NULL,
     "comment" TEXT,
     "isApproved" BOOLEAN NOT NULL DEFAULT false,
@@ -417,7 +534,7 @@ CREATE TABLE "Review" (
 -- CreateTable
 CREATE TABLE "Cart" (
     "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
+    "customerId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Cart_pkey" PRIMARY KEY ("id")
@@ -531,6 +648,39 @@ CREATE UNIQUE INDEX "subscriptions_stripeSubscriptionId_key" ON "subscriptions"(
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "admins_userId_key" ON "admins"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "admins_employeeId_key" ON "admins"("employeeId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "staff_userId_key" ON "staff"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "staff_employeeId_key" ON "staff"("employeeId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "customers_userId_key" ON "customers"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "customers_referralCode_key" ON "customers"("referralCode");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "countries_name_key" ON "countries"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "countries_code_key" ON "countries"("code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "divisions_countryId_name_key" ON "divisions"("countryId", "name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "districts_divisionId_name_key" ON "districts"("divisionId", "name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "thanas_districtId_name_key" ON "thanas"("districtId", "name");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "categories_tenantId_slug_key" ON "categories"("tenantId", "slug");
 
 -- CreateIndex
@@ -561,7 +711,34 @@ ALTER TABLE "subscriptions" ADD CONSTRAINT "subscriptions_tenantId_fkey" FOREIGN
 ALTER TABLE "users" ADD CONSTRAINT "users_tenantId_fkey" FOREIGN KEY ("tenantId") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Address" ADD CONSTRAINT "Address_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "admins" ADD CONSTRAINT "admins_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "staff" ADD CONSTRAINT "staff_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "staff" ADD CONSTRAINT "staff_managerId_fkey" FOREIGN KEY ("managerId") REFERENCES "staff"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "customers" ADD CONSTRAINT "customers_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "customers" ADD CONSTRAINT "customers_referredBy_fkey" FOREIGN KEY ("referredBy") REFERENCES "customers"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "divisions" ADD CONSTRAINT "divisions_countryId_fkey" FOREIGN KEY ("countryId") REFERENCES "countries"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "districts" ADD CONSTRAINT "districts_divisionId_fkey" FOREIGN KEY ("divisionId") REFERENCES "divisions"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "thanas" ADD CONSTRAINT "thanas_districtId_fkey" FOREIGN KEY ("districtId") REFERENCES "districts"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "addresses" ADD CONSTRAINT "addresses_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "customers"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "addresses" ADD CONSTRAINT "addresses_thanaId_fkey" FOREIGN KEY ("thanaId") REFERENCES "thanas"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "categories" ADD CONSTRAINT "categories_tenantId_fkey" FOREIGN KEY ("tenantId") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -603,10 +780,10 @@ ALTER TABLE "ProductImage" ADD CONSTRAINT "ProductImage_productId_fkey" FOREIGN 
 ALTER TABLE "orders" ADD CONSTRAINT "orders_tenantId_fkey" FOREIGN KEY ("tenantId") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "orders" ADD CONSTRAINT "orders_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "orders" ADD CONSTRAINT "orders_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "customers"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "orders" ADD CONSTRAINT "orders_addressId_fkey" FOREIGN KEY ("addressId") REFERENCES "Address"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "orders" ADD CONSTRAINT "orders_addressId_fkey" FOREIGN KEY ("addressId") REFERENCES "addresses"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "payments" ADD CONSTRAINT "payments_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "orders"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -636,10 +813,10 @@ ALTER TABLE "InventoryLog" ADD CONSTRAINT "InventoryLog_variantId_fkey" FOREIGN 
 ALTER TABLE "Review" ADD CONSTRAINT "Review_productId_fkey" FOREIGN KEY ("productId") REFERENCES "products"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Review" ADD CONSTRAINT "Review_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Review" ADD CONSTRAINT "Review_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "customers"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Cart" ADD CONSTRAINT "Cart_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Cart" ADD CONSTRAINT "Cart_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "customers"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "CartItem" ADD CONSTRAINT "CartItem_cartId_fkey" FOREIGN KEY ("cartId") REFERENCES "Cart"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -1,26 +1,148 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import { UserStatus } from '@prisma/client';
+import { ChangePasswordDto } from './auth.dto';
+import { MailerService } from 'src/utils/sendMail';
+import { ApiResponse } from 'src/utils/sendResponse';
+import { TUser } from 'src/interface/token.type';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  constructor(
+    private prisma: PrismaService,
+    private jwtService: JwtService,
+    private configService: ConfigService,
+    private mailerService: MailerService,
+  ) {}
+
+  // Login
+  public async loginUser(data: { email: string; password: string }) {
+    const { email, password } = data;
+    const user = await this.prisma.user.findUnique({
+      where: { email, status: UserStatus.ACTIVE, },
+    });
+
+    if (!user) throw new HttpException('User not found', 401);
+    if (!user.password)
+      throw new HttpException(
+        'Please create a password first. Verify your mail',
+        HttpStatus.BAD_REQUEST,
+      );
+
+    const isCorrectPassword = bcrypt.compare(password, user.password);
+    if (!isCorrectPassword) throw new HttpException('Invalid credentials', 401);
+
+    const payload = { email: user.email, role: user.role, id: user.id };
+    const accessToken = this.jwtService.sign(payload, {
+      secret: this.configService.getOrThrow('JWT_SECRET'),
+      expiresIn: 2592000000,
+    });
+    // const refreshToken = this.jwtService.sign(payload, {
+    //   secret: this.configService.getOrThrow('REFRESH_SECRET'),
+    // });
+    return {
+      accessToken,
+    };
   }
 
-  findAll() {
-    return `This action returns all auth`;
+  // ----------------------------------------------Change Password-------------------------------------------------
+  public async changePassword(user: TUser, payload: ChangePasswordDto) {
+    const userData = await this.prisma.user.findUniqueOrThrow({
+      where: {
+        email: user?.email,
+        status: UserStatus.ACTIVE,
+      },
+    });
+
+    const isCorrectPassword = bcrypt.compare(
+      payload.password,
+      userData.password as string,
+    );
+    if (!isCorrectPassword) {
+      throw new HttpException('Password is incorrect', HttpStatus.BAD_REQUEST);
+    }
+
+    const hashedPassword: string = await bcrypt.hash(payload.confirmPassword, 12);
+
+    // Update operation
+    await this.prisma.user.update({
+      where: {
+        email: userData?.email,
+      },
+      data: {
+        password: hashedPassword,
+      },
+    });
+    return null;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
+  // ---------------------------------------------------Forgot Password-------------------------------------------------
+  async forgotPassword(email: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { email, status: UserStatus.ACTIVE },
+    });
+    if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+
+    const payload = { email: user.email, role: user.role, id: user.id };
+    const token = this.jwtService.sign(payload, {
+      secret: this.configService.get('JWT_SECRET'),
+      expiresIn: 2592000000,
+    });
+    const resetPassLink = `${this.configService.get('FRONTEND_URL')}/reset-password?token=${token}`;
+    await this.mailerService.sendMail(
+      user.email,
+      `<div>
+          <p>Dear User,</p>
+          <p>Click on this Button to reset your password. Link expires in 10 minutes.</p> 
+          <p>
+              <a href="${resetPassLink}">
+                  <button>
+                      Reset Password
+                  </button>
+              </a>
+          </p>
+      </div>`,
+      "Reset Password Link 🔗",
+      "Click on the link to reset your password. Link expires in 10 minutes."
+    );
+    return null;
   }
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
+  public async resetPassword(payload: { newPassword: string }, token: string) {
+    console.log(payload, token);
+    // 1. Decode token
+    const decoded: any = this.jwtService.verify(token, {
+      secret: this.configService.get('JWT_SECRET'),
+    });
 
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+    // 2. Fetch user
+    const user = await this.prisma.user.findUnique({
+      where: { id: decoded.id },
+    });
+
+    if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    if (user.status === 'BLOCKED') {
+      throw new HttpException('This user is blocked!', HttpStatus.FORBIDDEN);
+    }
+
+    // 3. Hash new password
+    const newHashedPassword = await bcrypt.hash(
+      payload.newPassword,
+      Number(this.configService.get('BCRYPT_SALT_ROUNDS') || 10),
+    );
+
+    // 4. Update user
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        password: newHashedPassword,
+        updatedAt: new Date(),
+      },
+    });
+
+    return null;
   }
 }
