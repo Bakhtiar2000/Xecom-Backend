@@ -81,6 +81,7 @@ model User {
   password       String
   phone          String?
   profilePicture String?
+  gender         Gender?
   role           UserRole   @default(CUSTOMER)
   status         UserStatus @default(ACTIVE)
   emailVerified  Boolean    @default(false)
@@ -95,6 +96,7 @@ model User {
   notifications Notification[]
   auditLogs     AuditLog[]
   wishlists     Wishlist[]
+  addresses     Address[]
 
   // Role-specific relationships (one-to-one)
   admin    Admin?
@@ -180,7 +182,6 @@ model Customer {
 
   // Relationships
   user              User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  addresses         Address[]
   carts             Cart[]
   orders            Order[]
   reviews           Review[]
@@ -257,7 +258,7 @@ model Thana {
 
 model Address {
   id         String   @id @default(uuid())
-  customerId String
+  userId     String?
   thanaId    String
   street     String
   postalCode String?
@@ -265,9 +266,9 @@ model Address {
   updatedAt  DateTime @updatedAt
 
   // Relationships
-  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  thana    Thana    @relation(fields: [thanaId], references: [id])
-  orders   Order[]
+  thana  Thana   @relation(fields: [thanaId], references: [id])
+  User   User?   @relation(fields: [userId], references: [id])
+  orders Order[]
 
   @@map("addresses")
 }
@@ -730,14 +731,18 @@ enum SubscriptionStatus {
   TRIALING
 }
 
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
 // User Enums
 enum UserRole {
   SUPER_ADMIN
   ADMIN
   STAFF
   CUSTOMER
-
-  @@map("Role")
 }
 
 enum UserStatus {
