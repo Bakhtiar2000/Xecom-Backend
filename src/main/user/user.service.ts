@@ -1,25 +1,87 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto, UpdateUserDto } from './user.dto';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { CreateUserDto } from './user.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { LibService } from 'src/lib/lib.service';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import { MailerService } from 'src/utils/sendMail';
+import { TUser } from 'src/interface/token.type';
+import { Admin, Customer, Staff, UserRole, UserStatus } from '@prisma/client';
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly lib: LibService,
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
+    private readonly mailerService: MailerService,
+  ) { }
+
+  // ------------------------------- Get Me -------------------------------
+  public async getMe(user: TUser) {
+    let result: Admin | Customer | Staff | null;
+    if (
+      user.role !== UserRole.ADMIN &&
+      user.role !== UserRole.CUSTOMER &&
+      user.role !== UserRole.STAFF
+    ) {
+      throw new HttpException(
+        'Invalid User role provided',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    if (user.role == UserRole.ADMIN) {
+      result = await this.prisma.admin.findUniqueOrThrow({
+        where: { userId: user.id, isActive: true },
+        include: {
+          user: true,
+        },
+      });
+    } else if (user.role == UserRole.CUSTOMER) {
+      result = await this.prisma.customer.findUniqueOrThrow({
+        where: { userId: user.id, isActive: true },
+        include: {
+          user: true,
+        },
+      });
+    } else if (user.role == UserRole.STAFF) {
+      result = await this.prisma.staff.findUniqueOrThrow({
+        where: { userId: user.id, isActive: true },
+        include: {
+          user: true,
+        },
+      });
+    } else result = null
+    return result;
   }
 
-  findAll() {
-    return `This action returns all user`;
+  // ------------------------------- Get All Users -------------------------------
+  public async getAllUsers() {
+    const result = await this.prisma.user.findMany();
+    return result;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  // ------------------------------- Change User Status -------------------------------
+  public async changeUserStatus(id: string, status: UserStatus) {
+    const existingUser = await this.prisma.user.findUnique({
+      where: { id },
+    });
+    if (!existingUser)
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    const updatedUser = await this.prisma.user.update({
+      where: { id },
+      data: { status },
+    });
+    return updatedUser;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
-  }
+  /*
+  Make registration for three roles seperately on teir own modules. No common endpoint like register user
+
+    1. Register customer - access open. flexible dto with  lot of optional field
+    2. Register stuff - can be accessed by sup, and admin. a bit rigid dto with some fields to fill up
+    3. Register admin - can be accessed by sup. Rigid dto
+  */
 }

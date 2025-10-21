@@ -177,6 +177,7 @@ model Customer {
   companyName       String? // For B2B customers
   lastPurchaseAt    DateTime?
   isVip             Boolean      @default(false)
+  isActive          Boolean      @default(true)
   createdAt         DateTime     @default(now())
   updatedAt         DateTime     @updatedAt
 

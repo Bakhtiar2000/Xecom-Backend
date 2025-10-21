@@ -70,7 +70,7 @@ export class UpdateUserDto {
   stateId: string;
 }
 
-export class changeUserStatus {
+export class ChangeUserStatusDto {
   @IsEnum(UserStatus)
   status: UserStatus;
 }

@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, UseGuards, Res, Req, HttpStatus, UploadedFile } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './user.dto';
+import { CreateUserDto, ChangeUserStatusDto } from './user.dto';
 import sendResponse from 'src/utils/sendResponse';
 import { AuthGuard } from 'src/guard/auth.guard';
 import type { Request, Response } from 'express';
@@ -60,52 +60,6 @@ export class UserController {
       statusCode: HttpStatus.OK,
       success: true,
       message: 'User status updated successfully',
-      data: result,
-    });
-  }
-
-  // Create user (Server/ Developer)
-  @Post('register')
-  @UploadInterceptor('file')
-  async registerUser(
-    @Body('text') text: string, // this is the JSON string from "text"
-    @UploadedFile() file: any,
-    @Res() res: Response,
-  ) {
-    // Parse text and transform to DTO instance
-    const parsed = JSON.parse(text);
-    const createUserDto = plainToInstance(CreateUserDto, parsed);
-
-    // If file is uploaded, attach URL
-    if (file) {
-      const uploaded = await this.lib.uploadToCloudinary({
-        fileName: file.filename,
-        path: file.path,
-      });
-      if (uploaded?.secure_url) {
-        createUserDto.profile_photo = uploaded.secure_url;
-      }
-    }
-
-    // Validate the parsed DTO manually
-    const errors = await validate(createUserDto);
-    if (errors.length > 0) {
-      return res.status(400).json({
-        success: false,
-        statusCode: HttpStatus.BAD_REQUEST,
-        message:
-          Object.values(errors[0].constraints || {})[0] || 'Validation failed',
-        errorDetails: errors.map((err) => ({
-          property: err.property,
-          constraints: err.constraints,
-        })),
-      });
-    }
-    const result = await this.userService.registerUser(createUserDto);
-    sendResponse(res, {
-      statusCode: HttpStatus.OK,
-      success: true,
-      message: 'Please check your email to verify your account!',
       data: result,
     });
   }
