@@ -14,7 +14,8 @@ export class AuthGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
     private prisma: PrismaService,
-  ) {}
+    private configService: ConfigService,
+  ) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -24,7 +25,7 @@ export class AuthGuard implements CanActivate {
     }
     try {
       const decoded = await this.jwtService.verifyAsync(token, {
-        secret: new ConfigService().getOrThrow('JWT_SECRET'),
+        secret: this.configService.get<string>('JWT_SECRET'),
       });
       const { email } = decoded;
 

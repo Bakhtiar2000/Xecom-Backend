@@ -1,10 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateUserDto } from './user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { LibService } from 'src/lib/lib.service';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
-import { MailerService } from 'src/utils/sendMail';
 import { TUser } from 'src/interface/token.type';
 import { Admin, Customer, Staff, UserRole, UserStatus } from '@prisma/client';
 
@@ -12,10 +7,6 @@ import { Admin, Customer, Staff, UserRole, UserStatus } from '@prisma/client';
 export class UserService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly lib: LibService,
-    private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
-    private readonly mailerService: MailerService,
   ) { }
 
   // ------------------------------- Get Me -------------------------------
