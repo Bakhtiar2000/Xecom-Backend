@@ -69,7 +69,7 @@ export class UserService {
 
 
   /*
-  Make registration for three roles seperately on teir own modules. No common endpoint like register user
+  Make registration for three roles seperately on their own modules. No common endpoint like register user
 
     1. Register customer - access open. flexible dto with  lot of optional field
     2. Register stuff - can be accessed by sup, and admin. a bit rigid dto with some fields to fill up

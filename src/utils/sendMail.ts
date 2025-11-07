@@ -12,8 +12,8 @@ export class MailerService {
       port: 587,
       secure: false, // true for port 465, false for other ports
       auth: {
-        user: this.configService.get('EMAIL_SENDER'),
-        pass: this.configService.get('EMAIL_SENDER_APP_PASS'),
+        user: this.configService.get('SMTP_AUTH_USER'),
+        pass: this.configService.get('SMTP_AUTH_PASS'),
       },
       tls: {
         rejectUnauthorized: false as boolean, // explicitly type as boolean

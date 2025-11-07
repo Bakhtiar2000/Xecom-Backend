@@ -76,7 +76,10 @@ export class LibService {
             else this.logger.log('Local file deleted successfully.');
           });
 
-          if (error) return reject(error as UploadApiErrorResponse);
+          if (error) {
+            this.logger.error("Cloudinary Upload Error -> ", error);
+            return reject(error as UploadApiErrorResponse);
+          }
           resolve(result as UploadApiResponse);
         },
       );

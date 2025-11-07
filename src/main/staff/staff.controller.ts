@@ -1,0 +1,77 @@
+import { Body, Controller, Get, HttpStatus, Post, Req, Res, UploadedFile, UseGuards } from '@nestjs/common';
+import { StaffService } from './staff.service';
+import { AuthGuard } from 'src/guard/auth.guard';
+import sendResponse from 'src/utils/sendResponse';
+import type { Response } from 'express';
+import { UploadInterceptor } from 'src/common/upload.interceptor';
+import { plainToInstance } from 'class-transformer';
+import { LibService } from 'src/lib/lib.service';
+import { validate } from 'class-validator';
+import { CreateStaffDto } from './staff.dto';
+
+@Controller('staff')
+export class StaffController {
+    constructor(
+        private readonly staffService: StaffService,
+        private readonly lib: LibService,
+    ) { }
+
+    // Get all staffs
+    @Get()
+    @UseGuards(AuthGuard)
+    async getAllStaffs(@Res() res: Response) {
+        const result = await this.staffService.getAllStaffs();
+        sendResponse(res, {
+            statusCode: HttpStatus.OK,
+            success: true,
+            message: 'All Staff profiles fetched Successfully',
+            data: result,
+        });
+    }
+
+    // Add a Staff
+    @Post('register')
+    @UploadInterceptor('file')
+    async registerStaff(
+        @Body('text') text: string,
+        @UploadedFile() file: any,
+        @Res() res: Response,
+    ) {
+        // Parse text and transform to DTO instance
+        const parsed = JSON.parse(text);
+        const createStaffDto = plainToInstance(CreateStaffDto, parsed);
+
+        // If file is uploaded, attach URL
+        if (file) {
+            const uploaded = await this.lib.uploadToCloudinary({
+                fileName: file.filename,
+                path: file.path,
+            });
+            if (uploaded?.secure_url) {
+                createStaffDto.profilePicture = uploaded.secure_url;
+            }
+        }
+
+        // Validate the parsed DTO manually
+        const errors = await validate(createStaffDto);
+        if (errors.length > 0) {
+            return res.status(400).json({
+                success: false,
+                statusCode: HttpStatus.BAD_REQUEST,
+                message:
+                    Object.values(errors[0].constraints || {})[0] || 'Validation failed',
+                errorDetails: errors.map((err) => ({
+                    property: err.property,
+                    constraints: err.constraints,
+                })),
+            });
+        }
+        const result = await this.staffService.addAStaff(createStaffDto);
+        sendResponse(res, {
+            statusCode: HttpStatus.OK,
+            success: true,
+            message: 'Staff registered successfully!',
+            data: result,
+        });
+    }
+}

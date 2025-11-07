@@ -26,7 +26,7 @@ model Tenant {
   config       Json         @default("{}")
   billingEmail String?
   contactEmail String
-  phone        String?
+  phoneNumber        String?
   address      String?
   logoUrl      String?
   brandColors  Json?
@@ -79,7 +79,7 @@ model User {
   name           String
   email          String     @unique
   password       String
-  phone          String?
+  phoneNumber          String?
   profilePicture String?
   gender         Gender?
   role           UserRole   @default(CUSTOMER)
@@ -119,8 +119,7 @@ model Admin {
   canManageOrders   Boolean   @default(false)
   canViewReports    Boolean   @default(false)
   canManageSettings Boolean   @default(false)
-  department        String?
-  employeeId        String?   @unique
+  employeeId        String   @unique
   hireDate          DateTime?
   salary            Decimal?
   notes             String?
@@ -141,7 +140,6 @@ model Staff {
   canManageOrders    Boolean   @default(false)
   canManageInventory Boolean   @default(false)
   canViewReports     Boolean   @default(false)
-  department         String?
   employeeId         String?   @unique
   managerId          String? // Reference to another Staff member
   hireDate           DateTime?
@@ -157,7 +155,7 @@ model Staff {
   manager      Staff?  @relation("StaffManager", fields: [managerId], references: [id])
   subordinates Staff[] @relation("StaffManager")
 
-  @@map("staff")
+  @@map("staffs")
 }
 
 model Customer {
@@ -176,7 +174,6 @@ model Customer {
   vatNumber         String? // For B2B customers
   companyName       String? // For B2B customers
   lastPurchaseAt    DateTime?
-  isVip             Boolean      @default(false)
   isActive          Boolean      @default(true)
   createdAt         DateTime     @default(now())
   updatedAt         DateTime     @updatedAt
