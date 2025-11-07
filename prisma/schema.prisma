@@ -207,7 +207,6 @@ model Division {
   id        String   @id @default(uuid())
   countryId String
   name      String
-  code      String? // Division code if any
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -224,7 +223,6 @@ model District {
   id         String   @id @default(uuid())
   divisionId String
   name       String
-  code       String? // District code if any
   isActive   Boolean  @default(true)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -241,7 +239,6 @@ model Thana {
   id         String   @id @default(uuid())
   districtId String
   name       String
-  code       String? // Thana/Upazila code if any
   isActive   Boolean  @default(true)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt

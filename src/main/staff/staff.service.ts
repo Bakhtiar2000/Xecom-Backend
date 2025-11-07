@@ -2,12 +2,17 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateStaffDto } from './staff.dto';
 import { UserRole } from '@prisma/client';
+import { EmployeeUtils } from 'src/utils/employeeUtils';
 
 @Injectable()
 export class StaffService {
+    private employeeUtils: EmployeeUtils;
+
     constructor(
         private readonly prisma: PrismaService,
-    ) { }
+    ) {
+        this.employeeUtils = new EmployeeUtils(this.prisma);
+    }
 
     public async getAllStaffs() {
         const result = await this.prisma.staff.findMany();
@@ -21,10 +26,10 @@ export class StaffService {
         if (user) throw new HttpException('User already exists', 409);
 
         // Validate password
-        this.validatePassword(dto.password);
+        this.employeeUtils.validatePassword(dto.password);
 
         // Generate employee ID if not provided
-        const employeeId = dto.employeeId || await this.generateStaffEmployeeId();
+        const employeeId = await this.employeeUtils.generateStaffEmployeeId();
 
         const newUser = await this.prisma.user.create({
             data: {
@@ -47,47 +52,5 @@ export class StaffService {
             },
         });
         return newStaff;
-    }
-
-    private validatePassword(password: string): void {
-        if (password.length < 6) {
-            throw new HttpException('Password must be at least 6 characters long', 400);
-        }
-
-        const hasUpperCase = /[A-Z]/.test(password);
-        const hasLowerCase = /[a-z]/.test(password);
-        const hasNumber = /\d/.test(password);
-
-        if (!hasUpperCase) {
-            throw new HttpException('Password must contain at least one uppercase letter', 400);
-        }
-        if (!hasLowerCase) {
-            throw new HttpException('Password must contain at least one lowercase letter', 400);
-        }
-        if (!hasNumber) {
-            throw new HttpException('Password must contain at least one number', 400);
-        }
-    }
-
-    private async generateStaffEmployeeId(): Promise<string> {
-        // Find the latest staff with employee ID pattern S-XXX
-        const latestStaff = await this.prisma.staff.findFirst({
-            where: {
-                employeeId: {
-                    startsWith: 'S-'
-                }
-            },
-            orderBy: {
-                employeeId: 'desc'
-            }
-        });
-
-        let nextNumber = 1;
-        if (latestStaff && latestStaff.employeeId) {
-            const currentNumber = parseInt(latestStaff.employeeId.split('-')[1]);
-            nextNumber = currentNumber + 1;
-        }
-
-        return `S-${nextNumber.toString().padStart(3, '0')}`;
     }
 }
