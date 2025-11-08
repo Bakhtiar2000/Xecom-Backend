@@ -18,14 +18,25 @@ import {
 } from './auth.dto';
 import sendResponse from 'src/utils/sendResponse';
 import { AuthGuard } from 'src/guard/auth.guard';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService
+  ) { }
+
   @Post('login')
   async loginUser(@Body() loginDto: LoginDto, @Res() res: Response) {
     const result = await this.authService.loginUser(loginDto);
-    const { accessToken } = result;
+    const { refreshToken, accessToken } = result;
+    res.cookie('refreshToken', refreshToken, {
+      secure: this.configService.get('NODE_ENV') === 'production',
+      httpOnly: true,
+      sameSite: 'none',
+      maxAge: 1000 * 60 * 60 * 24 * 365,
+    });
     sendResponse(res, {
       statusCode: HttpStatus.OK,
       success: true,

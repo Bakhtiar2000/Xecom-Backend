@@ -3,6 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateStaffDto } from './staff.dto';
 import { UserRole } from '@prisma/client';
 import { EmployeeUtils } from 'src/utils/employeeUtils';
+import { LibService } from 'src/lib/lib.service';
 
 @Injectable()
 export class StaffService {
@@ -10,6 +11,7 @@ export class StaffService {
 
     constructor(
         private readonly prisma: PrismaService,
+        private readonly lib: LibService,
     ) {
         this.employeeUtils = new EmployeeUtils(this.prisma);
     }
@@ -30,12 +32,16 @@ export class StaffService {
 
         // Generate employee ID if not provided
         const employeeId = await this.employeeUtils.generateStaffEmployeeId();
+        const hashedPassword = await this.lib.hashPassword({
+            password: dto.password,
+            round: 6,
+        });
 
         const newUser = await this.prisma.user.create({
             data: {
                 name: dto.name,
                 email: dto.email,
-                password: dto.password,
+                password: hashedPassword,
                 phoneNumber: dto.phoneNumber,
                 profilePicture: dto.profilePicture,
                 gender: dto.gender,

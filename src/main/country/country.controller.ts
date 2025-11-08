@@ -1,9 +1,12 @@
-import { Controller, Get, Post, Body, Param, Res, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Res, HttpStatus, UseGuards } from '@nestjs/common';
 import { CountryService } from './country.service';
 import { CreateCountryDto } from './country.dto';
 import sendResponse from 'src/utils/sendResponse';
 import type { Response } from 'express';
 import { IdDto } from 'src/common/id.dto';
+import { AuthGuard } from 'src/guard/auth.guard';
+import { RoleGuardWith } from 'src/utils/RoleGuardWith';
+import { UserRole } from '@prisma/client';
 
 @Controller('country')
 export class CountryController {
@@ -13,6 +16,7 @@ export class CountryController {
 
     // Add Country
     @Post()
+    @UseGuards(AuthGuard, RoleGuardWith([UserRole.ADMIN, UserRole.SUPER_ADMIN]))
     async addCountry(
         @Body() createCountryDto: CreateCountryDto,
         @Res() res: Response,

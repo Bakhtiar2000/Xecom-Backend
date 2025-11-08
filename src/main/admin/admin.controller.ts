@@ -8,6 +8,8 @@ import { plainToInstance } from 'class-transformer';
 import { LibService } from 'src/lib/lib.service';
 import { validate } from 'class-validator';
 import { CreateAdminDto } from './admin.dto';
+import { RoleGuardWith } from 'src/utils/RoleGuardWith';
+import { UserRole } from '@prisma/client';
 
 @Controller('admin')
 export class AdminController {
@@ -19,7 +21,7 @@ export class AdminController {
 
     // Get all admins
     @Get()
-    @UseGuards(AuthGuard)
+    @UseGuards(AuthGuard, RoleGuardWith([UserRole.SUPER_ADMIN]))
     async getAllAdmins(@Res() res: Response) {
         const result = await this.adminService.getAllAdmins();
         sendResponse(res, {
@@ -32,6 +34,7 @@ export class AdminController {
 
     // Add an Admin
     @Post('register')
+    @UseGuards(AuthGuard, RoleGuardWith([UserRole.SUPER_ADMIN]))
     @UploadInterceptor('file')
     async registerAdmin(
         @Body('text') text: string,

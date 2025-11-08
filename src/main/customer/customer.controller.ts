@@ -8,6 +8,8 @@ import { plainToInstance } from 'class-transformer';
 import { LibService } from 'src/lib/lib.service';
 import { validate } from 'class-validator';
 import { CreateCustomerDto } from './customer.dto';
+import { RoleGuardWith } from 'src/utils/RoleGuardWith';
+import { UserRole } from '@prisma/client';
 
 @Controller('customer')
 export class CustomerController {
@@ -18,7 +20,7 @@ export class CustomerController {
 
     // Get all customers
     @Get()
-    @UseGuards(AuthGuard)
+    @UseGuards(AuthGuard, RoleGuardWith([UserRole.ADMIN, UserRole.SUPER_ADMIN]))
     async getAllCustomers(@Res() res: Response) {
         const result = await this.customerService.getAllCustomers();
         sendResponse(res, {

@@ -8,6 +8,8 @@ import { plainToInstance } from 'class-transformer';
 import { LibService } from 'src/lib/lib.service';
 import { validate } from 'class-validator';
 import { CreateStaffDto } from './staff.dto';
+import { RoleGuardWith } from 'src/utils/RoleGuardWith';
+import { UserRole } from '@prisma/client';
 
 @Controller('staff')
 export class StaffController {
@@ -18,7 +20,7 @@ export class StaffController {
 
     // Get all staffs
     @Get()
-    @UseGuards(AuthGuard)
+    @UseGuards(AuthGuard, RoleGuardWith([UserRole.ADMIN, UserRole.SUPER_ADMIN]))
     async getAllStaffs(@Res() res: Response) {
         const result = await this.staffService.getAllStaffs();
         sendResponse(res, {
@@ -31,6 +33,7 @@ export class StaffController {
 
     // Add a Staff
     @Post('register')
+    @UseGuards(AuthGuard, RoleGuardWith([UserRole.ADMIN, UserRole.SUPER_ADMIN]))
     @UploadInterceptor('file')
     async registerStaff(
         @Body('text') text: string,

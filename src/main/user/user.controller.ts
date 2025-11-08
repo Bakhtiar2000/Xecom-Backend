@@ -12,7 +12,7 @@ import { IdDto } from 'src/common/id.dto';
 export class UserController {
   constructor(
     private readonly userService: UserService,
-  ) {}
+  ) { }
 
   // Get me
   @Get('me')
@@ -41,7 +41,7 @@ export class UserController {
   }
   // Change User Status
   @Patch('change-status/:id')
-  @UseGuards(AuthGuard, RoleGuardWith([UserRole.SUPER_ADMIN]))
+  @UseGuards(AuthGuard, RoleGuardWith([UserRole.ADMIN, UserRole.SUPER_ADMIN]))
   async changeUserStatus(
     @Param() param: IdDto,
     @Res() res: Response,

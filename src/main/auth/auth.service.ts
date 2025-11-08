@@ -5,7 +5,6 @@ import { ConfigService } from '@nestjs/config';
 import { UserStatus } from '@prisma/client';
 import { ChangePasswordDto } from './auth.dto';
 import { MailerService } from 'src/utils/sendMail';
-import { ApiResponse } from 'src/utils/sendResponse';
 import { TUser } from 'src/interface/token.type';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -26,25 +25,23 @@ export class AuthService {
     });
 
     if (!user) throw new HttpException('User not found', 401);
-    if (!user.password)
-      throw new HttpException(
-        'Please create a password first. Verify your mail',
-        HttpStatus.BAD_REQUEST,
-      );
 
     const isCorrectPassword = bcrypt.compare(password, user.password);
+    console.log(password, user.password);
     if (!isCorrectPassword) throw new HttpException('Invalid credentials', 401);
 
     const payload = { email: user.email, role: user.role, id: user.id };
     const accessToken = this.jwtService.sign(payload, {
-      secret: this.configService.getOrThrow('JWT_SECRET'),
-      expiresIn: 2592000000,
+      secret: this.configService.getOrThrow('ACCESS_SECRET'),
+      expiresIn: this.configService.getOrThrow('ACCESS_SECRET_EXPIRES_IN'),
     });
-    // const refreshToken = this.jwtService.sign(payload, {
-    //   secret: this.configService.getOrThrow('REFRESH_SECRET'),
-    // });
+    const refreshToken = this.jwtService.sign(payload, {
+      secret: this.configService.getOrThrow('REFRESH_SECRET'),
+      expiresIn: this.configService.getOrThrow('REFRESH_SECRET_EXPIRES_IN'),
+    });
     return {
       accessToken,
+      refreshToken,
     };
   }
 
@@ -88,8 +85,8 @@ export class AuthService {
 
     const payload = { email: user.email, role: user.role, id: user.id };
     const token = this.jwtService.sign(payload, {
-      secret: this.configService.get('JWT_SECRET'),
-      expiresIn: 2592000000,
+      secret: this.configService.get('ACCESS_SECRET'),
+      expiresIn: this.configService.get('ACCESS_SECRET_EXPIRES_IN'),
     });
     const resetPassLink = `${this.configService.get('FRONTEND_URL')}/reset-password?token=${token}`;
     await this.mailerService.sendMail(
@@ -115,7 +112,7 @@ export class AuthService {
     console.log(payload, token);
     // 1. Decode token
     const decoded: any = this.jwtService.verify(token, {
-      secret: this.configService.get('JWT_SECRET'),
+      secret: this.configService.get('ACCESS_SECRET'),
     });
 
     // 2. Fetch user
@@ -124,7 +121,7 @@ export class AuthService {
     });
 
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    if (user.status === 'BLOCKED') {
+    if (user.status === UserStatus.BLOCKED) {
       throw new HttpException('This user is blocked!', HttpStatus.FORBIDDEN);
     }
 
