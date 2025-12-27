@@ -4,7 +4,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 // ========================================
@@ -26,7 +25,7 @@ model Tenant {
   config       Json         @default("{}")
   billingEmail String?
   contactEmail String
-  phoneNumber        String?
+  phoneNumber  String?
   address      String?
   logoUrl      String?
   brandColors  Json?
@@ -79,7 +78,7 @@ model User {
   name           String
   email          String     @unique
   password       String
-  phoneNumber          String?
+  phoneNumber    String?
   profilePicture String?
   gender         Gender?
   role           UserRole   @default(CUSTOMER)
@@ -119,7 +118,7 @@ model Admin {
   canManageOrders   Boolean   @default(false)
   canViewReports    Boolean   @default(false)
   canManageSettings Boolean   @default(false)
-  employeeId        String   @unique
+  employeeId        String    @unique
   hireDate          DateTime?
   salary            Decimal?
   notes             String?

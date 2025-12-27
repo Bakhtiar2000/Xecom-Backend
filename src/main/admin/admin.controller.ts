@@ -16,7 +16,6 @@ export class AdminController {
     constructor(
         private readonly adminService: AdminService,
         private readonly lib: LibService,
-
     ) { }
 
     // Get all admins

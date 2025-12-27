@@ -3,10 +3,6 @@ import { CustomerService } from './customer.service';
 import { AuthGuard } from 'src/guard/auth.guard';
 import sendResponse from 'src/utils/sendResponse';
 import type { Response } from 'express';
-import { UploadInterceptor } from 'src/common/upload.interceptor';
-import { plainToInstance } from 'class-transformer';
-import { LibService } from 'src/lib/lib.service';
-import { validate } from 'class-validator';
 import { CreateCustomerDto } from './customer.dto';
 import { RoleGuardWith } from 'src/utils/RoleGuardWith';
 import { UserRole } from '@prisma/client';
@@ -15,7 +11,6 @@ import { UserRole } from '@prisma/client';
 export class CustomerController {
     constructor(
         private readonly customerService: CustomerService,
-        private readonly lib: LibService,
     ) { }
 
     // Get all customers
