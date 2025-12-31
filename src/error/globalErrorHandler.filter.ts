@@ -9,10 +9,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { Response, Request } from 'express';
-import {
-  PrismaClientKnownRequestError,
-  PrismaClientValidationError,
-} from '@prisma/client/runtime/library';
+import { Prisma } from '@prisma/client';
 
 @Catch()
 export class GlobalErrorHandlerFilter implements ExceptionFilter {
@@ -65,12 +62,12 @@ export class GlobalErrorHandlerFilter implements ExceptionFilter {
     }
 
     // ✅ Handle Prisma Errors
-    if (exception instanceof PrismaClientValidationError) {
+    if (exception instanceof Prisma.PrismaClientValidationError) {
       console.log('Prisma Client Validation Error: ', exception);
       message = 'Validation Error';
       errorDetails = exception.message;
       status = HttpStatus.BAD_REQUEST;
-    } else if (exception instanceof PrismaClientKnownRequestError) {
+    } else if (exception instanceof Prisma.PrismaClientKnownRequestError) {
       if (exception.code === 'P2002') {
         message = 'Duplicate Key Error';
         errorDetails = exception.meta ?? undefined;
