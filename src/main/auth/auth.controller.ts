@@ -45,6 +45,18 @@ export class AuthController {
     });
   }
 
+  @Post('refresh-token')
+  async refreshToken(@Req() req: Request, @Res() res: Response) {
+    const { refreshToken } = req.cookies;
+    const result = await this.authService.refreshToken(refreshToken);
+    sendResponse(res, {
+      statusCode: HttpStatus.OK,
+      success: true,
+      message: 'Access token is refreshed successfully!',
+      data: result,
+    });
+  }
+
   // Change Password
   @Patch('change-password')
   @UseGuards(AuthGuard)

@@ -15,7 +15,7 @@ export class AuthService {
     private jwtService: JwtService,
     private configService: ConfigService,
     private mailerService: MailerService,
-  ) {}
+  ) { }
 
   // Login
   public async loginUser(data: { email: string; password: string }) {
@@ -42,6 +42,44 @@ export class AuthService {
     return {
       accessToken,
       refreshToken,
+    };
+  }
+
+  // Refresh Token
+  public async refreshToken(token: string) {
+    // Verify the refresh token
+    let decoded: any;
+    try {
+      decoded = this.jwtService.verify(token, {
+        secret: this.configService.getOrThrow('REFRESH_SECRET'),
+      });
+    } catch (error) {
+      throw new HttpException('Invalid refresh token', HttpStatus.UNAUTHORIZED);
+    }
+
+    // Check if the user exists
+    const user = await this.prisma.user.findUnique({
+      where: { id: decoded.id },
+    });
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    // Check if the user is blocked
+    if (user.status === UserStatus.BLOCKED) {
+      throw new HttpException('This user is blocked!', HttpStatus.FORBIDDEN);
+    }
+
+    // Generate new access token
+    const payload = { email: user.email, role: user.role, id: user.id };
+    const accessToken = this.jwtService.sign(payload, {
+      secret: this.configService.getOrThrow('ACCESS_SECRET'),
+      expiresIn: this.configService.getOrThrow('ACCESS_SECRET_EXPIRES_IN'),
+    });
+
+    return {
+      accessToken,
     };
   }
 

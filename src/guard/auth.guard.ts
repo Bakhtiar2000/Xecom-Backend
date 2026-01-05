@@ -33,17 +33,15 @@ export class AuthGuard implements CanActivate {
         where: { email: email },
       });
 
-      console.log(user)
-
       if (!user) {
         throw new HttpException('User not found!', 404);
       }
       if (user?.status === 'BLOCKED') {
         throw new HttpException('User is blocked!', 403);
       }
-      if (!user?.emailVerified) {
-        throw new HttpException('Unverified User!', 403);
-      }
+      // if (!user?.emailVerified) {
+      //   throw new HttpException('Unverified User!', 403);
+      // }
       request['user'] = decoded;
     } catch (error) {
       throw new HttpException('Could not Verify Token!', 401);
