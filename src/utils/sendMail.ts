@@ -28,7 +28,7 @@ export class MailerService {
     text: string,
   ): Promise<void> {
     const mailOptions = {
-      from: `"Enrghx ⚙️" <${this.configService.get('EMAIL_SENDER')}>`,
+      from: `"Xecom ⚙️" <${this.configService.get('EMAIL_SENDER')}>`,
       to: email,
       subject,
       text,

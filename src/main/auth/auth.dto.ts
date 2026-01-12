@@ -1,4 +1,4 @@
-import { IsEmail, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsString, Matches, MinLength } from 'class-validator';
 
 // login
 export class LoginDto {
@@ -21,22 +21,28 @@ export class ForgotPasswordDto {
 
 export class ChangePasswordDto {
   @IsString()
-  @MinLength(6, {
-    message: 'Password is too short. Minimum length is 6 characters.',
-  })
   password: string;
 
   @IsString()
   @MinLength(6, {
     message: 'Password is too short. Minimum length is 6 characters.',
   })
-  confirmPassword: string;
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/, {
+    message: 'Password must contain at least one lowercase letter, one uppercase letter, and one number.',
+  })
+  newPassword: string;
 }
 
 export class ResetPasswordDto {
   @IsString()
+  token: string;
+
+  @IsString()
   @MinLength(6, {
     message: 'Password is too short. Minimum length is 6 characters.',
+  })
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/, {
+    message: 'Password must contain at least one lowercase letter, one uppercase letter, and one number.',
   })
   newPassword: string;
 }

@@ -26,7 +26,7 @@ export class AuthService {
 
     if (!user) throw new HttpException('User not found', 401);
 
-    const isCorrectPassword = bcrypt.compare(password, user.password);
+    const isCorrectPassword = await bcrypt.compare(password, user.password);
     console.log(password, user.password);
     if (!isCorrectPassword) throw new HttpException('Invalid credentials', 401);
 
@@ -92,15 +92,16 @@ export class AuthService {
       },
     });
 
-    const isCorrectPassword = bcrypt.compare(
+    const isCorrectPassword = await bcrypt.compare(
       payload.password,
       userData.password as string,
     );
+
     if (!isCorrectPassword) {
       throw new HttpException('Password is incorrect', HttpStatus.BAD_REQUEST);
     }
 
-    const hashedPassword: string = await bcrypt.hash(payload.confirmPassword, 12);
+    const hashedPassword: string = await bcrypt.hash(payload.newPassword, 12);
 
     // Update operation
     await this.prisma.user.update({
