@@ -13,6 +13,8 @@ import { CountryModule } from './main/country/country.module';
 import { DivisionModule } from './main/division/division.module';
 import { DistrictModule } from './main/district/district.module';
 import { ThanaModule } from './main/thana/thana.module';
+import { CategoryModule } from './main/category/category.module';
+import { BrandModule } from './main/brand/brand.module';
 
 @Module({
   imports: [
@@ -30,8 +32,10 @@ import { ThanaModule } from './main/thana/thana.module';
     DivisionModule,
     DistrictModule,
     ThanaModule,
+    CategoryModule,
+    BrandModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
