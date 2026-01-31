@@ -1,0 +1,119 @@
+// ========================================
+// USER MANAGEMENT
+// ========================================
+
+model User {
+  id             String     @id @default(uuid())
+  tenantId       String? // Multi-tenant support
+  name           String
+  email          String     @unique
+  password       String
+  phoneNumber    String?
+  profilePicture String?
+  gender         Gender?
+  role           UserRole   @default(CUSTOMER)
+  status         UserStatus @default(ACTIVE)
+  emailVerified  Boolean    @default(false)
+  lastLoginAt    DateTime?
+  preferences    Json       @default("{}")
+  metadata       Json       @default("{}")
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  // Relationships (Common)
+  tenant        Tenant?        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  notifications Notification[]
+  auditLogs     AuditLog[]
+  wishlists     Wishlist[]
+  addresses     Address[]
+
+  // Role-specific relationships (one-to-one)
+  admin    Admin?
+  staff    Staff?
+  customer Customer?
+
+  @@map("users")
+}
+
+// ========================================
+// ROLE-SPECIFIC MODELS
+// ========================================
+
+model Admin {
+  id                String    @id @default(uuid())
+  userId            String    @unique
+  permissions       Json      @default("[]") // Array of permission strings
+  canManageUsers    Boolean   @default(false)
+  canManageProducts Boolean   @default(false)
+  canManageOrders   Boolean   @default(false)
+  canViewReports    Boolean   @default(false)
+  canManageSettings Boolean   @default(false)
+  employeeId        String    @unique
+  hireDate          DateTime?
+  salary            Decimal?
+  notes             String?
+  isActive          Boolean   @default(true)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  // Relationships
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("admins")
+}
+
+model Staff {
+  id                 String    @id @default(uuid())
+  userId             String    @unique
+  permissions        Json      @default("[]") // Array of permission strings
+  canManageOrders    Boolean   @default(false)
+  canManageInventory Boolean   @default(false)
+  canViewReports     Boolean   @default(false)
+  employeeId         String?   @unique
+  managerId          String? // Reference to another Staff member
+  hireDate           DateTime?
+  hourlyRate         Decimal?
+  workSchedule       Json? // Working hours, shifts, etc.
+  notes              String?
+  isActive           Boolean   @default(true)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  // Relationships
+  user         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  manager      Staff?  @relation("StaffManager", fields: [managerId], references: [id])
+  subordinates Staff[] @relation("StaffManager")
+
+  @@map("staffs")
+}
+
+model Customer {
+  id                String       @id @default(uuid())
+  userId            String       @unique
+  dateOfBirth       DateTime?
+  gender            String?
+  customerType      CustomerType @default(REGULAR)
+  loyaltyPoints     Int          @default(0)
+  totalSpent        Decimal      @default(0)
+  preferredLanguage String?      @default("en")
+  preferredCurrency String?      @default("USD")
+  marketingOptIn    Boolean      @default(false)
+  referralCode      String?      @unique
+  referredBy        String? // Customer ID who referred this customer
+  vatNumber         String? // For B2B customers
+  companyName       String? // For B2B customers
+  lastPurchaseAt    DateTime?
+  isActive          Boolean      @default(true)
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  // Relationships
+  user              User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  carts             Cart[]
+  orders            Order[]
+  reviews           Review[]
+  referredCustomers Customer[] @relation("CustomerReferral")
+  referrer          Customer?  @relation("CustomerReferral", fields: [referredBy], references: [id])
+
+  @@map("customers")
+}

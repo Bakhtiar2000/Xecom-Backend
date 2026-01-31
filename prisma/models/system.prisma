@@ -1,0 +1,53 @@
+// ========================================
+// SYSTEM & CONFIGURATION
+// ========================================
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  type      NotificationType
+  title     String
+  message   String
+  data      Json             @default("{}")
+  isRead    Boolean          @default(false)
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+model AuditLog {
+  id         String      @id @default(uuid())
+  userId     String?
+  entityType String // Product, Order, User, etc.
+  entityId   String
+  action     AuditAction
+  oldValues  Json?
+  newValues  Json?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime    @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@map("audit_logs")
+}
+
+model Setting {
+  id          String      @id @default(uuid())
+  tenantId    String?
+  key         String
+  value       String
+  type        SettingType @default(STRING)
+  description String?
+  isPublic    Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  tenant Tenant? @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, key])
+  @@map("settings")
+}
