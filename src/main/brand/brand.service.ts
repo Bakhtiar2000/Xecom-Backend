@@ -1,12 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { BrandRepository } from './brand.repository';
 import { CreateBrandDto, UpdateBrandDto } from './brand.dto';
 import calculatePagination from 'src/utils/calculatePagination';
-import { ProductStatus } from 'src/generated/prisma';
 
 @Injectable()
 export class BrandService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly brandRepository: BrandRepository) {}
 
   // ------------------------------- Get All Brands -------------------------------
   public async getAllBrands(pageNumber: number, pageSize: number) {
@@ -16,21 +15,8 @@ export class BrandService {
     });
 
     const [brands, total] = await Promise.all([
-      this.prisma.brand.findMany({
-        skip,
-        take,
-        where: { isActive: true },
-        include: {
-          products: {
-            where: { status: ProductStatus.ACTIVE },
-            take: 5,
-          },
-        },
-        orderBy: {
-          name: 'asc',
-        },
-      }),
-      this.prisma.brand.count({ where: { isActive: true } }),
+      this.brandRepository.findAll(skip, take),
+      this.brandRepository.count(),
     ]);
 
     return {
@@ -46,15 +32,7 @@ export class BrandService {
 
   // ------------------------------- Get Single Brand -------------------------------
   public async getSingleBrand(id: string) {
-    const brand = await this.prisma.brand.findUnique({
-      where: { id, isActive: true },
-      include: {
-        products: {
-          where: { status: ProductStatus.ACTIVE },
-          take: 20,
-        },
-      },
-    });
+    const brand = await this.brandRepository.findByIdActive(id);
 
     if (!brand) {
       throw new HttpException('Brand not found', HttpStatus.NOT_FOUND);
@@ -68,9 +46,7 @@ export class BrandService {
     const { name, slug } = createBrandDto;
 
     // Check if slug already exists
-    const existingBrand = await this.prisma.brand.findFirst({
-      where: { slug },
-    });
+    const existingBrand = await this.brandRepository.findBySlug(slug);
 
     if (existingBrand) {
       throw new HttpException(
@@ -79,15 +55,13 @@ export class BrandService {
       );
     }
 
-    const brand = await this.prisma.brand.create({
-      data: {
-        name,
-        slug,
-        description: createBrandDto.description,
-        websiteUrl: createBrandDto.websiteUrl,
-        metadata: createBrandDto.metadata || {},
-        logoUrl: createBrandDto.logoUrl,
-      },
+    const brand = await this.brandRepository.create({
+      name,
+      slug,
+      description: createBrandDto.description,
+      websiteUrl: createBrandDto.websiteUrl,
+      metadata: createBrandDto.metadata || {},
+      logoUrl: createBrandDto.logoUrl,
     });
 
     return brand;
@@ -98,9 +72,7 @@ export class BrandService {
     const { id, slug } = updateBrandDto;
 
     // Check if brand exists
-    const existingBrand = await this.prisma.brand.findUnique({
-      where: { id },
-    });
+    const existingBrand = await this.brandRepository.findById(id);
 
     if (!existingBrand) {
       throw new HttpException('Brand not found', HttpStatus.NOT_FOUND);
@@ -108,9 +80,10 @@ export class BrandService {
 
     // If slug is being updated, check if it's already in use
     if (slug && slug !== existingBrand.slug) {
-      const slugExists = await this.prisma.brand.findFirst({
-        where: { slug, id: { not: id } },
-      });
+      const slugExists = await this.brandRepository.findBySlugExcludingId(
+        slug,
+        id,
+      );
 
       if (slugExists) {
         throw new HttpException(
@@ -120,16 +93,13 @@ export class BrandService {
       }
     }
 
-    const brand = await this.prisma.brand.update({
-      where: { id },
-      data: {
-        name: updateBrandDto.name,
-        slug: updateBrandDto.slug,
-        description: updateBrandDto.description,
-        websiteUrl: updateBrandDto.websiteUrl,
-        metadata: updateBrandDto.metadata,
-        logoUrl: updateBrandDto.logoUrl,
-      },
+    const brand = await this.brandRepository.update(id, {
+      name: updateBrandDto.name,
+      slug: updateBrandDto.slug,
+      description: updateBrandDto.description,
+      websiteUrl: updateBrandDto.websiteUrl,
+      metadata: updateBrandDto.metadata,
+      logoUrl: updateBrandDto.logoUrl,
     });
 
     return brand;
@@ -138,22 +108,14 @@ export class BrandService {
   // ------------------------------- Delete Brand -------------------------------
   public async deleteBrand(id: string) {
     // Check if brand exists
-    const brand = await this.prisma.brand.findUnique({
-      where: { id },
-      include: {
-        products: true,
-      },
-    });
+    const brand = await this.brandRepository.findByIdWithProducts(id);
 
     if (!brand) {
       throw new HttpException('Brand not found', HttpStatus.NOT_FOUND);
     }
 
     // Soft delete by setting isActive to false
-    const deletedBrand = await this.prisma.brand.update({
-      where: { id },
-      data: { isActive: false },
-    });
+    const deletedBrand = await this.brandRepository.softDelete(id);
 
     return deletedBrand;
   }

@@ -1,12 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { CategoryRepository } from './category.repository';
 import { CreateCategoryDto, UpdateCategoryDto } from './category.dto';
 import calculatePagination from 'src/utils/calculatePagination';
-import { ProductStatus } from 'src/generated/prisma';
 
 @Injectable()
 export class CategoryService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly categoryRepository: CategoryRepository) {}
 
   // ------------------------------- Get All Categories -------------------------------
   public async getAllCategories(pageNumber: number, pageSize: number) {
@@ -16,19 +15,8 @@ export class CategoryService {
     });
 
     const [categories, total] = await Promise.all([
-      this.prisma.category.findMany({
-        skip,
-        take: take,
-        where: { isActive: true },
-        include: {
-          parent: true,
-          children: true,
-        },
-        orderBy: {
-          sortOrder: 'asc',
-        },
-      }),
-      this.prisma.category.count({ where: { isActive: true } }),
+      this.categoryRepository.findAll(skip, take),
+      this.categoryRepository.count(),
     ]);
 
     return {
@@ -44,17 +32,7 @@ export class CategoryService {
 
   // ------------------------------- Get Single Category -------------------------------
   public async getSingleCategory(id: string) {
-    const category = await this.prisma.category.findUnique({
-      where: { id, isActive: true },
-      include: {
-        parent: true,
-        children: true,
-        products: {
-          where: { status: ProductStatus.ACTIVE },
-          take: 10,
-        },
-      },
-    });
+    const category = await this.categoryRepository.findByIdWithRelations(id);
 
     if (!category) {
       throw new HttpException('Category not found', HttpStatus.NOT_FOUND);
@@ -68,9 +46,7 @@ export class CategoryService {
     const { name, slug, parentId } = createCategoryDto;
 
     // Check if slug already exists
-    const existingCategory = await this.prisma.category.findFirst({
-      where: { slug },
-    });
+    const existingCategory = await this.categoryRepository.findBySlug(slug);
 
     if (existingCategory) {
       throw new HttpException(
@@ -81,9 +57,7 @@ export class CategoryService {
 
     // If parentId is provided, check if parent exists
     if (parentId) {
-      const parent = await this.prisma.category.findUnique({
-        where: { id: parentId, isActive: true },
-      });
+      const parent = await this.categoryRepository.findByIdActive(parentId);
 
       if (!parent) {
         throw new HttpException(
@@ -93,21 +67,16 @@ export class CategoryService {
       }
     }
 
-    const category = await this.prisma.category.create({
-      data: {
-        name,
-        slug,
-        description: createCategoryDto.description,
-        parentId,
-        sortOrder: createCategoryDto.sortOrder || 0,
-        seoTitle: createCategoryDto.seoTitle,
-        seoDescription: createCategoryDto.seoDescription,
-        metadata: createCategoryDto.metadata || {},
-        imageUrl: createCategoryDto.imageUrl,
-      },
-      include: {
-        parent: true,
-      },
+    const category = await this.categoryRepository.create({
+      name,
+      slug,
+      description: createCategoryDto.description,
+      parent: parentId ? { connect: { id: parentId } } : undefined,
+      sortOrder: createCategoryDto.sortOrder || 0,
+      seoTitle: createCategoryDto.seoTitle,
+      seoDescription: createCategoryDto.seoDescription,
+      metadata: createCategoryDto.metadata || {},
+      imageUrl: createCategoryDto.imageUrl,
     });
 
     return category;
@@ -118,9 +87,7 @@ export class CategoryService {
     const { id, slug, parentId } = updateCategoryDto;
 
     // Check if category exists
-    const existingCategory = await this.prisma.category.findUnique({
-      where: { id },
-    });
+    const existingCategory = await this.categoryRepository.findById(id);
 
     if (!existingCategory) {
       throw new HttpException('Category not found', HttpStatus.NOT_FOUND);
@@ -128,9 +95,10 @@ export class CategoryService {
 
     // If slug is being updated, check if it's already in use
     if (slug && slug !== existingCategory.slug) {
-      const slugExists = await this.prisma.category.findFirst({
-        where: { slug, id: { not: id } },
-      });
+      const slugExists = await this.categoryRepository.findBySlugExcludingId(
+        slug,
+        id,
+      );
 
       if (slugExists) {
         throw new HttpException(
@@ -149,9 +117,7 @@ export class CategoryService {
         );
       }
 
-      const parent = await this.prisma.category.findUnique({
-        where: { id: parentId, isActive: true },
-      });
+      const parent = await this.categoryRepository.findByIdActive(parentId);
 
       if (!parent) {
         throw new HttpException(
@@ -161,22 +127,18 @@ export class CategoryService {
       }
     }
 
-    const category = await this.prisma.category.update({
-      where: { id },
-      data: {
-        name: updateCategoryDto.name,
-        slug: updateCategoryDto.slug,
-        description: updateCategoryDto.description,
-        parentId: updateCategoryDto.parentId,
-        sortOrder: updateCategoryDto.sortOrder,
-        seoTitle: updateCategoryDto.seoTitle,
-        seoDescription: updateCategoryDto.seoDescription,
-        metadata: updateCategoryDto.metadata,
-        imageUrl: updateCategoryDto.imageUrl,
-      },
-      include: {
-        parent: true,
-      },
+    const category = await this.categoryRepository.update(id, {
+      name: updateCategoryDto.name,
+      slug: updateCategoryDto.slug,
+      description: updateCategoryDto.description,
+      parent: updateCategoryDto.parentId
+        ? { connect: { id: updateCategoryDto.parentId } }
+        : undefined,
+      sortOrder: updateCategoryDto.sortOrder,
+      seoTitle: updateCategoryDto.seoTitle,
+      seoDescription: updateCategoryDto.seoDescription,
+      metadata: updateCategoryDto.metadata,
+      imageUrl: updateCategoryDto.imageUrl,
     });
 
     return category;
@@ -185,13 +147,7 @@ export class CategoryService {
   // ------------------------------- Delete Category -------------------------------
   public async deleteCategory(id: string) {
     // Check if category exists
-    const category = await this.prisma.category.findUnique({
-      where: { id },
-      include: {
-        children: true,
-        products: true,
-      },
-    });
+    const category = await this.categoryRepository.findByIdWithChildren(id);
 
     if (!category) {
       throw new HttpException('Category not found', HttpStatus.NOT_FOUND);
@@ -206,10 +162,7 @@ export class CategoryService {
     }
 
     // Soft delete by setting isActive to false
-    const deletedCategory = await this.prisma.category.update({
-      where: { id },
-      data: { isActive: false },
-    });
+    const deletedCategory = await this.categoryRepository.softDelete(id);
 
     return deletedCategory;
   }

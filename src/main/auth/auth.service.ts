@@ -6,12 +6,12 @@ import { UserStatus } from 'src/generated/prisma';
 import { ChangePasswordDto } from './auth.dto';
 import { MailerService } from 'src/utils/sendMail';
 import { TUser } from 'src/interface/token.type';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { AuthRepository } from './auth.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private prisma: PrismaService,
+    private authRepository: AuthRepository,
     private jwtService: JwtService,
     private configService: ConfigService,
     private mailerService: MailerService,
@@ -20,9 +20,7 @@ export class AuthService {
   // Login
   public async loginUser(data: { email: string; password: string }) {
     const { email, password } = data;
-    const user = await this.prisma.user.findUnique({
-      where: { email, status: UserStatus.ACTIVE },
-    });
+    const user = await this.authRepository.findActiveUserByEmail(email);
 
     if (!user) throw new HttpException('User not found', 401);
 
@@ -58,9 +56,7 @@ export class AuthService {
     }
 
     // Check if the user exists
-    const user = await this.prisma.user.findUnique({
-      where: { id: decoded.id },
-    });
+    const user = await this.authRepository.findUserById(decoded.id);
 
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
@@ -85,12 +81,9 @@ export class AuthService {
 
   // ----------------------------------------------Change Password-------------------------------------------------
   public async changePassword(user: TUser, payload: ChangePasswordDto) {
-    const userData = await this.prisma.user.findUniqueOrThrow({
-      where: {
-        email: user?.email,
-        status: UserStatus.ACTIVE,
-      },
-    });
+    const userData = await this.authRepository.findActiveUserByEmailOrThrow(
+      user?.email,
+    );
 
     const isCorrectPassword = bcrypt.compare(
       payload.password,
@@ -106,22 +99,15 @@ export class AuthService {
     );
 
     // Update operation
-    await this.prisma.user.update({
-      where: {
-        email: userData?.email,
-      },
-      data: {
-        password: hashedPassword,
-      },
+    await this.authRepository.updateUserByEmail(userData?.email, {
+      password: hashedPassword,
     });
     return null;
   }
 
   // ---------------------------------------------------Forgot Password-------------------------------------------------
   async forgotPassword(email: string) {
-    const user = await this.prisma.user.findUnique({
-      where: { email, status: UserStatus.ACTIVE },
-    });
+    const user = await this.authRepository.findActiveUserByEmail(email);
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
 
     const payload = { email: user.email, role: user.role, id: user.id };
@@ -157,9 +143,7 @@ export class AuthService {
     });
 
     // 2. Fetch user
-    const user = await this.prisma.user.findUnique({
-      where: { id: decoded.id },
-    });
+    const user = await this.authRepository.findUserById(decoded.id);
 
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     if (user.status === UserStatus.BLOCKED) {
@@ -173,12 +157,9 @@ export class AuthService {
     );
 
     // 4. Update user
-    await this.prisma.user.update({
-      where: { id: user.id },
-      data: {
-        password: newHashedPassword,
-        updatedAt: new Date(),
-      },
+    await this.authRepository.updateUser(user.id, {
+      password: newHashedPassword,
+      updatedAt: new Date(),
     });
 
     return null;

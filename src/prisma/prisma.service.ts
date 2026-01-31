@@ -7,8 +7,8 @@ export class PrismaService extends PrismaClient {
   constructor() {
     super({
       adapter: new PrismaPg({
-        connectionString: process.env.DATABASE_URL!
-      })
+        connectionString: process.env.DATABASE_URL!,
+      }),
     });
   }
 }

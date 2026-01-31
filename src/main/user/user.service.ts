@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { UserRepository } from './user.repository';
 import { TUser } from 'src/interface/token.type';
 import {
   Admin,
@@ -11,7 +11,7 @@ import {
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   // ------------------------------- Get Me -------------------------------
   public async getMe(user: TUser) {
@@ -27,47 +27,27 @@ export class UserService {
       );
     }
     if (user.role == UserRole.ADMIN) {
-      result = await this.prisma.admin.findUniqueOrThrow({
-        where: { userId: user.id, isActive: true },
-        include: {
-          user: true,
-        },
-      });
+      result = await this.userRepository.findAdminByUserId(user.id);
     } else if (user.role == UserRole.CUSTOMER) {
-      result = await this.prisma.customer.findUniqueOrThrow({
-        where: { userId: user.id, isActive: true },
-        include: {
-          user: true,
-        },
-      });
+      result = await this.userRepository.findCustomerByUserId(user.id);
     } else if (user.role == UserRole.STAFF) {
-      result = await this.prisma.staff.findUniqueOrThrow({
-        where: { userId: user.id, isActive: true },
-        include: {
-          user: true,
-        },
-      });
+      result = await this.userRepository.findStaffByUserId(user.id);
     } else result = null;
     return result;
   }
 
   // ------------------------------- Get All Users -------------------------------
   public async getAllUsers() {
-    const result = await this.prisma.user.findMany();
+    const result = await this.userRepository.findAll();
     return result;
   }
 
   // ------------------------------- Change User Status -------------------------------
   public async changeUserStatus(id: string, status: UserStatus) {
-    const existingUser = await this.prisma.user.findUnique({
-      where: { id },
-    });
+    const existingUser = await this.userRepository.findById(id);
     if (!existingUser)
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    const updatedUser = await this.prisma.user.update({
-      where: { id },
-      data: { status },
-    });
+    const updatedUser = await this.userRepository.updateStatus(id, status);
     return updatedUser;
   }
 
