@@ -135,6 +135,16 @@ export class CategoryController {
   ) {
     // Parse text and transform to DTO instance
     const parsed = JSON.parse(text);
+
+    // Validate that ID in body matches ID in URL if provided
+    if (parsed.id && parsed.id !== params.id) {
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        success: false,
+        statusCode: HttpStatus.BAD_REQUEST,
+        message: 'ID in request body does not match ID in URL',
+      });
+    }
+
     parsed.id = params.id;
     const updateCategoryDto = plainToInstance(UpdateCategoryDto, parsed);
 
