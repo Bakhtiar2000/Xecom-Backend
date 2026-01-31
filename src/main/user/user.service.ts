@@ -1,13 +1,17 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { TUser } from 'src/interface/token.type';
-import { Admin, Customer, Staff, UserRole, UserStatus } from '@prisma/client';
+import {
+  Admin,
+  Customer,
+  Staff,
+  UserRole,
+  UserStatus,
+} from 'src/generated/prisma';
 
 @Injectable()
 export class UserService {
-  constructor(
-    private readonly prisma: PrismaService,
-  ) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   // ------------------------------- Get Me -------------------------------
   public async getMe(user: TUser) {
@@ -43,7 +47,7 @@ export class UserService {
           user: true,
         },
       });
-    } else result = null
+    } else result = null;
     return result;
   }
 
@@ -66,7 +70,6 @@ export class UserService {
     });
     return updatedUser;
   }
-
 
   /*
   Make registration for three roles seperately on their own modules. No common endpoint like register user

@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCategoryDto, UpdateCategoryDto } from './category.dto';
 import calculatePagination from 'src/utils/calculatePagination';
-import { ProductStatus } from '@prisma/client';
+import { ProductStatus } from 'src/generated/prisma';
 
 @Injectable()
 export class CategoryService {

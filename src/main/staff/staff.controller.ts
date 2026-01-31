@@ -19,7 +19,7 @@ import { LibService } from 'src/lib/lib.service';
 import { validate } from 'class-validator';
 import { CreateStaffDto } from './staff.dto';
 import { RoleGuardWith } from 'src/utils/RoleGuardWith';
-import { UserRole } from '@prisma/client';
+import { UserRole } from 'src/generated/prisma';
 
 @Controller('staff')
 export class StaffController {

@@ -22,7 +22,7 @@ import { LibService } from 'src/lib/lib.service';
 import { validate } from 'class-validator';
 import { CreateBrandDto, UpdateBrandDto } from './brand.dto';
 import { RoleGuardWith } from 'src/utils/RoleGuardWith';
-import { UserRole } from '@prisma/client';
+import { UserRole } from 'src/generated/prisma';
 import { IdDto } from 'src/common/id.dto';
 
 @Controller('brand')

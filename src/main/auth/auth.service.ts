@@ -2,7 +2,7 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { UserStatus } from '@prisma/client';
+import { UserStatus } from 'src/generated/prisma';
 import { ChangePasswordDto } from './auth.dto';
 import { MailerService } from 'src/utils/sendMail';
 import { TUser } from 'src/interface/token.type';
@@ -15,13 +15,13 @@ export class AuthService {
     private jwtService: JwtService,
     private configService: ConfigService,
     private mailerService: MailerService,
-  ) { }
+  ) {}
 
   // Login
   public async loginUser(data: { email: string; password: string }) {
     const { email, password } = data;
     const user = await this.prisma.user.findUnique({
-      where: { email, status: UserStatus.ACTIVE, },
+      where: { email, status: UserStatus.ACTIVE },
     });
 
     if (!user) throw new HttpException('User not found', 401);
@@ -100,7 +100,10 @@ export class AuthService {
       throw new HttpException('Password is incorrect', HttpStatus.BAD_REQUEST);
     }
 
-    const hashedPassword: string = await bcrypt.hash(payload.confirmPassword, 12);
+    const hashedPassword: string = await bcrypt.hash(
+      payload.confirmPassword,
+      12,
+    );
 
     // Update operation
     await this.prisma.user.update({
@@ -140,8 +143,8 @@ export class AuthService {
               </a>
           </p>
       </div>`,
-      "Reset Password Link 🔗",
-      "Click on the link to reset your password. Link expires in 10 minutes."
+      'Reset Password Link 🔗',
+      'Click on the link to reset your password. Link expires in 10 minutes.',
     );
     return null;
   }
