@@ -63,6 +63,12 @@ enum ProductStatus {
   DISCONTINUED
 }
 
+enum ProductRelationType {
+  RELATED
+  CROSS_SELL
+  UP_SELL
+}
+
 // Order Enums
 enum OrderStatus {
   PENDING

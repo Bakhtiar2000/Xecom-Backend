@@ -63,6 +63,12 @@ enum ProductStatus {
   DISCONTINUED
 }
 
+enum ProductRelationType {
+  RELATED
+  CROSS_SELL
+  UP_SELL
+}
+
 // Order Enums
 enum OrderStatus {
   PENDING
@@ -501,50 +507,48 @@ model Brand {
 }
 
 model Product {
-  id                String        @id @default(uuid())
-  tenantId          String?
-  name              String
-  slug              String
-  shortDescription  String?
-  fullDescription   String?
-  brandId           String?
-  categoryId        String?
-  status            ProductStatus @default(DRAFT)
-  featured          Boolean       @default(false)
-  weight            Decimal?
-  dimensions        Json? // {length, width, height, unit}
-  tags              String[]
-  seoTitle          String?
-  seoDescription    String?
-  metaKeywords      String[]
-  warranty          String?
-  specifications    Json          @default("{}")
-  faqData           Json          @default("[]")
-  videoUrl          String?
-  manualUrl         String?
-  minOrderQty       Int           @default(1)
-  maxOrderQty       Int?
-  isBundle          Boolean       @default(false)
-  bundleProducts    Json? // Array of {productId, quantity}
-  relatedProducts   String[] // Array of product IDs
-  crossSellProducts String[] // Array of product IDs
-  upSellProducts    String[] // Array of product IDs
-  totalSales        Int           @default(0)
-  viewCount         Int           @default(0)
-  avgRating         Decimal?
-  reviewCount       Int           @default(0)
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
+  id               String        @id @default(uuid())
+  tenantId         String?
+  name             String
+  slug             String
+  shortDescription String?
+  fullDescription  String?
+  brandId          String?
+  categoryId       String?
+  status           ProductStatus @default(DRAFT)
+  featured         Boolean       @default(false)
+  weight           Decimal?
+  dimensions       Json? // {length, width, height, unit}
+  tags             String[]
+  seoTitle         String?
+  seoDescription   String?
+  metaKeywords     String[]
+  warranty         String?
+  specifications   Json          @default("{}")
+  faqData          Json          @default("[]")
+  videoUrl         String?
+  manualUrl        String?
+  minOrderQty      Int           @default(1)
+  maxOrderQty      Int?
+  isBundle         Boolean       @default(false)
+  totalSales       Int           @default(0)
+  viewCount        Int           @default(0)
+  avgRating        Decimal?
+  reviewCount      Int           @default(0)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
 
-  tenant      Tenant?          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  brand       Brand?           @relation(fields: [brandId], references: [id])
-  category    Category?        @relation(fields: [categoryId], references: [id])
+  tenant      Tenant?           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  brand       Brand?            @relation(fields: [brandId], references: [id])
+  category    Category?         @relation(fields: [categoryId], references: [id])
   images      ProductImage[]
   variants    ProductVariant[]
   reviews     Review[]
   wishlists   Wishlist[]
   orderItems  OrderItem[]
   bundleItems BundleItem[]
+  relations   ProductRelation[] @relation("ProductRelations")
+  relatedFrom ProductRelation[] @relation("RelatedProducts")
 
   @@unique([tenantId, slug])
   @@map("products")
@@ -561,6 +565,24 @@ model BundleItem {
   bundle Product @relation(fields: [bundleId], references: [id], onDelete: Cascade)
 
   @@map("bundle_items")
+}
+
+model ProductRelation {
+  id          String              @id @default(uuid())
+  tenantId    String?
+  productId   String
+  relatedToId String
+  type        ProductRelationType
+  priority    Int                 @default(0)
+  createdAt   DateTime            @default(now())
+
+  product   Product @relation("ProductRelations", fields: [productId], references: [id], onDelete: Cascade)
+  relatedTo Product @relation("RelatedProducts", fields: [relatedToId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, productId, relatedToId, type])
+  @@index([productId, type])
+  @@index([relatedToId])
+  @@map("product_relations")
 }
 
 model Attribute {
@@ -870,9 +892,8 @@ model Customer {
 }
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["prismaSchemaFolder"]
-  output          = "../src/generated/prisma"
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {

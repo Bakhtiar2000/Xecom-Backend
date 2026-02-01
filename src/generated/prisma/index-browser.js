@@ -360,10 +360,6 @@ exports.Prisma.ProductScalarFieldEnum = {
   minOrderQty: 'minOrderQty',
   maxOrderQty: 'maxOrderQty',
   isBundle: 'isBundle',
-  bundleProducts: 'bundleProducts',
-  relatedProducts: 'relatedProducts',
-  crossSellProducts: 'crossSellProducts',
-  upSellProducts: 'upSellProducts',
   totalSales: 'totalSales',
   viewCount: 'viewCount',
   avgRating: 'avgRating',
@@ -378,6 +374,16 @@ exports.Prisma.BundleItemScalarFieldEnum = {
   productId: 'productId',
   quantity: 'quantity',
   discount: 'discount',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ProductRelationScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  productId: 'productId',
+  relatedToId: 'relatedToId',
+  type: 'type',
+  priority: 'priority',
   createdAt: 'createdAt'
 };
 
@@ -704,6 +710,12 @@ exports.ProductStatus = exports.$Enums.ProductStatus = {
   DISCONTINUED: 'DISCONTINUED'
 };
 
+exports.ProductRelationType = exports.$Enums.ProductRelationType = {
+  RELATED: 'RELATED',
+  CROSS_SELL: 'CROSS_SELL',
+  UP_SELL: 'UP_SELL'
+};
+
 exports.NotificationType = exports.$Enums.NotificationType = {
   ORDER_CONFIRMATION: 'ORDER_CONFIRMATION',
   ORDER_SHIPPED: 'ORDER_SHIPPED',
@@ -806,6 +818,7 @@ exports.Prisma.ModelName = {
   Brand: 'Brand',
   Product: 'Product',
   BundleItem: 'BundleItem',
+  ProductRelation: 'ProductRelation',
   Attribute: 'Attribute',
   AttributeValue: 'AttributeValue',
   ProductVariantAttribute: 'ProductVariantAttribute',
