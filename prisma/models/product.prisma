@@ -48,36 +48,36 @@ model Brand {
 }
 
 model Product {
-  id                String        @id @default(uuid())
-  tenantId          String?
-  name              String
-  slug              String
-  shortDescription  String?
-  fullDescription   String?
-  brandId           String?
-  categoryId        String?
-  status            ProductStatus @default(DRAFT)
-  featured          Boolean       @default(false)
-  weight            Decimal?
-  dimensions        Json? // {length, width, height, unit}
-  tags              String[]
-  seoTitle          String?
-  seoDescription    String?
-  metaKeywords      String[]
-  warranty          String?
-  specifications    Json          @default("{}")
-  faqData           Json          @default("[]")
-  videoUrl          String?
-  manualUrl         String?
-  minOrderQty       Int           @default(1)
-  maxOrderQty       Int?
-  isBundle          Boolean       @default(false)
-  totalSales        Int           @default(0)
-  viewCount         Int           @default(0)
-  avgRating         Decimal?
-  reviewCount       Int           @default(0)
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
+  id               String        @id @default(uuid())
+  tenantId         String?
+  name             String
+  slug             String
+  shortDescription String?
+  fullDescription  String?
+  brandId          String?
+  categoryId       String?
+  status           ProductStatus @default(DRAFT)
+  featured         Boolean       @default(false)
+  weight           Decimal?
+  dimensions       Json? // {length, width, height, unit}
+  tags             String[]
+  seoTitle         String?
+  seoDescription   String?
+  metaKeywords     String[]
+  warranty         String?
+  specifications   Json          @default("{}")
+  faqData          Json          @default("[]")
+  videoUrl         String?
+  manualUrl        String?
+  minOrderQty      Int           @default(1)
+  maxOrderQty      Int?
+  isBundle         Boolean       @default(false)
+  totalSales       Int           @default(0)
+  viewCount        Int           @default(0)
+  avgRating        Decimal?
+  reviewCount      Int           @default(0)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
 
   tenant      Tenant?           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   brand       Brand?            @relation(fields: [brandId], references: [id])
@@ -128,7 +128,7 @@ model ProductRelation {
 
 model Attribute {
   id        String           @id @default(uuid())
-  name      String // e.g. "Size", "Color", "Width"
+  name      String           @unique // e.g. "Size", "Color", "Width"
   createdAt DateTime         @default(now())
   values    AttributeValue[]
 }
@@ -136,7 +136,8 @@ model Attribute {
 model AttributeValue {
   id          String                    @id @default(uuid())
   attributeId String
-  value       String // e.g. "Red", "Blue", "42", "XL"
+  value       String                    @unique // e.g. "Red", "Blue", "42", "XL"
+  hexCode     String?                   @unique // For color attributes
   attribute   Attribute                 @relation(fields: [attributeId], references: [id])
   variants    ProductVariantAttribute[]
 }

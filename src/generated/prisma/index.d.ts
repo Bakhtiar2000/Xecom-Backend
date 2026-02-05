@@ -1037,8 +1037,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 7.3.0
-   * Query Engine version: 9d6ad21cbbceab97458517b147a6a09ff43aa735
+   * Prisma Client JS version: 7.2.0
+   * Query Engine version: 0c8ef2ce45c83248ab3df073180d5eda9e8be7a3
    */
   export type PrismaVersion = {
     client: string
@@ -30118,18 +30118,21 @@ export namespace Prisma {
     id: string | null
     attributeId: string | null
     value: string | null
+    hexCode: string | null
   }
 
   export type AttributeValueMaxAggregateOutputType = {
     id: string | null
     attributeId: string | null
     value: string | null
+    hexCode: string | null
   }
 
   export type AttributeValueCountAggregateOutputType = {
     id: number
     attributeId: number
     value: number
+    hexCode: number
     _all: number
   }
 
@@ -30138,18 +30141,21 @@ export namespace Prisma {
     id?: true
     attributeId?: true
     value?: true
+    hexCode?: true
   }
 
   export type AttributeValueMaxAggregateInputType = {
     id?: true
     attributeId?: true
     value?: true
+    hexCode?: true
   }
 
   export type AttributeValueCountAggregateInputType = {
     id?: true
     attributeId?: true
     value?: true
+    hexCode?: true
     _all?: true
   }
 
@@ -30229,6 +30235,7 @@ export namespace Prisma {
     id: string
     attributeId: string
     value: string
+    hexCode: string | null
     _count: AttributeValueCountAggregateOutputType | null
     _min: AttributeValueMinAggregateOutputType | null
     _max: AttributeValueMaxAggregateOutputType | null
@@ -30252,6 +30259,7 @@ export namespace Prisma {
     id?: boolean
     attributeId?: boolean
     value?: boolean
+    hexCode?: boolean
     attribute?: boolean | AttributeDefaultArgs<ExtArgs>
     variants?: boolean | AttributeValue$variantsArgs<ExtArgs>
     _count?: boolean | AttributeValueCountOutputTypeDefaultArgs<ExtArgs>
@@ -30261,6 +30269,7 @@ export namespace Prisma {
     id?: boolean
     attributeId?: boolean
     value?: boolean
+    hexCode?: boolean
     attribute?: boolean | AttributeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["attributeValue"]>
 
@@ -30268,6 +30277,7 @@ export namespace Prisma {
     id?: boolean
     attributeId?: boolean
     value?: boolean
+    hexCode?: boolean
     attribute?: boolean | AttributeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["attributeValue"]>
 
@@ -30275,9 +30285,10 @@ export namespace Prisma {
     id?: boolean
     attributeId?: boolean
     value?: boolean
+    hexCode?: boolean
   }
 
-  export type AttributeValueOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "attributeId" | "value", ExtArgs["result"]["attributeValue"]>
+  export type AttributeValueOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "attributeId" | "value" | "hexCode", ExtArgs["result"]["attributeValue"]>
   export type AttributeValueInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     attribute?: boolean | AttributeDefaultArgs<ExtArgs>
     variants?: boolean | AttributeValue$variantsArgs<ExtArgs>
@@ -30300,6 +30311,7 @@ export namespace Prisma {
       id: string
       attributeId: string
       value: string
+      hexCode: string | null
     }, ExtArgs["result"]["attributeValue"]>
     composites: {}
   }
@@ -30728,6 +30740,7 @@ export namespace Prisma {
     readonly id: FieldRef<"AttributeValue", 'String'>
     readonly attributeId: FieldRef<"AttributeValue", 'String'>
     readonly value: FieldRef<"AttributeValue", 'String'>
+    readonly hexCode: FieldRef<"AttributeValue", 'String'>
   }
     
 
@@ -48451,7 +48464,8 @@ export namespace Prisma {
   export const AttributeValueScalarFieldEnum: {
     id: 'id',
     attributeId: 'attributeId',
-    value: 'value'
+    value: 'value',
+    hexCode: 'hexCode'
   };
 
   export type AttributeValueScalarFieldEnum = (typeof AttributeValueScalarFieldEnum)[keyof typeof AttributeValueScalarFieldEnum]
@@ -50906,13 +50920,13 @@ export namespace Prisma {
 
   export type AttributeWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    name?: string
     AND?: AttributeWhereInput | AttributeWhereInput[]
     OR?: AttributeWhereInput[]
     NOT?: AttributeWhereInput | AttributeWhereInput[]
-    name?: StringFilter<"Attribute"> | string
     createdAt?: DateTimeFilter<"Attribute"> | Date | string
     values?: AttributeValueListRelationFilter
-  }, "id">
+  }, "id" | "name">
 
   export type AttributeOrderByWithAggregationInput = {
     id?: SortOrder
@@ -50939,6 +50953,7 @@ export namespace Prisma {
     id?: StringFilter<"AttributeValue"> | string
     attributeId?: StringFilter<"AttributeValue"> | string
     value?: StringFilter<"AttributeValue"> | string
+    hexCode?: StringNullableFilter<"AttributeValue"> | string | null
     attribute?: XOR<AttributeScalarRelationFilter, AttributeWhereInput>
     variants?: ProductVariantAttributeListRelationFilter
   }
@@ -50947,25 +50962,28 @@ export namespace Prisma {
     id?: SortOrder
     attributeId?: SortOrder
     value?: SortOrder
+    hexCode?: SortOrderInput | SortOrder
     attribute?: AttributeOrderByWithRelationInput
     variants?: ProductVariantAttributeOrderByRelationAggregateInput
   }
 
   export type AttributeValueWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    value?: string
+    hexCode?: string
     AND?: AttributeValueWhereInput | AttributeValueWhereInput[]
     OR?: AttributeValueWhereInput[]
     NOT?: AttributeValueWhereInput | AttributeValueWhereInput[]
     attributeId?: StringFilter<"AttributeValue"> | string
-    value?: StringFilter<"AttributeValue"> | string
     attribute?: XOR<AttributeScalarRelationFilter, AttributeWhereInput>
     variants?: ProductVariantAttributeListRelationFilter
-  }, "id">
+  }, "id" | "value" | "hexCode">
 
   export type AttributeValueOrderByWithAggregationInput = {
     id?: SortOrder
     attributeId?: SortOrder
     value?: SortOrder
+    hexCode?: SortOrderInput | SortOrder
     _count?: AttributeValueCountOrderByAggregateInput
     _max?: AttributeValueMaxOrderByAggregateInput
     _min?: AttributeValueMinOrderByAggregateInput
@@ -50978,6 +50996,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"AttributeValue"> | string
     attributeId?: StringWithAggregatesFilter<"AttributeValue"> | string
     value?: StringWithAggregatesFilter<"AttributeValue"> | string
+    hexCode?: StringNullableWithAggregatesFilter<"AttributeValue"> | string | null
   }
 
   export type ProductVariantAttributeWhereInput = {
@@ -54256,6 +54275,7 @@ export namespace Prisma {
   export type AttributeValueCreateInput = {
     id?: string
     value: string
+    hexCode?: string | null
     attribute: AttributeCreateNestedOneWithoutValuesInput
     variants?: ProductVariantAttributeCreateNestedManyWithoutAttributeValueInput
   }
@@ -54264,12 +54284,14 @@ export namespace Prisma {
     id?: string
     attributeId: string
     value: string
+    hexCode?: string | null
     variants?: ProductVariantAttributeUncheckedCreateNestedManyWithoutAttributeValueInput
   }
 
   export type AttributeValueUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     value?: StringFieldUpdateOperationsInput | string
+    hexCode?: NullableStringFieldUpdateOperationsInput | string | null
     attribute?: AttributeUpdateOneRequiredWithoutValuesNestedInput
     variants?: ProductVariantAttributeUpdateManyWithoutAttributeValueNestedInput
   }
@@ -54278,6 +54300,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     attributeId?: StringFieldUpdateOperationsInput | string
     value?: StringFieldUpdateOperationsInput | string
+    hexCode?: NullableStringFieldUpdateOperationsInput | string | null
     variants?: ProductVariantAttributeUncheckedUpdateManyWithoutAttributeValueNestedInput
   }
 
@@ -54285,17 +54308,20 @@ export namespace Prisma {
     id?: string
     attributeId: string
     value: string
+    hexCode?: string | null
   }
 
   export type AttributeValueUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     value?: StringFieldUpdateOperationsInput | string
+    hexCode?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AttributeValueUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     attributeId?: StringFieldUpdateOperationsInput | string
     value?: StringFieldUpdateOperationsInput | string
+    hexCode?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProductVariantAttributeCreateInput = {
@@ -57560,18 +57586,21 @@ export namespace Prisma {
     id?: SortOrder
     attributeId?: SortOrder
     value?: SortOrder
+    hexCode?: SortOrder
   }
 
   export type AttributeValueMaxOrderByAggregateInput = {
     id?: SortOrder
     attributeId?: SortOrder
     value?: SortOrder
+    hexCode?: SortOrder
   }
 
   export type AttributeValueMinOrderByAggregateInput = {
     id?: SortOrder
     attributeId?: SortOrder
     value?: SortOrder
+    hexCode?: SortOrder
   }
 
   export type AttributeValueScalarRelationFilter = {
@@ -66681,12 +66710,14 @@ export namespace Prisma {
   export type AttributeValueCreateWithoutAttributeInput = {
     id?: string
     value: string
+    hexCode?: string | null
     variants?: ProductVariantAttributeCreateNestedManyWithoutAttributeValueInput
   }
 
   export type AttributeValueUncheckedCreateWithoutAttributeInput = {
     id?: string
     value: string
+    hexCode?: string | null
     variants?: ProductVariantAttributeUncheckedCreateNestedManyWithoutAttributeValueInput
   }
 
@@ -66723,6 +66754,7 @@ export namespace Prisma {
     id?: StringFilter<"AttributeValue"> | string
     attributeId?: StringFilter<"AttributeValue"> | string
     value?: StringFilter<"AttributeValue"> | string
+    hexCode?: StringNullableFilter<"AttributeValue"> | string | null
   }
 
   export type AttributeCreateWithoutValuesInput = {
@@ -66848,6 +66880,7 @@ export namespace Prisma {
   export type AttributeValueCreateWithoutVariantsInput = {
     id?: string
     value: string
+    hexCode?: string | null
     attribute: AttributeCreateNestedOneWithoutValuesInput
   }
 
@@ -66855,6 +66888,7 @@ export namespace Prisma {
     id?: string
     attributeId: string
     value: string
+    hexCode?: string | null
   }
 
   export type AttributeValueCreateOrConnectWithoutVariantsInput = {
@@ -66917,6 +66951,7 @@ export namespace Prisma {
   export type AttributeValueUpdateWithoutVariantsInput = {
     id?: StringFieldUpdateOperationsInput | string
     value?: StringFieldUpdateOperationsInput | string
+    hexCode?: NullableStringFieldUpdateOperationsInput | string | null
     attribute?: AttributeUpdateOneRequiredWithoutValuesNestedInput
   }
 
@@ -66924,6 +66959,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     attributeId?: StringFieldUpdateOperationsInput | string
     value?: StringFieldUpdateOperationsInput | string
+    hexCode?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CartItemCreateWithoutVariantInput = {
@@ -71925,23 +71961,27 @@ export namespace Prisma {
   export type AttributeValueCreateManyAttributeInput = {
     id?: string
     value: string
+    hexCode?: string | null
   }
 
   export type AttributeValueUpdateWithoutAttributeInput = {
     id?: StringFieldUpdateOperationsInput | string
     value?: StringFieldUpdateOperationsInput | string
+    hexCode?: NullableStringFieldUpdateOperationsInput | string | null
     variants?: ProductVariantAttributeUpdateManyWithoutAttributeValueNestedInput
   }
 
   export type AttributeValueUncheckedUpdateWithoutAttributeInput = {
     id?: StringFieldUpdateOperationsInput | string
     value?: StringFieldUpdateOperationsInput | string
+    hexCode?: NullableStringFieldUpdateOperationsInput | string | null
     variants?: ProductVariantAttributeUncheckedUpdateManyWithoutAttributeValueNestedInput
   }
 
   export type AttributeValueUncheckedUpdateManyWithoutAttributeInput = {
     id?: StringFieldUpdateOperationsInput | string
     value?: StringFieldUpdateOperationsInput | string
+    hexCode?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProductVariantAttributeCreateManyAttributeValueInput = {

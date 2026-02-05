@@ -80,6 +80,18 @@ export class AttributeRepository {
     });
   }
 
+  async findAttributeValueByHexCodeAndAttribute(
+    hexCode: string,
+    attributeId: string,
+  ) {
+    return this.prisma.attributeValue.findFirst({
+      where: {
+        hexCode,
+        attributeId,
+      },
+    });
+  }
+
   async createAttributeValue(data: Prisma.AttributeValueCreateInput) {
     return this.prisma.attributeValue.create({
       data,
@@ -93,6 +105,7 @@ export class AttributeRepository {
     id: string,
     data: Prisma.AttributeValueUpdateInput,
   ) {
+    console.log('Updating Attribute Value:', id, data);
     return this.prisma.attributeValue.update({
       where: { id },
       data,

@@ -20,7 +20,6 @@ export class CustomerService {
     if (user) throw new HttpException('User already exists', 409);
     const hashedPassword = await this.lib.hashPassword({
       password: dto.password,
-      round: 6,
     });
 
     const newUser = await this.customerRepository.createUser({

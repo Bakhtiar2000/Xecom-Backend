@@ -9,7 +9,7 @@ import {
 
 @Injectable()
 export class AttributeService {
-  constructor(private readonly attributeRepository: AttributeRepository) {}
+  constructor(private readonly attributeRepository: AttributeRepository) { }
 
   // ------------------------------- Get All Attributes -------------------------------
   public async getAllAttributes() {
@@ -124,8 +124,24 @@ export class AttributeService {
       );
     }
 
+    // Check if hexCode already exists for this attribute
+    if (hexCode) {
+      const existingHexCode =
+        await this.attributeRepository.findAttributeValueByHexCodeAndAttribute(
+          hexCode,
+          attributeId,
+        );
+
+      if (existingHexCode) {
+        throw new HttpException(
+          'Hex code already exists for this attribute',
+          HttpStatus.CONFLICT,
+        );
+      }
+    }
     const attributeValue = await this.attributeRepository.createAttributeValue({
       value,
+      hexCode,
       attribute: {
         connect: { id: attributeId },
       },
@@ -155,6 +171,7 @@ export class AttributeService {
       id,
       {
         value,
+        hexCode,
       },
     );
 

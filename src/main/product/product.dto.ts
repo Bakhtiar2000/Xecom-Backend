@@ -7,10 +7,7 @@ import {
   IsBoolean,
   IsNumber,
   IsArray,
-  IsUrl,
-  IsDecimal,
   Min,
-  Max,
 } from 'class-validator';
 import { ProductStatus } from 'src/generated/prisma';
 
@@ -97,10 +94,6 @@ export class CreateProductDto {
   @IsNumber()
   @Min(1)
   maxOrderQty?: number;
-
-  @IsOptional()
-  @IsBoolean()
-  isBundle?: boolean;
 }
 
 export class UpdateProductDto {
@@ -191,8 +184,4 @@ export class UpdateProductDto {
   @IsNumber()
   @Min(1)
   maxOrderQty?: number;
-
-  @IsOptional()
-  @IsBoolean()
-  isBundle?: boolean;
 }

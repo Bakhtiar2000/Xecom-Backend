@@ -38,23 +38,11 @@ export class LibService {
     });
   }
 
-  public hashPassword({
-    password,
-    round = 6,
-  }: {
-    password: string;
-    round?: number;
-  }): Promise<string> {
-    return bcrypt.hash(password, round);
+  public hashPassword({ password }: { password: string }): Promise<string> {
+    return bcrypt.hash(password, Number(this.configService.get('BCRYPT_SALT_ROUNDS')));
   }
 
-  public comparePassword({
-    hashedPassword,
-    password,
-  }: {
-    password: string;
-    hashedPassword: string;
-  }): Promise<boolean> {
+  public comparePassword({ hashedPassword, password }: { password: string; hashedPassword: string }): Promise<boolean> {
     return bcrypt.compare(password, hashedPassword);
   }
 

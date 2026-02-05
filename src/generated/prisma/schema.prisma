@@ -587,7 +587,7 @@ model ProductRelation {
 
 model Attribute {
   id        String           @id @default(uuid())
-  name      String // e.g. "Size", "Color", "Width"
+  name      String           @unique // e.g. "Size", "Color", "Width"
   createdAt DateTime         @default(now())
   values    AttributeValue[]
 }
@@ -595,7 +595,8 @@ model Attribute {
 model AttributeValue {
   id          String                    @id @default(uuid())
   attributeId String
-  value       String // e.g. "Red", "Blue", "42", "XL"
+  value       String                    @unique // e.g. "Red", "Blue", "42", "XL"
+  hexCode     String?                   @unique // For color attributes
   attribute   Attribute                 @relation(fields: [attributeId], references: [id])
   variants    ProductVariantAttribute[]
 }

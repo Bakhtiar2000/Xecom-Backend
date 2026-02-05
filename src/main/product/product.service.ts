@@ -5,7 +5,7 @@ import calculatePagination from 'src/utils/calculatePagination';
 
 @Injectable()
 export class ProductService {
-  constructor(private readonly productRepository: ProductRepository) {}
+  constructor(private readonly productRepository: ProductRepository) { }
 
   // ------------------------------- Get All Products -------------------------------
   public async getAllProducts(
@@ -87,8 +87,7 @@ export class ProductService {
       videoUrl: createProductDto.videoUrl,
       manualUrl: createProductDto.manualUrl,
       minOrderQty: createProductDto.minOrderQty || 1,
-      maxOrderQty: createProductDto.maxOrderQty,
-      isBundle: createProductDto.isBundle || false,
+      maxOrderQty: createProductDto.maxOrderQty
     });
 
     return product;
@@ -145,8 +144,7 @@ export class ProductService {
       videoUrl: updateProductDto.videoUrl,
       manualUrl: updateProductDto.manualUrl,
       minOrderQty: updateProductDto.minOrderQty,
-      maxOrderQty: updateProductDto.maxOrderQty,
-      isBundle: updateProductDto.isBundle,
+      maxOrderQty: updateProductDto.maxOrderQty
     });
 
     return product;
