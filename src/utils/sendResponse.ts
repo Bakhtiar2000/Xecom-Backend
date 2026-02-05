@@ -6,11 +6,7 @@ const sendResponse = <T>(
     statusCode: number;
     success: boolean;
     message: string;
-    meta?: {
-      page: number;
-      limit: number;
-      total: number;
-    };
+    meta?: ResponseMeta;
     data: T | null | undefined;
   },
 ) => {
@@ -26,9 +22,10 @@ const sendResponse = <T>(
 export default sendResponse;
 
 export interface ResponseMeta {
-  page: number;
-  limit: number;
-  total: number;
+  pageNumber: number;
+  pageSize: number;
+  totalPages: number;
+  totalCount: number;
 }
 
 export interface ApiResponse<T> {

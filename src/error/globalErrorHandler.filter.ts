@@ -9,7 +9,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { Response, Request } from 'express';
-import { Prisma } from '@prisma/client';
+import { Prisma } from 'src/generated/prisma';
 
 @Catch()
 export class GlobalErrorHandlerFilter implements ExceptionFilter {

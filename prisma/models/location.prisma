@@ -1,0 +1,82 @@
+// ========================================
+// LOCATION MANAGEMENT
+// ========================================
+
+model Country {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  code      String?  @unique // ISO country code (e.g., "BD", "US")
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  divisions Division[]
+
+  @@map("countries")
+}
+
+model Division {
+  id        String   @id @default(uuid())
+  countryId String
+  name      String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  country   Country    @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  districts District[]
+
+  @@unique([countryId, name])
+  @@map("divisions")
+}
+
+model District {
+  id         String   @id @default(uuid())
+  divisionId String
+  name       String
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relationships
+  division Division @relation(fields: [divisionId], references: [id], onDelete: Cascade)
+  thanas   Thana[]
+
+  @@unique([divisionId, name])
+  @@map("districts")
+}
+
+model Thana {
+  id         String   @id @default(uuid())
+  districtId String
+  name       String
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relationships
+  district  District  @relation(fields: [districtId], references: [id], onDelete: Cascade)
+  addresses Address[]
+
+  @@unique([districtId, name])
+  @@map("thanas")
+}
+
+model Address {
+  id         String   @id @default(uuid())
+  userId     String?
+  thanaId    String
+  street     String
+  postalCode String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relationships
+  thana  Thana   @relation(fields: [thanaId], references: [id])
+  User   User?   @relation(fields: [userId], references: [id])
+  orders Order[]
+
+  @@map("addresses")
+}

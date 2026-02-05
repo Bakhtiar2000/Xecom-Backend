@@ -61,23 +61,45 @@ export class LibService {
   public async uploadToCloudinary({
     fileName,
     path,
+    timeout = 60000, // 60 seconds default timeout
   }: {
     fileName: string;
     path: string;
+    timeout?: number;
   }): Promise<UploadApiResponse> {
     const resourceType = this.getResourceType(path);
+
     return new Promise((resolve, reject) => {
+      // Set timeout to prevent hanging requests
+      const timeoutId = setTimeout(() => {
+        this.logger.error(`Cloudinary upload timeout after ${timeout}ms`);
+
+        // Clean up local file even on timeout
+        fs.unlink(path, (err) => {
+          if (err) this.logger.error(`Error deleting local file: ${err}`);
+          else this.logger.log('Local file deleted after timeout.');
+        });
+
+        reject(new Error(`Upload timeout after ${timeout}ms`));
+      }, timeout);
+
       cloudinary.uploader.upload(
         path,
-        { public_id: fileName, resource_type: resourceType },
+        {
+          public_id: fileName,
+          resource_type: resourceType,
+          timeout: timeout,
+        },
         (error, result) => {
+          clearTimeout(timeoutId); // Clear timeout on completion
+
           fs.unlink(path, (err) => {
             if (err) this.logger.error(`Error deleting local file: ${err}`);
             else this.logger.log('Local file deleted successfully.');
           });
 
           if (error) {
-            this.logger.error("Cloudinary Upload Error -> ", error);
+            this.logger.error('Cloudinary Upload Error -> ', error);
             return reject(error as UploadApiErrorResponse);
           }
           resolve(result as UploadApiResponse);

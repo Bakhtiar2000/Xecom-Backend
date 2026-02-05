@@ -1,13 +1,13 @@
 type TOptions = {
   page?: number;
-  limit?: number;
+  take?: number;
   sortOrder?: string;
   sortBy?: string;
 };
 
 type TOptionsResult = {
   page: number;
-  limit: number;
+  take: number;
   skip: number;
   sortBy: string;
   sortOrder: string;
@@ -15,14 +15,14 @@ type TOptionsResult = {
 
 const calculatePagination = (options: TOptions): TOptionsResult => {
   const page: number = Number(options.page) || 1;
-  const limit: number = Number(options.limit) || 10;
-  const skip: number = Number((page - 1) * limit);
+  const take: number = Number(options.take) || 10;
+  const skip: number = Number((page - 1) * take);
   const sortBy: string = options.sortBy || "createdAt";
   const sortOrder: string = options.sortOrder || "desc";
 
   return {
     page,
-    limit,
+    take,
     skip,
     sortBy,
     sortOrder,

@@ -13,6 +13,12 @@ import { CountryModule } from './main/country/country.module';
 import { DivisionModule } from './main/division/division.module';
 import { DistrictModule } from './main/district/district.module';
 import { ThanaModule } from './main/thana/thana.module';
+import { CategoryModule } from './main/category/category.module';
+import { BrandModule } from './main/brand/brand.module';
+import { ProductModule } from './main/product/product.module';
+import { ProductRelationModule } from './main/product-relation/product-relation.module';
+import { AttributeModule } from './main/attribute/attribute.module';
+import { ProductVariantModule } from './main/product-variant/product-variant.module';
 
 @Module({
   imports: [
@@ -30,8 +36,14 @@ import { ThanaModule } from './main/thana/thana.module';
     DivisionModule,
     DistrictModule,
     ThanaModule,
+    CategoryModule,
+    BrandModule,
+    ProductModule,
+    ProductRelationModule,
+    AttributeModule,
+    ProductVariantModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

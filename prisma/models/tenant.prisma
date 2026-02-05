@@ -1,0 +1,61 @@
+// ========================================
+// TENANT MANAGEMENT (SaaS Ready)
+// ========================================
+
+model Tenant {
+  id           String       @id @default(uuid())
+  name         String
+  slug         String       @unique
+  domain       String?      @unique
+  subdomain    String?      @unique
+  plan         TenantPlan   @default(FREE)
+  status       TenantStatus @default(ACTIVE)
+  maxUsers     Int          @default(5)
+  maxProducts  Int          @default(100)
+  maxOrders    Int          @default(1000)
+  features     Json         @default("{}")
+  config       Json         @default("{}")
+  billingEmail String?
+  contactEmail String
+  phoneNumber  String?
+  address      String?
+  logoUrl      String?
+  brandColors  Json?
+  customDomain String?
+  sslEnabled   Boolean      @default(false)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  expiresAt    DateTime?
+
+  // Relationships
+  users         User[]
+  products      Product[]
+  categories    Category[]
+  brands        Brand[]
+  orders        Order[]
+  coupons       Coupon[]
+  subscriptions Subscription[]
+  settings      Setting[]
+
+  @@map("tenants")
+}
+
+model Subscription {
+  id                   String             @id @default(uuid())
+  tenantId             String
+  plan                 TenantPlan
+  status               SubscriptionStatus
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  cancelAtPeriodEnd    Boolean            @default(false)
+  stripeSubscriptionId String?            @unique
+  stripeCustomerId     String?
+  pricePerMonth        Decimal?
+  trialEndsAt          DateTime?
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
+}

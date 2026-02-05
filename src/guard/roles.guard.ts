@@ -6,7 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { UserRole } from '@prisma/client';
+import { UserRole } from 'src/generated/prisma';
 import { Request } from 'express';
 import { ROLES_KEY } from 'src/decorator/roles.decorator';
 

@@ -1,18 +1,28 @@
-import { Controller, Get, Post, Body, Patch, Param, UseGuards, Res, Req, HttpStatus, UploadedFile } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  UseGuards,
+  Res,
+  Req,
+  HttpStatus,
+  UploadedFile,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { ChangeUserStatusDto } from './user.dto';
 import sendResponse from 'src/utils/sendResponse';
 import { AuthGuard } from 'src/guard/auth.guard';
 import type { Request, Response } from 'express';
 import { RoleGuardWith } from 'src/utils/RoleGuardWith';
-import { UserRole } from '@prisma/client';
+import { UserRole } from 'src/generated/prisma';
 import { IdDto } from 'src/common/id.dto';
 
 @Controller('user')
 export class UserController {
-  constructor(
-    private readonly userService: UserService,
-  ) { }
+  constructor(private readonly userService: UserService) {}
 
   // Get me
   @Get('me')

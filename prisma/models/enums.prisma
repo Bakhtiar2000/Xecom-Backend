@@ -1,0 +1,184 @@
+// ========================================
+// ALL ENUMS DEFINITIONS
+// ========================================
+
+// Tenant Enums
+enum TenantPlan {
+  FREE
+  STARTER
+  PROFESSIONAL
+  ENTERPRISE
+}
+
+enum TenantStatus {
+  ACTIVE
+  SUSPENDED
+  CANCELLED
+  TRIAL
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELLED
+  UNPAID
+  TRIALING
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+// User Enums
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  STAFF
+  CUSTOMER
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  BLOCKED
+}
+
+enum CustomerType {
+  REGULAR
+  PREMIUM
+  VIP
+  BUSINESS
+  WHOLESALE
+}
+
+// Product Enums
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+  DRAFT
+  OUT_OF_STOCK
+  DISCONTINUED
+}
+
+enum ProductRelationType {
+  RELATED
+  CROSS_SELL
+  UP_SELL
+}
+
+// Order Enums
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  RETURNED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  CANCELLED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  DEBIT_CARD
+  PAYPAL
+  STRIPE
+  BANK_TRANSFER
+  CASH_ON_DELIVERY
+  WALLET
+  CRYPTOCURRENCY
+}
+
+enum ShipmentStatus {
+  PENDING
+  PREPARING
+  SHIPPED
+  IN_TRANSIT
+  OUT_FOR_DELIVERY
+  DELIVERED
+  FAILED
+  RETURNED
+}
+
+enum ReturnStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  PROCESSING
+  COMPLETED
+  CANCELLED
+}
+
+enum ItemCondition {
+  NEW
+  USED
+  DAMAGED
+  DEFECTIVE
+}
+
+// Inventory Enums
+enum InventoryReason {
+  SALE
+  RESTOCK
+  RETURN
+  CORRECTION
+  MANUAL
+  ADJUSTMENT
+  DAMAGE
+  EXPIRED
+}
+
+// Coupon Enums
+enum CouponType {
+  PERCENTAGE
+  FIXED_AMOUNT
+  FREE_SHIPPING
+  BUY_X_GET_Y
+}
+
+// Notification Enums
+enum NotificationType {
+  ORDER_CONFIRMATION
+  ORDER_SHIPPED
+  ORDER_DELIVERED
+  PAYMENT_SUCCESS
+  PAYMENT_FAILED
+  STOCK_ALERT
+  PROMOTION
+  SYSTEM
+  ACCOUNT
+}
+
+// Audit Enums
+enum AuditAction {
+  CREATE
+  READ
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+  PURCHASE
+  REFUND
+}
+
+// Setting Enums
+enum SettingType {
+  STRING
+  NUMBER
+  BOOLEAN
+  JSON
+  EMAIL
+  URL
+}

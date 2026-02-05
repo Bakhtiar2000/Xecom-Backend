@@ -1,26 +1,21 @@
-import { Gender } from '@prisma/client';
-import {
-    IsString,
-    IsEmail,
-    IsOptional,
-    IsEnum,
-} from 'class-validator';
+import { Gender } from 'src/generated/prisma';
+import { IsString, IsEmail, IsOptional, IsEnum } from 'class-validator';
 
 export class CreateCustomerDto {
-    @IsString()
-    name: string;
+  @IsString()
+  name: string;
 
-    @IsEmail()
-    email: string;
+  @IsEmail()
+  email: string;
 
-    @IsString()
-    password: string;
+  @IsString()
+  password: string;
 
-    @IsOptional()
-    @IsString()
-    phoneNumber: string;
+  @IsOptional()
+  @IsString()
+  phoneNumber: string;
 
-    @IsOptional()
-    @IsEnum(Gender)
-    gender: Gender;
+  @IsOptional()
+  @IsEnum(Gender)
+  gender: Gender;
 }

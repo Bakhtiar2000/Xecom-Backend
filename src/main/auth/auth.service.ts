@@ -2,17 +2,19 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { UserStatus } from '@prisma/client';
+import { UserStatus } from 'src/generated/prisma';
 import { ChangePasswordDto } from './auth.dto';
 import { MailerService } from 'src/utils/sendMail';
 import { TUser } from 'src/interface/token.type';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { AuthRepository } from './auth.repository';
+import { LibService } from 'src/lib/lib.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private prisma: PrismaService,
+    private authRepository: AuthRepository,
     private jwtService: JwtService,
+    private lib: LibService,
     private configService: ConfigService,
     private mailerService: MailerService,
   ) { }
@@ -20,13 +22,14 @@ export class AuthService {
   // Login
   public async loginUser(data: { email: string; password: string }) {
     const { email, password } = data;
-    const user = await this.prisma.user.findUnique({
-      where: { email, status: UserStatus.ACTIVE, },
-    });
+    const user = await this.authRepository.findActiveUserByEmail(email);
 
     if (!user) throw new HttpException('User not found', 401);
 
-    const isCorrectPassword = await bcrypt.compare(password, user.password);
+    const isCorrectPassword = await this.lib.comparePassword({
+      password,
+      hashedPassword: user.password,
+    });
     console.log(password, user.password);
     if (!isCorrectPassword) throw new HttpException('Invalid credentials', 401);
 
@@ -58,9 +61,7 @@ export class AuthService {
     }
 
     // Check if the user exists
-    const user = await this.prisma.user.findUnique({
-      where: { id: decoded.id },
-    });
+    const user = await this.authRepository.findUserById(decoded.id);
 
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
@@ -85,41 +86,33 @@ export class AuthService {
 
   // ----------------------------------------------Change Password-------------------------------------------------
   public async changePassword(user: TUser, payload: ChangePasswordDto) {
-    const userData = await this.prisma.user.findUniqueOrThrow({
-      where: {
-        email: user?.email,
-        status: UserStatus.ACTIVE,
-      },
-    });
-
-    const isCorrectPassword = await bcrypt.compare(
-      payload.password,
-      userData.password as string,
+    const userData = await this.authRepository.findActiveUserByEmailOrThrow(
+      user?.email,
     );
+
+    const isCorrectPassword = await this.lib.comparePassword({
+      password: payload.password,
+      hashedPassword: userData.password as string,
+    });
 
     if (!isCorrectPassword) {
       throw new HttpException('Password is incorrect', HttpStatus.BAD_REQUEST);
     }
 
-    const hashedPassword: string = await bcrypt.hash(payload.newPassword, 12);
+    const hashedPassword: string = await this.lib.hashPassword({
+      password: payload.newPassword,
+    });
 
     // Update operation
-    await this.prisma.user.update({
-      where: {
-        email: userData?.email,
-      },
-      data: {
-        password: hashedPassword,
-      },
+    await this.authRepository.updateUserByEmail(userData?.email, {
+      password: hashedPassword,
     });
     return null;
   }
 
   // ---------------------------------------------------Forgot Password-------------------------------------------------
   async forgotPassword(email: string) {
-    const user = await this.prisma.user.findUnique({
-      where: { email, status: UserStatus.ACTIVE },
-    });
+    const user = await this.authRepository.findActiveUserByEmail(email);
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
 
     const payload = { email: user.email, role: user.role, id: user.id };
@@ -141,8 +134,8 @@ export class AuthService {
               </a>
           </p>
       </div>`,
-      "Reset Password Link 🔗",
-      "Click on the link to reset your password. Link expires in 10 minutes."
+      'Reset Password Link 🔗',
+      'Click on the link to reset your password. Link expires in 10 minutes.',
     );
     return null;
   }
@@ -155,9 +148,7 @@ export class AuthService {
     });
 
     // 2. Fetch user
-    const user = await this.prisma.user.findUnique({
-      where: { id: decoded.id },
-    });
+    const user = await this.authRepository.findUserById(decoded.id);
 
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     if (user.status === UserStatus.BLOCKED) {
@@ -165,18 +156,14 @@ export class AuthService {
     }
 
     // 3. Hash new password
-    const newHashedPassword = await bcrypt.hash(
-      payload.newPassword,
-      Number(this.configService.get('BCRYPT_SALT_ROUNDS') || 10),
-    );
+    const newHashedPassword = await this.lib.hashPassword({
+      password: payload.newPassword,
+    });
 
     // 4. Update user
-    await this.prisma.user.update({
-      where: { id: user.id },
-      data: {
-        password: newHashedPassword,
-        updatedAt: new Date(),
-      },
+    await this.authRepository.updateUser(user.id, {
+      password: newHashedPassword,
+      updatedAt: new Date(),
     });
 
     return null;
