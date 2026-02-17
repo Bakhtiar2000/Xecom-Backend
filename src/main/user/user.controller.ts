@@ -81,7 +81,7 @@ export class UserController {
 
   // Get users metadata
   @Get('metadata')
-  @UseGuards(AuthGuard, RoleGuardWith([UserRole.SUPER_ADMIN]))
+  @UseGuards(AuthGuard, RoleGuardWith([UserRole.ADMIN, UserRole.SUPER_ADMIN]))
   async getUsersMetadata(@Res() res: Response) {
     const result = await this.userService.getUsersMetadata();
     sendResponse(res, {
@@ -91,6 +91,7 @@ export class UserController {
       data: result,
     });
   }
+
   // Change User Status
   @Patch('change-status/:id')
   @UseGuards(AuthGuard, RoleGuardWith([UserRole.ADMIN, UserRole.SUPER_ADMIN]))

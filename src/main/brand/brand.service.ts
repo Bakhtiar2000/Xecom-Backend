@@ -5,18 +5,39 @@ import calculatePagination from 'src/utils/calculatePagination';
 
 @Injectable()
 export class BrandService {
-  constructor(private readonly brandRepository: BrandRepository) {}
+  constructor(private readonly brandRepository: BrandRepository) { }
 
   // ------------------------------- Get All Brands -------------------------------
-  public async getAllBrands(pageNumber: number, pageSize: number) {
+  public async getAllBrands(
+    pageNumber: number,
+    pageSize: number,
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc',
+    fields?: string,
+    isActive?: string,
+    searchTerm?: string,
+  ) {
     const { skip, take } = calculatePagination({
       page: pageNumber,
       take: pageSize,
     });
 
+    // Parse fields string into array
+    const selectedFields = fields
+      ? fields.split(',').map((field) => field.trim())
+      : undefined;
+
     const [brands, total] = await Promise.all([
-      this.brandRepository.findAll(skip, take),
-      this.brandRepository.count(),
+      this.brandRepository.findAll(
+        skip,
+        take,
+        sortBy,
+        sortOrder,
+        selectedFields,
+        isActive,
+        searchTerm,
+      ),
+      this.brandRepository.count(isActive, searchTerm),
     ]);
 
     return {
@@ -118,5 +139,21 @@ export class BrandService {
     const deletedBrand = await this.brandRepository.softDelete(id);
 
     return deletedBrand;
+  }
+
+  // ------------------------------- Get Brands Metadata -------------------------------
+  public async getBrandsMetadata() {
+    const [totalBrands, totalActiveBrands, totalInactiveBrands] =
+      await Promise.all([
+        this.brandRepository.countTotal(),
+        this.brandRepository.countByIsActive(true),
+        this.brandRepository.countByIsActive(false),
+      ]);
+
+    return {
+      totalBrands,
+      totalActiveBrands,
+      totalInactiveBrands,
+    };
   }
 }

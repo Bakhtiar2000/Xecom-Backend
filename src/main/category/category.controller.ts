@@ -30,25 +30,51 @@ export class CategoryController {
   constructor(
     private readonly categoryService: CategoryService,
     private readonly lib: LibService,
-  ) {}
+  ) { }
 
   // Get all categories
   @Get()
   async getAllCategories(
     @Query('pageNumber') pageNumber: string,
     @Query('pageSize') pageSize: string,
+    @Query('sortBy') sortBy: string,
+    @Query('sortOrder') sortOrder: string,
+    @Query('fields') fields: string,
+    @Query('isActive') isActive: string,
+    @Query('searchTerm') searchTerm: string,
     @Res() res: Response,
   ) {
     const page = parseInt(pageNumber) || 1;
     const size = parseInt(pageSize) || 20;
 
-    const result = await this.categoryService.getAllCategories(page, size);
+    const result = await this.categoryService.getAllCategories(
+      page,
+      size,
+      sortBy,
+      sortOrder as 'asc' | 'desc',
+      fields,
+      isActive,
+      searchTerm,
+    );
     sendResponse(res, {
       statusCode: HttpStatus.OK,
       success: true,
       message: 'Categories fetched successfully',
       meta: result.meta,
       data: result.data,
+    });
+  }
+
+  // Get categories metadata
+  @Get('metadata')
+  @UseGuards(AuthGuard, RoleGuardWith([UserRole.ADMIN, UserRole.SUPER_ADMIN]))
+  async getCategoriesMetadata(@Res() res: Response) {
+    const result = await this.categoryService.getCategoriesMetadata();
+    sendResponse(res, {
+      statusCode: HttpStatus.OK,
+      success: true,
+      message: 'Categories metadata fetched successfully',
+      data: result,
     });
   }
 

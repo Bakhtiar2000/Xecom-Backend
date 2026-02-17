@@ -5,18 +5,39 @@ import calculatePagination from 'src/utils/calculatePagination';
 
 @Injectable()
 export class CategoryService {
-  constructor(private readonly categoryRepository: CategoryRepository) {}
+  constructor(private readonly categoryRepository: CategoryRepository) { }
 
   // ------------------------------- Get All Categories -------------------------------
-  public async getAllCategories(pageNumber: number, pageSize: number) {
+  public async getAllCategories(
+    pageNumber: number,
+    pageSize: number,
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc',
+    fields?: string,
+    isActive?: string,
+    searchTerm?: string,
+  ) {
     const { skip, take } = calculatePagination({
       page: pageNumber,
       take: pageSize,
     });
 
+    // Parse fields string into array
+    const selectedFields = fields
+      ? fields.split(',').map((field) => field.trim())
+      : undefined;
+
     const [categories, total] = await Promise.all([
-      this.categoryRepository.findAll(skip, take),
-      this.categoryRepository.count(),
+      this.categoryRepository.findAll(
+        skip,
+        take,
+        sortBy,
+        sortOrder,
+        selectedFields,
+        isActive,
+        searchTerm,
+      ),
+      this.categoryRepository.count(isActive, searchTerm),
     ]);
 
     return {
@@ -165,5 +186,21 @@ export class CategoryService {
     const deletedCategory = await this.categoryRepository.softDelete(id);
 
     return deletedCategory;
+  }
+
+  // ------------------------------- Get Categories Metadata -------------------------------
+  public async getCategoriesMetadata() {
+    const [totalCategories, totalActiveCategories, totalInactiveCategories] =
+      await Promise.all([
+        this.categoryRepository.countTotal(),
+        this.categoryRepository.countByIsActive(true),
+        this.categoryRepository.countByIsActive(false),
+      ]);
+
+    return {
+      totalCategories,
+      totalActiveCategories,
+      totalInactiveCategories,
+    };
   }
 }

@@ -4,27 +4,81 @@ import { Prisma, ProductStatus } from 'src/generated/prisma';
 
 @Injectable()
 export class BrandRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
-  async findAll(skip: number, take: number) {
-    return this.prisma.brand.findMany({
+  async findAll(
+    skip: number,
+    take: number,
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc',
+    fields?: string[],
+    isActive?: string,
+    searchTerm?: string,
+  ) {
+    // Build where clause
+    const where: Prisma.BrandWhereInput = {};
+
+    if (isActive !== undefined && isActive !== '') {
+      where.isActive = isActive === 'true';
+    } else {
+      where.isActive = true;
+    }
+
+    if (searchTerm) {
+      where.name = { contains: searchTerm, mode: 'insensitive' };
+    }
+
+    // Build orderBy object
+    const orderBy: Prisma.BrandOrderByWithRelationInput = sortBy
+      ? ({ [sortBy]: sortOrder || 'asc' } as Prisma.BrandOrderByWithRelationInput)
+      : { name: 'asc' as Prisma.SortOrder };
+
+    // Build select object if fields are specified
+    const select = fields && fields.length > 0
+      ? (fields.reduce((acc, field) => ({ ...acc, [field]: true }), {}) as Prisma.BrandSelect)
+      : undefined;
+
+    // If select is used, we need to handle includes differently
+    const query: any = {
+      where,
       skip,
       take,
-      where: { isActive: true },
-      include: {
+      orderBy,
+    };
+
+    if (select) {
+      query.select = {
+        ...select,
+        _count: { select: { products: true } },
+      };
+    } else {
+      query.include = {
         products: {
           where: { status: ProductStatus.ACTIVE },
           take: 5,
         },
-      },
-      orderBy: {
-        name: 'asc',
-      },
-    });
+        _count: { select: { products: true } },
+      };
+    }
+
+    return this.prisma.brand.findMany(query);
   }
 
-  async count() {
-    return this.prisma.brand.count({ where: { isActive: true } });
+  async count(isActive?: string, searchTerm?: string) {
+    // Build where clause (same as findAll)
+    const where: Prisma.BrandWhereInput = {};
+
+    if (isActive !== undefined && isActive !== '') {
+      where.isActive = isActive === 'true';
+    } else {
+      where.isActive = true;
+    }
+
+    if (searchTerm) {
+      where.name = { contains: searchTerm, mode: 'insensitive' };
+    }
+
+    return this.prisma.brand.count({ where });
   }
 
   async findById(id: string) {
@@ -41,6 +95,7 @@ export class BrandRepository {
           where: { status: ProductStatus.ACTIVE },
           take: 20,
         },
+        _count: { select: { products: true } },
       },
     });
   }
@@ -83,6 +138,17 @@ export class BrandRepository {
     return this.prisma.brand.update({
       where: { id },
       data: { isActive: false },
+    });
+  }
+
+  // Metadata operations
+  async countTotal() {
+    return this.prisma.brand.count();
+  }
+
+  async countByIsActive(isActive: boolean) {
+    return this.prisma.brand.count({
+      where: { isActive },
     });
   }
 }
