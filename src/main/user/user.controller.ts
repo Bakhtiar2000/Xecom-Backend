@@ -5,6 +5,7 @@ import {
   Body,
   Patch,
   Param,
+  Query,
   UseGuards,
   Res,
   Req,
@@ -17,12 +18,13 @@ import sendResponse from 'src/utils/sendResponse';
 import { AuthGuard } from 'src/guard/auth.guard';
 import type { Request, Response } from 'express';
 import { RoleGuardWith } from 'src/utils/RoleGuardWith';
-import { UserRole } from 'src/generated/prisma';
+import { UserRole, UserStatus } from 'src/generated/prisma';
 import { IdDto } from 'src/common/id.dto';
+import { Gender } from '@prisma/client';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   // Get me
   @Get('me')
@@ -40,12 +42,52 @@ export class UserController {
   // Get all users
   @Get()
   @UseGuards(AuthGuard, RoleGuardWith([UserRole.SUPER_ADMIN]))
-  async getAllUsers(@Res() res: Response) {
-    const result = await this.userService.getAllUsers();
+  async getAllUsers(
+    @Query('pageNumber') pageNumber: string,
+    @Query('pageSize') pageSize: string,
+    @Query('sortBy') sortBy: string,
+    @Query('sortOrder') sortOrder: string,
+    @Query('fields') fields: string,
+    @Query('gender') gender: string,
+    @Query('role') role: string,
+    @Query('emailVerified') emailVerified: string,
+    @Query('status') status: string,
+    @Query('searchTerm') searchTerm: string,
+    @Res() res: Response,
+  ) {
+    const page = parseInt(pageNumber) || 1;
+    const size = parseInt(pageSize) || 20;
+
+    const result = await this.userService.getAllUsers(
+      page,
+      size,
+      sortBy,
+      sortOrder as 'asc' | 'desc',
+      fields,
+      gender,
+      role,
+      emailVerified,
+      status,
+      searchTerm,
+    );
     sendResponse(res, {
       statusCode: HttpStatus.OK,
       success: true,
       message: 'All Users fetched Successfully',
+      meta: result.meta,
+      data: result.data,
+    });
+  }
+
+  // Get users metadata
+  @Get('metadata')
+  @UseGuards(AuthGuard, RoleGuardWith([UserRole.SUPER_ADMIN]))
+  async getUsersMetadata(@Res() res: Response) {
+    const result = await this.userService.getUsersMetadata();
+    sendResponse(res, {
+      statusCode: HttpStatus.OK,
+      success: true,
+      message: 'Users metadata fetched successfully',
       data: result,
     });
   }

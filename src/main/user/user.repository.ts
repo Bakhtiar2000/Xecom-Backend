@@ -1,13 +1,104 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Prisma, UserStatus } from 'src/generated/prisma';
+import { Prisma, UserStatus, UserRole, Gender } from 'src/generated/prisma';
 
 @Injectable()
 export class UserRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
-  async findAll() {
-    return this.prisma.user.findMany();
+  async findAll(
+    skip: number,
+    take: number,
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc',
+    fields?: string[],
+    gender?: string,
+    role?: string,
+    emailVerified?: string,
+    status?: string,
+    searchTerm?: string,
+  ) {
+    // Build where clause
+    const where: Prisma.UserWhereInput = {};
+
+    if (gender) {
+      where.gender = gender as Gender;
+    }
+
+    if (role) {
+      where.role = role as UserRole;
+    }
+
+    if (emailVerified !== undefined && emailVerified !== '') {
+      where.emailVerified = emailVerified === 'true';
+    }
+
+    if (status) {
+      where.status = status as UserStatus;
+    }
+
+    if (searchTerm) {
+      where.OR = [
+        { name: { contains: searchTerm, mode: 'insensitive' } },
+        { email: { contains: searchTerm, mode: 'insensitive' } },
+        { phoneNumber: { contains: searchTerm, mode: 'insensitive' } },
+      ];
+    }
+
+    // Build orderBy object
+    const orderBy: Prisma.UserOrderByWithRelationInput = sortBy
+      ? ({ [sortBy]: sortOrder || 'asc' } as Prisma.UserOrderByWithRelationInput)
+      : { createdAt: 'desc' as Prisma.SortOrder };
+
+    // Build select object if fields are specified
+    const select = fields && fields.length > 0
+      ? (fields.reduce((acc, field) => ({ ...acc, [field]: true }), {}) as Prisma.UserSelect)
+      : undefined;
+
+    return this.prisma.user.findMany({
+      where,
+      skip,
+      take,
+      orderBy,
+      ...(select && { select }),
+    });
+  }
+
+  async count(
+    gender?: string,
+    role?: string,
+    emailVerified?: string,
+    status?: string,
+    searchTerm?: string,
+  ) {
+    // Build where clause (same as findAll)
+    const where: Prisma.UserWhereInput = {};
+
+    if (gender) {
+      where.gender = gender as Gender;
+    }
+
+    if (role) {
+      where.role = role as UserRole;
+    }
+
+    if (emailVerified !== undefined && emailVerified !== '') {
+      where.emailVerified = emailVerified === 'true';
+    }
+
+    if (status) {
+      where.status = status as UserStatus;
+    }
+
+    if (searchTerm) {
+      where.OR = [
+        { name: { contains: searchTerm, mode: 'insensitive' } },
+        { email: { contains: searchTerm, mode: 'insensitive' } },
+        { phoneNumber: { contains: searchTerm, mode: 'insensitive' } },
+      ];
+    }
+
+    return this.prisma.user.count({ where });
   }
 
   async findById(id: string) {
@@ -33,6 +124,29 @@ export class UserRepository {
     return this.prisma.user.update({
       where: { id },
       data: { status },
+    });
+  }
+
+  // Metadata operations
+  async countTotal() {
+    return this.prisma.user.count();
+  }
+
+  async countByStatus(status: UserStatus) {
+    return this.prisma.user.count({
+      where: { status },
+    });
+  }
+
+  async countByStatusNot(status: UserStatus) {
+    return this.prisma.user.count({
+      where: { status: { not: status } },
+    });
+  }
+
+  async countVerified() {
+    return this.prisma.user.count({
+      where: { emailVerified: true },
     });
   }
 

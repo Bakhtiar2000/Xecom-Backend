@@ -60,7 +60,7 @@ model Product {
   featured         Boolean       @default(false)
   weight           Decimal?
   dimensions       Json? // {length, width, height, unit}
-  tags             String[]
+  tags             String[] // Might be better as a separate table for complex queries. To be thought later.
   seoTitle         String?
   seoDescription   String?
   metaKeywords     String[]
@@ -88,8 +88,8 @@ model Product {
   wishlists   Wishlist[]
   orderItems  OrderItem[]
   bundleItems BundleItem[]
-  relations   ProductRelation[] @relation("ProductRelations")
-  relatedFrom ProductRelation[] @relation("RelatedProducts")
+  relations   ProductRelation[] @relation("ProductRelations") // Products this product is related to (e.g. accessories, similar products)
+  relatedFrom ProductRelation[] @relation("RelatedProducts") // Products that are related to this product
 
   @@unique([tenantId, slug])
   @@map("products")

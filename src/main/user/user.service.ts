@@ -8,10 +8,11 @@ import {
   UserRole,
   UserStatus,
 } from 'src/generated/prisma';
+import calculatePagination from 'src/utils/calculatePagination';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly userRepository: UserRepository) { }
 
   // ------------------------------- Get Me -------------------------------
   public async getMe(user: TUser) {
@@ -19,14 +20,15 @@ export class UserService {
     if (
       user.role !== UserRole.ADMIN &&
       user.role !== UserRole.CUSTOMER &&
-      user.role !== UserRole.STAFF
+      user.role !== UserRole.STAFF &&
+      user.role !== UserRole.SUPER_ADMIN
     ) {
       throw new HttpException(
         'Invalid User role provided',
         HttpStatus.BAD_REQUEST,
       );
     }
-    if (user.role == UserRole.ADMIN) {
+    if (user.role == UserRole.ADMIN || user.role == UserRole.SUPER_ADMIN) {
       result = await this.userRepository.findAdminByUserId(user.id);
     } else if (user.role == UserRole.CUSTOMER) {
       result = await this.userRepository.findCustomerByUserId(user.id);
@@ -37,9 +39,53 @@ export class UserService {
   }
 
   // ------------------------------- Get All Users -------------------------------
-  public async getAllUsers() {
-    const result = await this.userRepository.findAll();
-    return result;
+  public async getAllUsers(
+    pageNumber: number,
+    pageSize: number,
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc',
+    fields?: string,
+    gender?: string,
+    role?: string,
+    emailVerified?: string,
+    status?: string,
+    searchTerm?: string,
+  ) {
+    const { skip, take } = calculatePagination({
+      page: pageNumber,
+      take: pageSize,
+    });
+
+    // Parse fields string into array
+    const selectedFields = fields
+      ? fields.split(',').map((field) => field.trim())
+      : undefined;
+
+    const [users, total] = await Promise.all([
+      this.userRepository.findAll(
+        skip,
+        take,
+        sortBy,
+        sortOrder,
+        selectedFields,
+        gender,
+        role,
+        emailVerified,
+        status,
+        searchTerm,
+      ),
+      this.userRepository.count(gender, role, emailVerified, status, searchTerm),
+    ]);
+
+    return {
+      data: users,
+      meta: {
+        pageNumber,
+        pageSize,
+        totalPages: Math.ceil(total / pageSize),
+        totalCount: total,
+      },
+    };
   }
 
   // ------------------------------- Change User Status -------------------------------
@@ -49,6 +95,24 @@ export class UserService {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     const updatedUser = await this.userRepository.updateStatus(id, status);
     return updatedUser;
+  }
+
+  // ------------------------------- Get Users Metadata -------------------------------
+  public async getUsersMetadata() {
+    const [totalUsers, totalActiveUsers, totalInactiveUsers, totalVerifiedAccounts] =
+      await Promise.all([
+        this.userRepository.countTotal(),
+        this.userRepository.countByStatus(UserStatus.ACTIVE),
+        this.userRepository.countByStatusNot(UserStatus.ACTIVE),
+        this.userRepository.countVerified(),
+      ]);
+
+    return {
+      totalUsers,
+      totalActiveUsers,
+      totalInactiveUsers,
+      totalVerifiedAccounts,
+    };
   }
 
   /*
