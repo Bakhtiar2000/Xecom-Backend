@@ -18,9 +18,8 @@ import sendResponse from 'src/utils/sendResponse';
 import { AuthGuard } from 'src/guard/auth.guard';
 import type { Request, Response } from 'express';
 import { RoleGuardWith } from 'src/utils/RoleGuardWith';
-import { UserRole, UserStatus } from 'src/generated/prisma';
+import { UserRole } from 'src/generated/prisma';
 import { IdDto } from 'src/common/id.dto';
-import { Gender } from '@prisma/client';
 
 @Controller('user')
 export class UserController {
