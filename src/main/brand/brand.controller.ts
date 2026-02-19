@@ -162,6 +162,13 @@ export class BrandController {
     // Parse text and transform to DTO instance
     const parsed = JSON.parse(text);
 
+    if (!parsed.id) {
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        success: false,
+        statusCode: HttpStatus.BAD_REQUEST,
+        message: 'ID is required in request body',
+      });
+    }
     // Validate that ID in body matches ID in URL if provided
     if (parsed.id && parsed.id !== params.id) {
       return res.status(HttpStatus.BAD_REQUEST).json({

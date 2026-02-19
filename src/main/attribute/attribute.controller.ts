@@ -28,7 +28,7 @@ import { IdDto } from 'src/common/id.dto';
 
 @Controller('attribute')
 export class AttributeController {
-  constructor(private readonly attributeService: AttributeService) {}
+  constructor(private readonly attributeService: AttributeService) { }
 
   // Get all attributes
   @Get()
@@ -127,6 +127,14 @@ export class AttributeController {
     @Body() body: any,
     @Res() res: Response,
   ) {
+
+    if (!body.id) {
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        success: false,
+        statusCode: HttpStatus.BAD_REQUEST,
+        message: 'ID is required in request body',
+      });
+    }
     // Validate that ID in body matches ID in URL if provided
     if (body.id && body.id !== params.id) {
       return res.status(HttpStatus.BAD_REQUEST).json({
@@ -172,6 +180,13 @@ export class AttributeController {
     @Body() body: any,
     @Res() res: Response,
   ) {
+    if (!body.id) {
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        success: false,
+        statusCode: HttpStatus.BAD_REQUEST,
+        message: 'ID is required in request body',
+      });
+    }
     // Validate that ID in body matches ID in URL if provided
     if (body.id && body.id !== params.id) {
       return res.status(HttpStatus.BAD_REQUEST).json({

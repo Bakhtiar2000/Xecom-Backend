@@ -10,7 +10,6 @@ import {
   Res,
   Req,
   HttpStatus,
-  UploadedFile,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ChangeUserStatusDto } from './user.dto';
