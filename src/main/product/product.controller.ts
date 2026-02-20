@@ -27,7 +27,6 @@ import { CreateProductDto, UpdateProductDto } from './product.dto';
 import { RoleGuardWith } from 'src/utils/RoleGuardWith';
 import { UserRole } from 'src/generated/prisma';
 import { IdDto } from 'src/common/id.dto';
-import { ProductFilters } from './product.repository';
 
 @Controller('product')
 export class ProductController {
@@ -40,10 +39,15 @@ export class ProductController {
   @Get()
   async getAllProducts(
     @Query('pageNumber') pageNumber: string,
-    @Query('pageSize') pageSizeParam: string,
+    @Query('pageSize') pageSize: string,
+    @Query('sortBy') sortBy: string,
+    @Query('sortOrder') sortOrder: string,
+    @Query('fields') fields: string,
+    @Query('isActive') isActive: string,
+    @Query('searchTerm') searchTerm: string,
     @Query('brandId') brandId: string,
     @Query('categoryId') categoryId: string,
-    @Query('searchParam') searchParam: string,
+    @Query('tag') tag: string,
     @Query('ratingCount') ratingCount: string,
     @Query('reviewCount') reviewCount: string,
     @Query('color') color: string,
@@ -53,23 +57,25 @@ export class ProductController {
     @Res() res: Response,
   ) {
     const page = parseInt(pageNumber) || 1;
-    const pageSize = parseInt(pageSizeParam) || 20;
-
-    const filters: ProductFilters = {};
-    if (brandId) filters.brandId = brandId;
-    if (categoryId) filters.categoryId = categoryId;
-    if (searchParam) filters.searchParam = searchParam;
-    if (ratingCount) filters.ratingCount = parseInt(ratingCount);
-    if (reviewCount) filters.reviewCount = parseInt(reviewCount);
-    if (color) filters.color = color;
-    if (sizeParam) filters.size = sizeParam;
-    if (priceStarts) filters.priceStarts = parseFloat(priceStarts);
-    if (priceEnds) filters.priceEnds = parseFloat(priceEnds);
+    const size = parseInt(pageSize) || 20;
 
     const result = await this.productService.getAllProducts(
       page,
-      pageSize,
-      filters,
+      size,
+      sortBy,
+      sortOrder as 'asc' | 'desc',
+      fields,
+      isActive,
+      searchTerm,
+      brandId,
+      categoryId,
+      tag,
+      ratingCount ? parseInt(ratingCount) : undefined,
+      reviewCount ? parseInt(reviewCount) : undefined,
+      color,
+      sizeParam,
+      priceStarts ? parseFloat(priceStarts) : undefined,
+      priceEnds ? parseFloat(priceEnds) : undefined,
     );
     sendResponse(res, {
       statusCode: HttpStatus.OK,

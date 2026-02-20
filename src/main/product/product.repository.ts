@@ -2,59 +2,74 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma, ProductStatus } from 'src/generated/prisma';
 
-export interface ProductFilters {
-  brandId?: string;
-  categoryId?: string;
-  searchParam?: string;
-  ratingCount?: number;
-  reviewCount?: number;
-  color?: string;
-  size?: string;
-  priceStarts?: number;
-  priceEnds?: number;
-}
-
 @Injectable()
 export class ProductRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
-  async findAll(skip: number, take: number, filters?: ProductFilters) {
-    const where: Prisma.ProductWhereInput = {
-      status: ProductStatus.ACTIVE,
-    };
+  async findAll(
+    skip: number,
+    take: number,
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc',
+    fields?: string[],
+    isActive?: string,
+    searchTerm?: string,
+    brandId?: string,
+    categoryId?: string,
+    tag?: string,
+    ratingCount?: number,
+    reviewCount?: number,
+    color?: string,
+    size?: string,
+    priceStarts?: number,
+    priceEnds?: number,
+  ) {
+    // Build where clause
+    const where: Prisma.ProductWhereInput = {};
 
-    if (filters?.brandId) {
-      where.brandId = filters.brandId;
+    // Handle isActive filter
+    if (isActive !== undefined && isActive !== '') {
+      where.status = isActive === 'true' ? ProductStatus.ACTIVE : { not: ProductStatus.ACTIVE };
+    } else {
+      where.status = ProductStatus.ACTIVE;
     }
 
-    if (filters?.categoryId) {
-      where.categoryId = filters.categoryId;
+    if (brandId) {
+      where.brandId = brandId;
     }
 
-    if (filters?.searchParam) {
+    if (categoryId) {
+      where.categoryId = categoryId;
+    }
+
+    if (searchTerm) {
       where.OR = [
-        { name: { contains: filters.searchParam, mode: 'insensitive' } },
+        { name: { contains: searchTerm, mode: 'insensitive' } },
         {
           shortDescription: {
-            contains: filters.searchParam,
+            contains: searchTerm,
             mode: 'insensitive',
           },
         },
-        { tags: { has: filters.searchParam } },
+        { tags: { has: searchTerm } },
       ];
     }
 
-    if (filters?.ratingCount) {
-      where.avgRating = { gte: filters.ratingCount };
+    if (tag) {
+      where.tags = { has: tag };
     }
 
-    if (filters?.reviewCount) {
-      where.reviewCount = { gte: filters.reviewCount };
+    if (ratingCount) {
+      where.avgRating = { gte: ratingCount };
+    }
+
+    if (reviewCount) {
+      where.reviewCount = { gte: reviewCount };
     }
 
     // For color and size filters, we need to join with variants
     const variantFilters: any = {};
-    if (filters?.color || filters?.size) {
+    if (color || size) {
       variantFilters.some = {
         attributes: {
           some: {
@@ -63,19 +78,19 @@ export class ProductRepository {
         },
       };
 
-      if (filters?.color) {
+      if (color) {
         variantFilters.some.attributes.some.OR.push({
           attributeValue: {
-            value: filters.color,
+            value: color,
             attribute: { name: 'Color' },
           },
         });
       }
 
-      if (filters?.size) {
+      if (size) {
         variantFilters.some.attributes.some.OR.push({
           attributeValue: {
-            value: filters.size,
+            value: size,
             attribute: { name: 'Size' },
           },
         });
@@ -87,13 +102,13 @@ export class ProductRepository {
     }
 
     // Price filter based on variants
-    if (filters?.priceStarts || filters?.priceEnds) {
+    if (priceStarts || priceEnds) {
       const priceFilter: any = {};
-      if (filters?.priceStarts) {
-        priceFilter.gte = filters.priceStarts;
+      if (priceStarts) {
+        priceFilter.gte = priceStarts;
       }
-      if (filters?.priceEnds) {
-        priceFilter.lte = filters.priceEnds;
+      if (priceEnds) {
+        priceFilter.lte = priceEnds;
       }
 
       where.variants = {
@@ -105,60 +120,88 @@ export class ProductRepository {
       };
     }
 
-    return this.prisma.product.findMany({
+    // Build orderBy object
+    const orderBy: Prisma.ProductOrderByWithRelationInput = sortBy
+      ? ({ [sortBy]: sortOrder || 'asc' } as Prisma.ProductOrderByWithRelationInput)
+      : { createdAt: 'desc' as Prisma.SortOrder };
+
+    // Build select object if fields are specified
+    const select = fields && fields.length > 0
+      ? (fields.reduce((acc, field) => ({ ...acc, [field]: true }), {}) as Prisma.ProductSelect)
+      : undefined;
+
+    // If select is used, we need to handle includes differently
+    const query: any = {
+      where,
       skip,
       take,
-      where,
-      include: {
-        brand: true,
-        category: true,
-        images: {
-          where: { isFeatured: true },
-          take: 1,
-        },
-        variants: {
-          take: 1,
-          orderBy: { isDefault: 'desc' },
-        },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
-  }
-
-  async count(filters?: ProductFilters) {
-    const where: Prisma.ProductWhereInput = {
-      status: ProductStatus.ACTIVE,
+      orderBy,
     };
 
-    if (filters?.brandId) {
-      where.brandId = filters.brandId;
+    if (select) {
+      query.select = {
+        ...select,
+        _count: { select: { images: true, variants: true } },
+      };
+    } else {
+      query.include = {
+        _count: { select: { images: true, variants: true } },
+      };
     }
 
-    if (filters?.categoryId) {
-      where.categoryId = filters.categoryId;
+    return this.prisma.product.findMany(query);
+  }
+
+  async count(
+    isActive?: string,
+    searchTerm?: string,
+    brandId?: string,
+    categoryId?: string,
+    tag?: string,
+    ratingCount?: number,
+    reviewCount?: number,
+  ) {
+    // Build where clause (same as findAll)
+    const where: Prisma.ProductWhereInput = {};
+
+    // Handle isActive filter
+    if (isActive !== undefined && isActive !== '') {
+      where.status = isActive === 'true' ? ProductStatus.ACTIVE : { not: ProductStatus.ACTIVE };
+    } else {
+      where.status = ProductStatus.ACTIVE;
     }
 
-    if (filters?.searchParam) {
+    if (brandId) {
+      where.brandId = brandId;
+    }
+
+    if (categoryId) {
+      where.categoryId = categoryId;
+    }
+
+    if (searchTerm) {
       where.OR = [
-        { name: { contains: filters.searchParam, mode: 'insensitive' } },
+        { name: { contains: searchTerm, mode: 'insensitive' } },
         {
           shortDescription: {
-            contains: filters.searchParam,
+            contains: searchTerm,
             mode: 'insensitive',
           },
         },
-        { tags: { has: filters.searchParam } },
+        { tags: { has: searchTerm } },
       ];
     }
 
-    if (filters?.ratingCount) {
-      where.avgRating = { gte: filters.ratingCount };
+    if (tag) {
+      where.tags = { has: tag };
     }
 
-    if (filters?.reviewCount) {
-      where.reviewCount = { gte: filters.reviewCount };
+    if (ratingCount) {
+      where.avgRating = { gte: ratingCount };
+    }
+
+    if (reviewCount) {
+      where.reviewCount = { gte: reviewCount };
     }
 
     return this.prisma.product.count({ where });

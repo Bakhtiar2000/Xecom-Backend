@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { ProductRepository, ProductFilters } from './product.repository';
+import { ProductRepository } from './product.repository';
 import { CreateProductDto, UpdateProductDto } from './product.dto';
 import calculatePagination from 'src/utils/calculatePagination';
 
@@ -11,16 +11,59 @@ export class ProductService {
   public async getAllProducts(
     pageNumber: number,
     pageSize: number,
-    filters?: ProductFilters,
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc',
+    fields?: string,
+    isActive?: string,
+    searchTerm?: string,
+    brandId?: string,
+    categoryId?: string,
+    tag?: string,
+    ratingCount?: number,
+    reviewCount?: number,
+    color?: string,
+    size?: string,
+    priceStarts?: number,
+    priceEnds?: number,
   ) {
     const { skip, take } = calculatePagination({
       page: pageNumber,
       take: pageSize,
     });
 
+    // Parse fields string into array
+    const selectedFields = fields
+      ? fields.split(',').map((field) => field.trim())
+      : undefined;
+
     const [products, total] = await Promise.all([
-      this.productRepository.findAll(skip, take, filters),
-      this.productRepository.count(filters),
+      this.productRepository.findAll(
+        skip,
+        take,
+        sortBy,
+        sortOrder,
+        selectedFields,
+        isActive,
+        searchTerm,
+        brandId,
+        categoryId,
+        tag,
+        ratingCount,
+        reviewCount,
+        color,
+        size,
+        priceStarts,
+        priceEnds,
+      ),
+      this.productRepository.count(
+        isActive,
+        searchTerm,
+        brandId,
+        categoryId,
+        tag,
+        ratingCount,
+        reviewCount,
+      ),
     ]);
 
     return {
