@@ -86,13 +86,13 @@ export class CategoryRepository {
   }
 
   async findByIdActive(id: string) {
-    return this.prisma.category.findUnique({
+    return this.prisma.category.findFirst({
       where: { id, isActive: true },
     });
   }
 
   async findByIdWithRelations(id: string) {
-    return this.prisma.category.findUnique({
+    return this.prisma.category.findFirst({
       where: { id, isActive: true },
       include: {
         parent: true,

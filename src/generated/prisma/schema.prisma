@@ -518,14 +518,12 @@ model Product {
   status           ProductStatus @default(DRAFT)
   featured         Boolean       @default(false)
   weight           Decimal?
-  dimensions       Json? // {length, width, height, unit}
-  tags             String[]
+  tags             String[] // Might be better as a separate table for complex queries. To be thought later.
   seoTitle         String?
   seoDescription   String?
   metaKeywords     String[]
   warranty         String?
   specifications   Json          @default("{}")
-  faqData          Json          @default("[]")
   videoUrl         String?
   manualUrl        String?
   minOrderQty      Int           @default(1)
@@ -543,12 +541,14 @@ model Product {
   category    Category?         @relation(fields: [categoryId], references: [id])
   images      ProductImage[]
   variants    ProductVariant[]
+  dimension   ProductDimension?
+  faqs        ProductFaq[]
   reviews     Review[]
   wishlists   Wishlist[]
   orderItems  OrderItem[]
   bundleItems BundleItem[]
-  relations   ProductRelation[] @relation("ProductRelations")
-  relatedFrom ProductRelation[] @relation("RelatedProducts")
+  relations   ProductRelation[] @relation("ProductRelations") // Products this product is related to (e.g. accessories, similar products)
+  relatedFrom ProductRelation[] @relation("RelatedProducts") // Products that are related to this product
 
   @@unique([tenantId, slug])
   @@map("products")
@@ -632,7 +632,36 @@ model ProductImage {
   imageUrl   String
   isFeatured Boolean  @default(false)
   createdAt  DateTime @default(now())
-  product    Product  @relation(fields: [productId], references: [id])
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("product_images")
+}
+
+model ProductDimension {
+  id        String   @id @default(uuid())
+  productId String   @unique
+  length    Decimal?
+  width     Decimal?
+  height    Decimal?
+  unit      String?  @default("cm") // cm, inch, m, etc.
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("product_dimensions")
+}
+
+model ProductFaq {
+  id        String   @id @default(uuid())
+  productId String
+  question  String
+  answer    String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("product_faqs")
 }
 
 model Review {

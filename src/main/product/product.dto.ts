@@ -8,8 +8,89 @@ import {
   IsNumber,
   IsArray,
   Min,
+  ValidateNested,
+  IsNotEmpty,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 import { ProductStatus } from 'src/generated/prisma';
+
+// ========================================
+// NESTED DTOs for Images and Variants
+// ========================================
+
+export class CreateProductImageDto {
+  @IsString()
+  @IsNotEmpty()
+  imageUrl: string;
+}
+
+export class CreateProductDimensionDto {
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  length?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  width?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  height?: number;
+
+  @IsOptional()
+  @IsString()
+  unit?: string; // cm, inch, m, etc.
+}
+
+export class CreateProductFaqDto {
+  @IsString()
+  @IsNotEmpty()
+  question: string;
+
+  @IsString()
+  @IsNotEmpty()
+  answer: string;
+
+  @IsOptional()
+  @IsNumber()
+  sortOrder?: number;
+}
+
+export class CreateProductVariantInProductDto {
+  @IsString()
+  @IsNotEmpty()
+  sku: string;
+
+  @IsNumber()
+  @Min(0)
+  price: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  cost?: number;
+
+  @IsNumber()
+  @Min(0)
+  stockQuantity: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  stockAlertThreshold?: number;
+
+  @IsOptional()
+  @IsBoolean()
+  isDefault?: boolean;
+
+  @IsOptional()
+  @IsArray()
+  @IsUUID('4', { each: true })
+  attributeValueIds?: string[];
+}
 
 export class CreateProductDto {
   @IsString()
@@ -49,7 +130,9 @@ export class CreateProductDto {
   weight?: number;
 
   @IsOptional()
-  dimensions?: any;
+  @ValidateNested()
+  @Type(() => CreateProductDimensionDto)
+  dimension?: CreateProductDimensionDto;
 
   @IsOptional()
   @IsArray()
@@ -75,7 +158,10 @@ export class CreateProductDto {
   specifications?: any; // JSON object
 
   @IsOptional()
-  faqData?: any; // array of {question: string, answer: string} 
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateProductFaqDto)
+  faqs?: CreateProductFaqDto[];
 
   @IsOptional()
   @IsString()
@@ -94,6 +180,19 @@ export class CreateProductDto {
   @IsNumber()
   @Min(1)
   maxOrderQty?: number;
+
+  // Images and Variants
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateProductImageDto)
+  images?: CreateProductImageDto[];
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateProductVariantInProductDto)
+  variants?: CreateProductVariantInProductDto[];
 }
 
 export class UpdateProductDto {
@@ -139,7 +238,9 @@ export class UpdateProductDto {
   weight?: number;
 
   @IsOptional()
-  dimensions?: any;
+  @ValidateNested()
+  @Type(() => CreateProductDimensionDto)
+  dimension?: CreateProductDimensionDto;
 
   @IsOptional()
   @IsArray()
@@ -165,7 +266,10 @@ export class UpdateProductDto {
   specifications?: any;
 
   @IsOptional()
-  faqData?: any;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateProductFaqDto)
+  faqs?: CreateProductFaqDto[];
 
   @IsOptional()
   @IsString()
@@ -184,4 +288,17 @@ export class UpdateProductDto {
   @IsNumber()
   @Min(1)
   maxOrderQty?: number;
+
+  // Images and Variants
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateProductImageDto)
+  images?: CreateProductImageDto[];
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateProductVariantInProductDto)
+  variants?: CreateProductVariantInProductDto[];
 }

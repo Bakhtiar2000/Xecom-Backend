@@ -93,7 +93,44 @@ export class ProductService {
 
   // ------------------------------- Add Product -------------------------------
   public async addProduct(createProductDto: CreateProductDto) {
-    const { slug } = createProductDto;
+    const { slug, images, variants, dimension, faqs } = createProductDto;
+
+    // Validate that at least one image is provided
+    if (!images || images.length === 0) {
+      throw new HttpException(
+        'At least one product image is required',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    // Validate that at least one variant is provided
+    if (!variants || variants.length === 0) {
+      throw new HttpException(
+        'At least one product variant is required',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    // Validate unique SKUs in variants
+    const skus = variants.map((v) => v.sku);
+    const uniqueSkus = new Set(skus);
+    if (skus.length !== uniqueSkus.size) {
+      throw new HttpException(
+        'Duplicate SKUs found in variants',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    // Check if SKUs already exist in database
+    for (const variant of variants) {
+      const existingSku = await this.productRepository.findBySku(variant.sku);
+      if (existingSku) {
+        throw new HttpException(
+          `SKU '${variant.sku}' already exists`,
+          HttpStatus.CONFLICT,
+        );
+      }
+    }
 
     // Check if slug already exists
     const existingProduct = await this.productRepository.findBySlug(slug);
@@ -119,32 +156,120 @@ export class ProductService {
       status: createProductDto.status || 'DRAFT',
       featured: createProductDto.featured || false,
       weight: createProductDto.weight,
-      dimensions: createProductDto.dimensions || {},
       tags: createProductDto.tags || [],
       seoTitle: createProductDto.seoTitle,
       seoDescription: createProductDto.seoDescription,
       metaKeywords: createProductDto.metaKeywords || [],
       warranty: createProductDto.warranty,
       specifications: createProductDto.specifications || {},
-      faqData: createProductDto.faqData || [],
       videoUrl: createProductDto.videoUrl,
       manualUrl: createProductDto.manualUrl,
       minOrderQty: createProductDto.minOrderQty || 1,
-      maxOrderQty: createProductDto.maxOrderQty
+      maxOrderQty: createProductDto.maxOrderQty,
+      images: {
+        create: images.map((img) => ({
+          imageUrl: img.imageUrl
+        })),
+      },
+      variants: {
+        create: variants.map((variant) => ({
+          sku: variant.sku,
+          price: variant.price,
+          cost: variant.cost,
+          stockQuantity: variant.stockQuantity,
+          stockAlertThreshold: variant.stockAlertThreshold || 5,
+          isDefault: variant.isDefault || false,
+        })),
+      },
+      dimension: dimension
+        ? {
+          create: {
+            length: dimension.length,
+            width: dimension.width,
+            height: dimension.height,
+            unit: dimension.unit || 'cm',
+          },
+        }
+        : undefined,
+      faqs: faqs && faqs.length > 0
+        ? {
+          create: faqs.map((faq, index) => ({
+            question: faq.question,
+            answer: faq.answer,
+            sortOrder: faq.sortOrder ?? index,
+          })),
+        }
+        : undefined,
     });
+
+    // Create variant attributes separately
+    if (product.variants && product.variants.length > 0) {
+      for (let i = 0; i < variants.length; i++) {
+        const variantData = variants[i];
+        if (variantData.attributeValueIds && variantData.attributeValueIds.length > 0) {
+          const variant = product.variants[i];
+          await this.productRepository.createVariantAttributes(
+            variant.id,
+            variantData.attributeValueIds,
+          );
+        }
+      }
+    }
 
     return product;
   }
 
   // ------------------------------- Update Product -------------------------------
   public async updateProduct(updateProductDto: UpdateProductDto) {
-    const { id, slug } = updateProductDto;
+    const { id, slug, images, variants, dimension, faqs } = updateProductDto;
 
     // Check if product exists
     const existingProduct = await this.productRepository.findById(id);
 
     if (!existingProduct) {
       throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
+    }
+
+    // If images are provided, validate at least one
+    if (images !== undefined && images.length === 0) {
+      throw new HttpException(
+        'At least one product image is required',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    // If variants are provided, validate at least one
+    if (variants !== undefined && variants.length === 0) {
+      throw new HttpException(
+        'At least one product variant is required',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    // Validate unique SKUs in variants if provided
+    if (variants && variants.length > 0) {
+      const skus = variants.map((v) => v.sku);
+      const uniqueSkus = new Set(skus);
+      if (skus.length !== uniqueSkus.size) {
+        throw new HttpException(
+          'Duplicate SKUs found in variants',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      // Check if SKUs already exist in database (excluding current product's variants)
+      for (const variant of variants) {
+        const existingSku = await this.productRepository.findBySkuExcludingProduct(
+          variant.sku,
+          id,
+        );
+        if (existingSku) {
+          throw new HttpException(
+            `SKU '${variant.sku}' already exists`,
+            HttpStatus.CONFLICT,
+          );
+        }
+      }
     }
 
     // If slug is being updated, check if it's already in use
@@ -176,19 +301,100 @@ export class ProductService {
       status: updateProductDto.status,
       featured: updateProductDto.featured,
       weight: updateProductDto.weight,
-      dimensions: updateProductDto.dimensions,
       tags: updateProductDto.tags,
       seoTitle: updateProductDto.seoTitle,
       seoDescription: updateProductDto.seoDescription,
       metaKeywords: updateProductDto.metaKeywords,
       warranty: updateProductDto.warranty,
       specifications: updateProductDto.specifications,
-      faqData: updateProductDto.faqData,
       videoUrl: updateProductDto.videoUrl,
       manualUrl: updateProductDto.manualUrl,
       minOrderQty: updateProductDto.minOrderQty,
-      maxOrderQty: updateProductDto.maxOrderQty
+      maxOrderQty: updateProductDto.maxOrderQty,
     });
+
+    // Handle dimension replacement if provided
+    if (dimension !== undefined) {
+      // Delete existing dimension
+      await this.productRepository.deleteProductDimension(id);
+      // Create new dimension if data is provided
+      if (dimension) {
+        await this.productRepository.createProductDimension(id, {
+          length: dimension.length,
+          width: dimension.width,
+          height: dimension.height,
+          unit: dimension.unit || 'cm',
+        });
+      }
+    }
+
+    // Handle FAQs replacement if provided
+    if (faqs !== undefined) {
+      // Delete existing FAQs
+      await this.productRepository.deleteProductFaqs(id);
+      // Create new FAQs if data is provided
+      if (faqs && faqs.length > 0) {
+        await this.productRepository.createProductFaqs(
+          id,
+          faqs.map((faq, index) => ({
+            question: faq.question,
+            answer: faq.answer,
+            sortOrder: faq.sortOrder ?? index,
+          })),
+        );
+      }
+    }
+
+    // Handle images replacement if provided
+    if (images && images.length > 0) {
+      // Delete existing images
+      await this.productRepository.deleteProductImages(id);
+      // Create new images
+      await this.productRepository.createProductImages(
+        id,
+        images.map((img) => ({
+          imageUrl: img.imageUrl,
+          isFeatured: false,
+        })),
+      );
+    }
+
+    // Handle variants replacement if provided
+    if (variants && variants.length > 0) {
+      // Get existing variants to delete their attributes first
+      const existingVariants = await this.productRepository.getProductVariants(id);
+
+      // Delete variant attributes and variants
+      for (const variant of existingVariants) {
+        await this.productRepository.deleteVariantAttributes(variant.id);
+      }
+      await this.productRepository.deleteProductVariants(id);
+
+      // Create new variants
+      const createdVariants = await this.productRepository.createProductVariants(
+        id,
+        variants.map((v) => ({
+          sku: v.sku,
+          price: v.price,
+          cost: v.cost,
+          stockQuantity: v.stockQuantity,
+          stockAlertThreshold: v.stockAlertThreshold || 5,
+          isDefault: v.isDefault || false,
+        })),
+      );
+
+      // Create variant attributes
+      for (let i = 0; i < variants.length; i++) {
+        const variantData = variants[i];
+        if (variantData.attributeValueIds && variantData.attributeValueIds.length > 0) {
+          const createdVariant = createdVariants[i];
+          await this.productRepository.createVariantAttributes(
+            createdVariant.id,
+            variantData.attributeValueIds,
+          );
+        }
+      }
+    }
 
     return product;
   }
@@ -206,5 +412,27 @@ export class ProductService {
     const deletedProduct = await this.productRepository.softDelete(id);
 
     return deletedProduct;
+  }
+
+  // ------------------------------- Get Products Metadata -------------------------------
+  public async getProductsMetadata() {
+    const [
+      totalProducts,
+      totalActiveProducts,
+      totalInactiveProducts,
+      totalSalesCount,
+    ] = await Promise.all([
+      this.productRepository.countTotal(),
+      this.productRepository.countByStatus('ACTIVE' as any),
+      this.productRepository.countByStatusNot('ACTIVE' as any),
+      this.productRepository.sumTotalSales(),
+    ]);
+
+    return {
+      totalProducts,
+      totalActiveProducts,
+      totalInactiveProducts,
+      totalSalesCount,
+    };
   }
 }

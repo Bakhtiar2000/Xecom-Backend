@@ -24,12 +24,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 7.3.0
- * Query Engine version: 9d6ad21cbbceab97458517b147a6a09ff43aa735
+ * Prisma Client JS version: 7.2.0
+ * Query Engine version: 0c8ef2ce45c83248ab3df073180d5eda9e8be7a3
  */
 Prisma.prismaVersion = {
-  client: "7.3.0",
-  engine: "9d6ad21cbbceab97458517b147a6a09ff43aa735"
+  client: "7.2.0",
+  engine: "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -347,14 +347,12 @@ exports.Prisma.ProductScalarFieldEnum = {
   status: 'status',
   featured: 'featured',
   weight: 'weight',
-  dimensions: 'dimensions',
   tags: 'tags',
   seoTitle: 'seoTitle',
   seoDescription: 'seoDescription',
   metaKeywords: 'metaKeywords',
   warranty: 'warranty',
   specifications: 'specifications',
-  faqData: 'faqData',
   videoUrl: 'videoUrl',
   manualUrl: 'manualUrl',
   minOrderQty: 'minOrderQty',
@@ -424,6 +422,27 @@ exports.Prisma.ProductImageScalarFieldEnum = {
   imageUrl: 'imageUrl',
   isFeatured: 'isFeatured',
   createdAt: 'createdAt'
+};
+
+exports.Prisma.ProductDimensionScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  length: 'length',
+  width: 'width',
+  height: 'height',
+  unit: 'unit',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ProductFaqScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  question: 'question',
+  answer: 'answer',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.ReviewScalarFieldEnum = {
@@ -825,6 +844,8 @@ exports.Prisma.ModelName = {
   ProductVariantAttribute: 'ProductVariantAttribute',
   ProductVariant: 'ProductVariant',
   ProductImage: 'ProductImage',
+  ProductDimension: 'ProductDimension',
+  ProductFaq: 'ProductFaq',
   Review: 'Review',
   Wishlist: 'Wishlist',
   Notification: 'Notification',

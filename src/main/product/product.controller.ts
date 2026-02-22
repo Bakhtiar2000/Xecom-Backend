@@ -86,6 +86,19 @@ export class ProductController {
     });
   }
 
+  // Get products metadata
+  @Get('metadata')
+  @UseGuards(AuthGuard, RoleGuardWith([UserRole.ADMIN, UserRole.SUPER_ADMIN]))
+  async getProductsMetadata(@Res() res: Response) {
+    const result = await this.productService.getProductsMetadata();
+    sendResponse(res, {
+      statusCode: HttpStatus.OK,
+      success: true,
+      message: 'Products metadata fetched successfully',
+      data: result,
+    });
+  }
+
   // Get single product
   @Get(':id')
   async getSingleProduct(@Param() params: IdDto, @Res() res: Response) {
@@ -104,6 +117,7 @@ export class ProductController {
   @UseInterceptors(
     FileFieldsInterceptor(
       [
+        { name: 'images', maxCount: 10 },
         { name: 'videoUrl', maxCount: 1 },
         { name: 'manualUrl', maxCount: 1 },
       ],
@@ -124,6 +138,7 @@ export class ProductController {
     @Body('text') text: string,
     @UploadedFiles()
     files: {
+      images?: Express.Multer.File[];
       videoUrl?: Express.Multer.File[];
       manualUrl?: Express.Multer.File[];
     },
@@ -132,6 +147,39 @@ export class ProductController {
     // Parse text and transform to DTO instance
     const parsed = JSON.parse(text);
     const createProductDto = plainToInstance(CreateProductDto, parsed);
+
+    // Handle product image uploads to Cloudinary
+    if (files?.images && files.images.length > 0) {
+      const uploadedImages: Array<{ imageUrl: string; isFeatured: boolean }> = [];
+      for (const imageFile of files.images) {
+        try {
+          const uploaded = await this.lib.uploadToCloudinary({
+            fileName: imageFile.filename,
+            path: imageFile.path,
+          });
+          if (uploaded?.secure_url) {
+            uploadedImages.push({
+              imageUrl: uploaded.secure_url,
+              isFeatured: false, // Can be set via JSON if needed
+            });
+          }
+        } catch (error) {
+          console.error('Image upload failed:', error);
+          return res.status(HttpStatus.REQUEST_TIMEOUT).json({
+            success: false,
+            statusCode: HttpStatus.REQUEST_TIMEOUT,
+            message:
+              'Image upload failed. Please try again with a smaller file or check your connection.',
+            error: error.message || 'Upload timeout',
+          });
+        }
+      }
+      // Merge with images from JSON body
+      createProductDto.images = [
+        ...(createProductDto.images || []),
+        ...uploadedImages,
+      ];
+    }
 
     // Handle video file upload to Cloudinary
     if (files?.videoUrl?.[0]) {
@@ -207,6 +255,7 @@ export class ProductController {
   @UseInterceptors(
     FileFieldsInterceptor(
       [
+        { name: 'images', maxCount: 10 },
         { name: 'videoUrl', maxCount: 1 },
         { name: 'manualUrl', maxCount: 1 },
       ],
@@ -228,6 +277,7 @@ export class ProductController {
     @Body('text') text: string,
     @UploadedFiles()
     files: {
+      images?: Express.Multer.File[];
       videoUrl?: Express.Multer.File[];
       manualUrl?: Express.Multer.File[];
     },
@@ -255,6 +305,39 @@ export class ProductController {
 
     parsed.id = params.id;
     const updateProductDto = plainToInstance(UpdateProductDto, parsed);
+
+    // Handle product image uploads to Cloudinary
+    if (files?.images && files.images.length > 0) {
+      const uploadedImages: Array<{ imageUrl: string; isFeatured: boolean }> = [];
+      for (const imageFile of files.images) {
+        try {
+          const uploaded = await this.lib.uploadToCloudinary({
+            fileName: imageFile.filename,
+            path: imageFile.path,
+          });
+          if (uploaded?.secure_url) {
+            uploadedImages.push({
+              imageUrl: uploaded.secure_url,
+              isFeatured: false,
+            });
+          }
+        } catch (error) {
+          console.error('Image upload failed:', error);
+          return res.status(HttpStatus.REQUEST_TIMEOUT).json({
+            success: false,
+            statusCode: HttpStatus.REQUEST_TIMEOUT,
+            message:
+              'Image upload failed. Please try again with a smaller file or check your connection.',
+            error: error.message || 'Upload timeout',
+          });
+        }
+      }
+      // Merge with images from JSON body
+      updateProductDto.images = [
+        ...(updateProductDto.images || []),
+        ...uploadedImages,
+      ];
+    }
 
     // Handle video file upload to Cloudinary
     if (files?.videoUrl?.[0]) {

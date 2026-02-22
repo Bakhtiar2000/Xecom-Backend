@@ -88,7 +88,7 @@ export class BrandRepository {
   }
 
   async findByIdActive(id: string) {
-    return this.prisma.brand.findUnique({
+    return this.prisma.brand.findFirst({
       where: { id, isActive: true },
       include: {
         products: {

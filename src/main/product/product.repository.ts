@@ -210,16 +210,66 @@ export class ProductRepository {
   async findById(id: string) {
     return this.prisma.product.findUnique({
       where: { id },
+      include: {
+        brand: true,
+        category: true,
+        images: true,
+        dimension: true,
+        faqs: {
+          orderBy: { sortOrder: 'asc' },
+        },
+        variants: {
+          include: {
+            attributes: {
+              include: {
+                attributeValue: {
+                  include: {
+                    attribute: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        reviews: {
+          where: { isApproved: true },
+          include: {
+            customer: true,
+          },
+          orderBy: { createdAt: 'desc' },
+        },
+        relations: {
+          include: {
+            relatedTo: {
+              include: {
+                images: {
+                  where: { isFeatured: true },
+                  take: 1,
+                },
+                variants: {
+                  take: 1,
+                  orderBy: { isDefault: 'desc' },
+                },
+              },
+            },
+          },
+          orderBy: [{ priority: 'desc' }, { createdAt: 'desc' }],
+        },
+      },
     });
   }
 
   async findByIdActive(id: string) {
-    return this.prisma.product.findUnique({
+    return this.prisma.product.findFirst({
       where: { id, status: ProductStatus.ACTIVE },
       include: {
         brand: true,
         category: true,
         images: true,
+        dimension: true,
+        faqs: {
+          orderBy: { sortOrder: 'asc' },
+        },
         variants: {
           include: {
             attributes: {
@@ -276,6 +326,12 @@ export class ProductRepository {
   async create(data: Prisma.ProductCreateInput) {
     return this.prisma.product.create({
       data,
+      include: {
+        images: true,
+        variants: true,
+        dimension: true,
+        faqs: true,
+      },
     });
   }
 
@@ -302,5 +358,207 @@ export class ProductRepository {
         },
       },
     });
+  }
+
+  // ========================================
+  // SKU VALIDATION METHODS
+  // ========================================
+
+  async findBySku(sku: string) {
+    return this.prisma.productVariant.findUnique({
+      where: { sku },
+    });
+  }
+
+  async findBySkuExcludingProduct(sku: string, excludeProductId: string) {
+    return this.prisma.productVariant.findFirst({
+      where: {
+        sku,
+        productId: { not: excludeProductId },
+      },
+    });
+  }
+
+  // ========================================
+  // PRODUCT IMAGE METHODS
+  // ========================================
+
+  async deleteProductImages(productId: string) {
+    return this.prisma.productImage.deleteMany({
+      where: { productId },
+    });
+  }
+
+  async createProductImages(
+    productId: string,
+    images: Array<{ imageUrl: string; isFeatured: boolean }>,
+  ) {
+    return this.prisma.productImage.createMany({
+      data: images.map((img) => ({
+        productId,
+        imageUrl: img.imageUrl,
+        isFeatured: img.isFeatured,
+      })),
+    });
+  }
+
+  // ========================================
+  // PRODUCT DIMENSION METHODS
+  // ========================================
+
+  async deleteProductDimension(productId: string) {
+    return this.prisma.productDimension.deleteMany({
+      where: { productId },
+    });
+  }
+
+  async createProductDimension(
+    productId: string,
+    dimension: {
+      length?: number;
+      width?: number;
+      height?: number;
+      unit?: string;
+    },
+  ) {
+    return this.prisma.productDimension.create({
+      data: {
+        productId,
+        length: dimension.length,
+        width: dimension.width,
+        height: dimension.height,
+        unit: dimension.unit || 'cm',
+      },
+    });
+  }
+
+  // ========================================
+  // PRODUCT FAQ METHODS
+  // ========================================
+
+  async deleteProductFaqs(productId: string) {
+    return this.prisma.productFaq.deleteMany({
+      where: { productId },
+    });
+  }
+
+  async createProductFaqs(
+    productId: string,
+    faqs: Array<{
+      question: string;
+      answer: string;
+      sortOrder: number;
+    }>,
+  ) {
+    return this.prisma.productFaq.createMany({
+      data: faqs.map((faq) => ({
+        productId,
+        question: faq.question,
+        answer: faq.answer,
+        sortOrder: faq.sortOrder,
+      })),
+    });
+  }
+
+  // ========================================
+  // PRODUCT VARIANT METHODS
+  // ========================================
+
+  async getProductVariants(productId: string) {
+    return this.prisma.productVariant.findMany({
+      where: { productId },
+    });
+  }
+
+  async deleteProductVariants(productId: string) {
+    return this.prisma.productVariant.deleteMany({
+      where: { productId },
+    });
+  }
+
+  async createProductVariants(
+    productId: string,
+    variants: Array<{
+      sku: string;
+      price: number;
+      cost?: number;
+      stockQuantity: number;
+      stockAlertThreshold: number;
+      isDefault: boolean;
+    }>,
+  ) {
+    const createdVariants: Array<{
+      id: string;
+      sku: string;
+      price: any;
+      cost: any;
+      stockQuantity: number;
+      stockAlertThreshold: number;
+      isDefault: boolean;
+      productId: string;
+      createdAt: Date;
+    }> = [];
+    for (const variant of variants) {
+      const created = await this.prisma.productVariant.create({
+        data: {
+          productId,
+          sku: variant.sku,
+          price: variant.price,
+          cost: variant.cost,
+          stockQuantity: variant.stockQuantity,
+          stockAlertThreshold: variant.stockAlertThreshold,
+          isDefault: variant.isDefault,
+        },
+      });
+      createdVariants.push(created);
+    }
+    return createdVariants;
+  }
+
+  async deleteVariantAttributes(variantId: string) {
+    return this.prisma.productVariantAttribute.deleteMany({
+      where: { variantId },
+    });
+  }
+
+  async createVariantAttributes(
+    variantId: string,
+    attributeValueIds: string[],
+  ) {
+    return this.prisma.productVariantAttribute.createMany({
+      data: attributeValueIds.map((attributeValueId) => ({
+        variantId,
+        attributeValueId,
+      })),
+    });
+  }
+
+  // ========================================
+  // METADATA OPERATIONS
+  // ========================================
+
+  async countTotal() {
+    return this.prisma.product.count();
+  }
+
+  async countByStatus(status: ProductStatus) {
+    return this.prisma.product.count({
+      where: { status },
+    });
+  }
+
+  async countByStatusNot(status: ProductStatus) {
+    return this.prisma.product.count({
+      where: { status: { not: status } },
+    });
+  }
+
+  async sumTotalSales() {
+    const result = await this.prisma.product.aggregate({
+      _sum: {
+        totalSales: true,
+      },
+    });
+    return result._sum.totalSales || 0;
   }
 }
