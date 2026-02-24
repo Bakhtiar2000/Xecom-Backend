@@ -2,10 +2,16 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ProductRepository } from './product.repository';
 import { CreateProductDto, UpdateProductDto } from './product.dto';
 import calculatePagination from 'src/utils/calculatePagination';
+import { BrandRepository } from '../brand/brand.repository';
+import { CategoryRepository } from '../category/category.repository';
 
 @Injectable()
 export class ProductService {
-  constructor(private readonly productRepository: ProductRepository) { }
+  constructor(
+    private readonly productRepository: ProductRepository,
+    private readonly brandRepository: BrandRepository,
+    private readonly categoryRepository: CategoryRepository,
+  ) { }
 
   // ------------------------------- Get All Products -------------------------------
   public async getAllProducts(
@@ -93,7 +99,31 @@ export class ProductService {
 
   // ------------------------------- Add Product -------------------------------
   public async addProduct(createProductDto: CreateProductDto) {
-    const { slug, images, variants, dimension, faqs } = createProductDto;
+    const { slug, images, variants, dimension, faqs, brandId, categoryId } = createProductDto;
+
+    console.log("Creating product with DTO:", createProductDto)
+
+    // Validate brand exists and is active
+    if (brandId) {
+      const brand = await this.brandRepository.findByIdActive(brandId);
+      if (!brand) {
+        throw new HttpException(
+          'Brand not found or inactive',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+    }
+
+    // Validate category exists and is active
+    if (categoryId) {
+      const category = await this.categoryRepository.findByIdActive(categoryId);
+      if (!category) {
+        throw new HttpException(
+          'Category not found or inactive',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+    }
 
     // Validate that at least one image is provided
     if (!images || images.length === 0) {
@@ -164,20 +194,21 @@ export class ProductService {
       specifications: createProductDto.specifications || {},
       videoUrl: createProductDto.videoUrl,
       manualUrl: createProductDto.manualUrl,
-      minOrderQty: createProductDto.minOrderQty || 1,
-      maxOrderQty: createProductDto.maxOrderQty,
+      minOrderQty: createProductDto.minOrderQty ? parseFloat(createProductDto.minOrderQty.toFixed(2)) : 1,
+      maxOrderQty: createProductDto.maxOrderQty ? parseFloat(createProductDto.maxOrderQty.toFixed(2)) : undefined,
       images: {
         create: images.map((img) => ({
-          imageUrl: img.imageUrl
+          imageUrl: img.imageUrl,
+          isFeatured: img.isFeatured || false,
         })),
       },
       variants: {
         create: variants.map((variant) => ({
           sku: variant.sku,
-          price: variant.price,
-          cost: variant.cost,
-          stockQuantity: variant.stockQuantity,
-          stockAlertThreshold: variant.stockAlertThreshold || 5,
+          price: parseFloat(variant.price.toFixed(2)),
+          cost: variant.cost ? parseFloat(variant.cost.toFixed(2)) : undefined,
+          stockQuantity: parseFloat(variant.stockQuantity.toFixed(2)),
+          stockAlertThreshold: variant.stockAlertThreshold ? parseFloat(variant.stockAlertThreshold.toFixed(2)) : 5,
           isDefault: variant.isDefault || false,
         })),
       },
@@ -221,13 +252,35 @@ export class ProductService {
 
   // ------------------------------- Update Product -------------------------------
   public async updateProduct(updateProductDto: UpdateProductDto) {
-    const { id, slug, images, variants, dimension, faqs } = updateProductDto;
+    const { id, slug, images, variants, dimension, faqs, brandId, categoryId } = updateProductDto;
 
     // Check if product exists
     const existingProduct = await this.productRepository.findById(id);
 
     if (!existingProduct) {
       throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
+    }
+
+    // Validate brand exists and is active if provided
+    if (brandId) {
+      const brand = await this.brandRepository.findByIdActive(brandId);
+      if (!brand) {
+        throw new HttpException(
+          'Brand not found or inactive',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+    }
+
+    // Validate category exists and is active if provided
+    if (categoryId) {
+      const category = await this.categoryRepository.findByIdActive(categoryId);
+      if (!category) {
+        throw new HttpException(
+          'Category not found or inactive',
+          HttpStatus.NOT_FOUND,
+        );
+      }
     }
 
     // If images are provided, validate at least one
@@ -354,7 +407,7 @@ export class ProductService {
         id,
         images.map((img) => ({
           imageUrl: img.imageUrl,
-          isFeatured: false,
+          isFeatured: img.isFeatured || false,
         })),
       );
     }

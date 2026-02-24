@@ -23,7 +23,7 @@ import sendResponse from 'src/utils/sendResponse';
 import type { Response } from 'express';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
-import { CreateProductDto, UpdateProductDto } from './product.dto';
+import { CreateProductDto, UpdateProductDto, CreateProductImageDto } from './product.dto';
 import { RoleGuardWith } from 'src/utils/RoleGuardWith';
 import { UserRole } from 'src/generated/prisma';
 import { IdDto } from 'src/common/id.dto';
@@ -151,7 +151,8 @@ export class ProductController {
     // Handle product image uploads to Cloudinary
     if (files?.images && files.images.length > 0) {
       const uploadedImages: Array<{ imageUrl: string; isFeatured: boolean }> = [];
-      for (const imageFile of files.images) {
+      for (let i = 0; i < files.images.length; i++) {
+        const imageFile = files.images[i];
         try {
           const uploaded = await this.lib.uploadToCloudinary({
             fileName: imageFile.filename,
@@ -160,7 +161,7 @@ export class ProductController {
           if (uploaded?.secure_url) {
             uploadedImages.push({
               imageUrl: uploaded.secure_url,
-              isFeatured: false, // Can be set via JSON if needed
+              isFeatured: i === 0, // First image is featured
             });
           }
         } catch (error) {
@@ -175,9 +176,13 @@ export class ProductController {
         }
       }
       // Merge with images from JSON body
+      // Transform plain objects to DTO instances
+      const transformedImages = uploadedImages.map(img =>
+        plainToInstance(CreateProductImageDto, img)
+      );
       createProductDto.images = [
         ...(createProductDto.images || []),
-        ...uploadedImages,
+        ...transformedImages,
       ];
     }
 
@@ -226,7 +231,9 @@ export class ProductController {
     }
 
     // Validate the DTO
+    console.log('Validating DTO:', createProductDto);
     const errors = await validate(createProductDto);
+    console.log('Validation errors:', errors);
     if (errors.length > 0) {
       return res.status(400).json({
         success: false,
@@ -309,7 +316,8 @@ export class ProductController {
     // Handle product image uploads to Cloudinary
     if (files?.images && files.images.length > 0) {
       const uploadedImages: Array<{ imageUrl: string; isFeatured: boolean }> = [];
-      for (const imageFile of files.images) {
+      for (let i = 0; i < files.images.length; i++) {
+        const imageFile = files.images[i];
         try {
           const uploaded = await this.lib.uploadToCloudinary({
             fileName: imageFile.filename,
@@ -318,7 +326,7 @@ export class ProductController {
           if (uploaded?.secure_url) {
             uploadedImages.push({
               imageUrl: uploaded.secure_url,
-              isFeatured: false,
+              isFeatured: i === 0, // First image is featured
             });
           }
         } catch (error) {
@@ -333,9 +341,13 @@ export class ProductController {
         }
       }
       // Merge with images from JSON body
+      // Transform plain objects to DTO instances
+      const transformedImages = uploadedImages.map(img =>
+        plainToInstance(CreateProductImageDto, img)
+      );
       updateProductDto.images = [
         ...(updateProductDto.images || []),
-        ...uploadedImages,
+        ...transformedImages,
       ];
     }
 

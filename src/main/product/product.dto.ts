@@ -22,6 +22,10 @@ export class CreateProductImageDto {
   @IsString()
   @IsNotEmpty()
   imageUrl: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isFeatured?: boolean;
 }
 
 export class CreateProductDimensionDto {

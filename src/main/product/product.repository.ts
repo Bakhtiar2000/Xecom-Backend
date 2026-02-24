@@ -82,7 +82,11 @@ export class ProductRepository {
         variantFilters.some.attributes.some.OR.push({
           attributeValue: {
             value: color,
-            attribute: { name: 'Color' },
+            attribute: {
+              name: {
+                in: ['Color', 'color', 'Colour', 'colour', 'COLOR', 'COLOUR']
+              }
+            },
           },
         });
       }
@@ -91,7 +95,11 @@ export class ProductRepository {
         variantFilters.some.attributes.some.OR.push({
           attributeValue: {
             value: size,
-            attribute: { name: 'Size' },
+            attribute: {
+              name: {
+                in: ['Size', 'size', 'SIZE']
+              }
+            },
           },
         });
       }
