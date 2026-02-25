@@ -1,10 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { DivisionRepository } from './division.repository';
 import { CreateDivisionDto } from './division.dto';
+import calculatePagination from 'src/utils/calculatePagination';
 
 @Injectable()
 export class DivisionService {
-  constructor(private readonly divisionRepository: DivisionRepository) {}
+  constructor(private readonly divisionRepository: DivisionRepository) { }
 
   // ------------------------------- Add Division -------------------------------
   public async addDivision(createDivisionDto: CreateDivisionDto) {
@@ -38,6 +39,43 @@ export class DivisionService {
     });
 
     return division;
+  }
+
+  // ------------------------------- Get All Divisions -------------------------------
+  public async getAllDivisions(
+    pageNumber: number,
+    pageSize: number,
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc',
+    searchTerm?: string,
+    countryId?: string,
+  ) {
+    const { skip, take } = calculatePagination({
+      page: pageNumber,
+      take: pageSize,
+    });
+
+    const [divisions, total] = await Promise.all([
+      this.divisionRepository.findAll(
+        skip,
+        take,
+        sortBy,
+        sortOrder,
+        searchTerm,
+        countryId,
+      ),
+      this.divisionRepository.count(searchTerm, countryId),
+    ]);
+
+    return {
+      data: divisions,
+      meta: {
+        pageNumber,
+        pageSize,
+        totalPages: Math.ceil(total / pageSize),
+        totalCount: total,
+      },
+    };
   }
 
   // ------------------------------- Get Single Division -------------------------------

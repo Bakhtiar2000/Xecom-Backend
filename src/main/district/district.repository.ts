@@ -4,7 +4,7 @@ import { Prisma } from 'src/generated/prisma';
 
 @Injectable()
 export class DistrictRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async findDivisionById(divisionId: string) {
     return this.prisma.division.findUnique({
@@ -21,16 +21,71 @@ export class DistrictRepository {
     });
   }
 
+  async findAll(
+    skip: number,
+    take: number,
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc',
+    searchTerm?: string,
+    countryId?: string,
+    divisionId?: string,
+  ) {
+    // Build where clause
+    const where: Prisma.DistrictWhereInput = { isActive: true };
+
+    if (divisionId) {
+      where.divisionId = divisionId;
+    }
+
+    if (countryId) {
+      where.division = {
+        countryId: countryId,
+      };
+    }
+
+    if (searchTerm) {
+      where.name = { contains: searchTerm, mode: 'insensitive' };
+    }
+
+    // Build orderBy object
+    const orderBy: Prisma.DistrictOrderByWithRelationInput = sortBy
+      ? ({ [sortBy]: sortOrder || 'asc' } as Prisma.DistrictOrderByWithRelationInput)
+      : { name: 'asc' as Prisma.SortOrder };
+
+    return this.prisma.district.findMany({
+      where,
+      skip,
+      take,
+      orderBy,
+      include: {
+        _count: { select: { thanas: true } },
+      },
+    });
+  }
+
+  async count(searchTerm?: string, countryId?: string, divisionId?: string) {
+    const where: Prisma.DistrictWhereInput = { isActive: true };
+
+    if (divisionId) {
+      where.divisionId = divisionId;
+    }
+
+    if (countryId) {
+      where.division = {
+        countryId: countryId,
+      };
+    }
+
+    if (searchTerm) {
+      where.name = { contains: searchTerm, mode: 'insensitive' };
+    }
+
+    return this.prisma.district.count({ where });
+  }
+
   async create(data: Prisma.DistrictCreateInput) {
     return this.prisma.district.create({
       data,
-      include: {
-        division: {
-          include: {
-            country: true,
-          },
-        },
-      },
     });
   }
 
@@ -53,6 +108,7 @@ export class DistrictRepository {
           where: { isActive: true },
           orderBy: { name: 'asc' },
         },
+        _count: { select: { thanas: true } },
       },
     });
   }

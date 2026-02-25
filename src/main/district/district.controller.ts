@@ -4,6 +4,7 @@ import {
   Post,
   Body,
   Param,
+  Query,
   Res,
   HttpStatus,
   UseGuards,
@@ -19,7 +20,7 @@ import { UserRole } from 'src/generated/prisma';
 
 @Controller('district')
 export class DistrictController {
-  constructor(private readonly districtService: DistrictService) {}
+  constructor(private readonly districtService: DistrictService) { }
 
   // Add District
   @Post()
@@ -34,6 +35,39 @@ export class DistrictController {
       success: true,
       message: 'District created successfully',
       data: result,
+    });
+  }
+
+  // Get All Districts
+  @Get()
+  async getAllDistricts(
+    @Query('pageNumber') pageNumber: string,
+    @Query('pageSize') pageSize: string,
+    @Query('sortBy') sortBy: string,
+    @Query('sortOrder') sortOrder: string,
+    @Query('searchTerm') searchTerm: string,
+    @Query('countryId') countryId: string,
+    @Query('divisionId') divisionId: string,
+    @Res() res: Response,
+  ) {
+    const page = parseInt(pageNumber) || 1;
+    const size = parseInt(pageSize) || 20;
+
+    const result = await this.districtService.getAllDistricts(
+      page,
+      size,
+      sortBy,
+      sortOrder as 'asc' | 'desc',
+      searchTerm,
+      countryId,
+      divisionId,
+    );
+    sendResponse(res, {
+      statusCode: HttpStatus.OK,
+      success: true,
+      message: 'Districts fetched successfully',
+      meta: result.meta,
+      data: result.data,
     });
   }
 

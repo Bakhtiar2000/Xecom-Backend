@@ -4,6 +4,7 @@ import {
   Post,
   Body,
   Param,
+  Query,
   Res,
   HttpStatus,
   UseGuards,
@@ -19,7 +20,7 @@ import { UserRole } from 'src/generated/prisma';
 
 @Controller('country')
 export class CountryController {
-  constructor(private readonly countryService: CountryService) {}
+  constructor(private readonly countryService: CountryService) { }
 
   // Add Country
   @Post()
@@ -39,13 +40,30 @@ export class CountryController {
 
   // Get All Countries
   @Get()
-  async getAllCountries(@Res() res: Response) {
-    const result = await this.countryService.getAllCountries();
+  async getAllCountries(
+    @Query('pageNumber') pageNumber: string,
+    @Query('pageSize') pageSize: string,
+    @Query('sortBy') sortBy: string,
+    @Query('sortOrder') sortOrder: string,
+    @Query('searchTerm') searchTerm: string,
+    @Res() res: Response,
+  ) {
+    const page = parseInt(pageNumber) || 1;
+    const size = parseInt(pageSize) || 20;
+
+    const result = await this.countryService.getAllCountries(
+      page,
+      size,
+      sortBy,
+      sortOrder as 'asc' | 'desc',
+      searchTerm,
+    );
     sendResponse(res, {
       statusCode: HttpStatus.OK,
       success: true,
       message: 'Countries fetched successfully',
-      data: result,
+      meta: result.meta,
+      data: result.data,
     });
   }
 

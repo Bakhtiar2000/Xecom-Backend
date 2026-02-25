@@ -4,7 +4,7 @@ import { Prisma } from 'src/generated/prisma';
 
 @Injectable()
 export class DivisionRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async findCountryById(countryId: string) {
     return this.prisma.country.findUnique({
@@ -19,6 +19,80 @@ export class DivisionRepository {
         countryId,
       },
     });
+  }
+
+  async findAll(
+    skip: number,
+    take: number,
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc',
+    searchTerm?: string,
+    countryId?: string,
+  ) {
+    // Build where clause
+    const where: Prisma.DivisionWhereInput = { isActive: true };
+
+    if (countryId) {
+      where.countryId = countryId;
+    }
+
+    if (searchTerm) {
+      where.name = { contains: searchTerm, mode: 'insensitive' };
+    }
+
+    // Build orderBy object
+    const orderBy: Prisma.DivisionOrderByWithRelationInput = sortBy
+      ? ({ [sortBy]: sortOrder || 'asc' } as Prisma.DivisionOrderByWithRelationInput)
+      : { name: 'asc' as Prisma.SortOrder };
+
+    const divisions = await this.prisma.division.findMany({
+      where,
+      skip,
+      take,
+      orderBy,
+      include: {
+        _count: { select: { districts: true } },
+      },
+    });
+
+    // Add nested counts for thanas
+    const divisionsWithCounts = await Promise.all(
+      divisions.map(async (division) => {
+        const thanaCount = await this.prisma.thana.count({
+          where: {
+            isActive: true,
+            district: {
+              isActive: true,
+              divisionId: division.id,
+            },
+          },
+        });
+
+        return {
+          ...division,
+          _count: {
+            ...division._count,
+            thanas: thanaCount,
+          },
+        };
+      }),
+    );
+
+    return divisionsWithCounts;
+  }
+
+  async count(searchTerm?: string, countryId?: string) {
+    const where: Prisma.DivisionWhereInput = { isActive: true };
+
+    if (countryId) {
+      where.countryId = countryId;
+    }
+
+    if (searchTerm) {
+      where.name = { contains: searchTerm, mode: 'insensitive' };
+    }
+
+    return this.prisma.division.count({ where });
   }
 
   async create(data: Prisma.DivisionCreateInput) {
@@ -37,7 +111,7 @@ export class DivisionRepository {
   }
 
   async findByIdWithRelations(id: string) {
-    return this.prisma.division.findUnique({
+    const division = await this.prisma.division.findUnique({
       where: { id, isActive: true },
       include: {
         country: true,
@@ -45,7 +119,31 @@ export class DivisionRepository {
           where: { isActive: true },
           orderBy: { name: 'asc' },
         },
+        _count: { select: { districts: true } },
       },
     });
+
+    if (!division) {
+      return null;
+    }
+
+    // Add nested count for thanas
+    const thanaCount = await this.prisma.thana.count({
+      where: {
+        isActive: true,
+        district: {
+          isActive: true,
+          divisionId: division.id,
+        },
+      },
+    });
+
+    return {
+      ...division,
+      _count: {
+        ...division._count,
+        thanas: thanaCount,
+      },
+    };
   }
 }

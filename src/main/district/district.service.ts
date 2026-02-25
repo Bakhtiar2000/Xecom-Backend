@@ -1,10 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { DistrictRepository } from './district.repository';
 import { CreateDistrictDto } from './district.dto';
+import calculatePagination from 'src/utils/calculatePagination';
 
 @Injectable()
 export class DistrictService {
-  constructor(private readonly districtRepository: DistrictRepository) {}
+  constructor(private readonly districtRepository: DistrictRepository) { }
 
   // ------------------------------- Add District -------------------------------
   public async addDistrict(createDistrictDto: CreateDistrictDto) {
@@ -36,6 +37,45 @@ export class DistrictService {
     });
 
     return district;
+  }
+
+  // ------------------------------- Get All Districts -------------------------------
+  public async getAllDistricts(
+    pageNumber: number,
+    pageSize: number,
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc',
+    searchTerm?: string,
+    countryId?: string,
+    divisionId?: string,
+  ) {
+    const { skip, take } = calculatePagination({
+      page: pageNumber,
+      take: pageSize,
+    });
+
+    const [districts, total] = await Promise.all([
+      this.districtRepository.findAll(
+        skip,
+        take,
+        sortBy,
+        sortOrder,
+        searchTerm,
+        countryId,
+        divisionId,
+      ),
+      this.districtRepository.count(searchTerm, countryId, divisionId),
+    ]);
+
+    return {
+      data: districts,
+      meta: {
+        pageNumber,
+        pageSize,
+        totalPages: Math.ceil(total / pageSize),
+        totalCount: total,
+      },
+    };
   }
 
   // ------------------------------- Get Single District -------------------------------

@@ -1,10 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CountryRepository } from './country.repository';
 import { CreateCountryDto } from './country.dto';
+import calculatePagination from 'src/utils/calculatePagination';
 
 @Injectable()
 export class CountryService {
-  constructor(private readonly countryRepository: CountryRepository) {}
+  constructor(private readonly countryRepository: CountryRepository) { }
 
   // ------------------------------- Add Country -------------------------------
   public async addCountry(createCountryDto: CreateCountryDto) {
@@ -32,10 +33,38 @@ export class CountryService {
   }
 
   // ------------------------------- Get All Countries -------------------------------
-  public async getAllCountries() {
-    const countries = await this.countryRepository.findAll();
+  public async getAllCountries(
+    pageNumber: number,
+    pageSize: number,
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc',
+    searchTerm?: string,
+  ) {
+    const { skip, take } = calculatePagination({
+      page: pageNumber,
+      take: pageSize,
+    });
 
-    return countries;
+    const [countries, total] = await Promise.all([
+      this.countryRepository.findAll(
+        skip,
+        take,
+        sortBy,
+        sortOrder,
+        searchTerm,
+      ),
+      this.countryRepository.count(searchTerm),
+    ]);
+
+    return {
+      data: countries,
+      meta: {
+        pageNumber,
+        pageSize,
+        totalPages: Math.ceil(total / pageSize),
+        totalCount: total,
+      },
+    };
   }
 
   // ------------------------------- Get Single Country -------------------------------

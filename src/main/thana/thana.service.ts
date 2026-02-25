@@ -1,10 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ThanaRepository } from './thana.repository';
 import { CreateThanaDto } from './thana.dto';
+import calculatePagination from 'src/utils/calculatePagination';
 
 @Injectable()
 export class ThanaService {
-  constructor(private readonly thanaRepository: ThanaRepository) {}
+  constructor(private readonly thanaRepository: ThanaRepository) { }
 
   // ------------------------------- Add Thana -------------------------------
   public async addThana(createThanaDto: CreateThanaDto) {
@@ -38,5 +39,46 @@ export class ThanaService {
     });
 
     return thana;
+  }
+
+  // ------------------------------- Get All Thanas -------------------------------
+  public async getAllThanas(
+    pageNumber: number,
+    pageSize: number,
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc',
+    searchTerm?: string,
+    countryId?: string,
+    divisionId?: string,
+    districtId?: string,
+  ) {
+    const { skip, take } = calculatePagination({
+      page: pageNumber,
+      take: pageSize,
+    });
+
+    const [thanas, total] = await Promise.all([
+      this.thanaRepository.findAll(
+        skip,
+        take,
+        sortBy,
+        sortOrder,
+        searchTerm,
+        countryId,
+        divisionId,
+        districtId,
+      ),
+      this.thanaRepository.count(searchTerm, countryId, divisionId, districtId),
+    ]);
+
+    return {
+      data: thanas,
+      meta: {
+        pageNumber,
+        pageSize,
+        totalPages: Math.ceil(total / pageSize),
+        totalCount: total,
+      },
+    };
   }
 }
