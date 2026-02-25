@@ -19,8 +19,7 @@ export class ProductRepository {
     tag?: string,
     ratingCount?: number,
     reviewCount?: number,
-    color?: string,
-    size?: string,
+    attributeValueIds?: string,
     priceStarts?: number,
     priceEnds?: number,
   ) {
@@ -67,45 +66,22 @@ export class ProductRepository {
       where.reviewCount = { gte: reviewCount };
     }
 
-    // For color and size filters, we need to join with variants
-    const variantFilters: any = {};
-    if (color || size) {
-      variantFilters.some = {
-        attributes: {
+    // Filter by attribute value IDs
+    if (attributeValueIds) {
+      console.log('Filtering by attribute value IDs:', attributeValueIds);
+      const attributeIdArray = attributeValueIds.split(',').map(id => id.trim()).filter(id => id);
+      if (attributeIdArray.length > 0) {
+        where.variants = {
           some: {
-            OR: [],
-          },
-        },
-      };
-
-      if (color) {
-        variantFilters.some.attributes.some.OR.push({
-          attributeValue: {
-            value: color,
-            attribute: {
-              name: {
-                in: ['Color', 'color', 'Colour', 'colour', 'COLOR', 'COLOUR']
-              }
+            attributes: {
+              some: {
+                attributeValueId: {
+                  in: attributeIdArray,
+                },
+              },
             },
           },
-        });
-      }
-
-      if (size) {
-        variantFilters.some.attributes.some.OR.push({
-          attributeValue: {
-            value: size,
-            attribute: {
-              name: {
-                in: ['Size', 'size', 'SIZE']
-              }
-            },
-          },
-        });
-      }
-
-      if (variantFilters.some.attributes.some.OR.length > 0) {
-        where.variants = variantFilters;
+        };
       }
     }
 
