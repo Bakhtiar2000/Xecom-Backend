@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Post,
+  Put,
   Body,
   Param,
   Query,
@@ -10,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { DistrictService } from './district.service';
-import { CreateDistrictDto } from './district.dto';
+import { CreateDistrictDto, UpdateDistrictDto } from './district.dto';
 import sendResponse from 'src/utils/sendResponse';
 import type { Response } from 'express';
 import { IdDto } from 'src/common/id.dto';
@@ -79,6 +80,24 @@ export class DistrictController {
       statusCode: HttpStatus.OK,
       success: true,
       message: 'District fetched successfully',
+      data: result,
+    });
+  }
+
+  // Update District
+  @Put(':id')
+  @UseGuards(AuthGuard, RoleGuardWith([UserRole.ADMIN, UserRole.SUPER_ADMIN]))
+  async updateDistrict(
+    @Param() param: IdDto,
+    @Body() updateDistrictDto: UpdateDistrictDto,
+    @Res() res: Response,
+  ) {
+    updateDistrictDto.id = param.id;
+    const result = await this.districtService.updateDistrict(updateDistrictDto);
+    sendResponse(res, {
+      statusCode: HttpStatus.OK,
+      success: true,
+      message: 'District updated successfully',
       data: result,
     });
   }

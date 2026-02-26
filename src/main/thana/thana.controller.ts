@@ -2,16 +2,19 @@ import {
   Controller,
   Get,
   Post,
+  Put,
   Body,
+  Param,
   Query,
   Res,
   HttpStatus,
   UseGuards,
 } from '@nestjs/common';
 import { ThanaService } from './thana.service';
-import { CreateThanaDto } from './thana.dto';
+import { CreateThanaDto, UpdateThanaDto } from './thana.dto';
 import sendResponse from 'src/utils/sendResponse';
 import type { Response } from 'express';
+import { IdDto } from 'src/common/id.dto';
 import { AuthGuard } from 'src/guard/auth.guard';
 import { RoleGuardWith } from 'src/utils/RoleGuardWith';
 import { UserRole } from 'src/generated/prisma';
@@ -65,6 +68,24 @@ export class ThanaController {
       message: 'Thanas fetched successfully',
       meta: result.meta,
       data: result.data,
+    });
+  }
+
+  // Update Thana
+  @Put(':id')
+  @UseGuards(AuthGuard, RoleGuardWith([UserRole.ADMIN, UserRole.SUPER_ADMIN]))
+  async updateThana(
+    @Param() param: IdDto,
+    @Body() updateThanaDto: UpdateThanaDto,
+    @Res() res: Response,
+  ) {
+    updateThanaDto.id = param.id;
+    const result = await this.thanaService.updateThana(updateThanaDto);
+    sendResponse(res, {
+      statusCode: HttpStatus.OK,
+      success: true,
+      message: 'Thana updated successfully',
+      data: result,
     });
   }
 }

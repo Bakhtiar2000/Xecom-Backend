@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Post,
+  Put,
   Body,
   Param,
   Query,
@@ -10,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { DivisionService } from './division.service';
-import { CreateDivisionDto } from './division.dto';
+import { CreateDivisionDto, UpdateDivisionDto } from './division.dto';
 import sendResponse from 'src/utils/sendResponse';
 import type { Response } from 'express';
 import { IdDto } from 'src/common/id.dto';
@@ -74,6 +75,24 @@ export class DivisionController {
       statusCode: HttpStatus.OK,
       success: true,
       message: 'Division fetched successfully',
+      data: result,
+    });
+  }
+
+  // Update Division
+  @Put(':id')
+  @UseGuards(AuthGuard, RoleGuardWith([UserRole.ADMIN, UserRole.SUPER_ADMIN]))
+  async updateDivision(
+    @Param() param: IdDto,
+    @Body() updateDivisionDto: UpdateDivisionDto,
+    @Res() res: Response,
+  ) {
+    updateDivisionDto.id = param.id;
+    const result = await this.divisionService.updateDivision(updateDivisionDto);
+    sendResponse(res, {
+      statusCode: HttpStatus.OK,
+      success: true,
+      message: 'Division updated successfully',
       data: result,
     });
   }

@@ -146,4 +146,14 @@ export class DivisionRepository {
       },
     };
   }
+
+  async update(id: string, data: Prisma.DivisionUpdateInput) {
+    return this.prisma.division.update({
+      where: { id },
+      data,
+      include: {
+        country: true,
+      },
+    });
+  }
 }

@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CountryRepository } from './country.repository';
-import { CreateCountryDto } from './country.dto';
+import { CreateCountryDto, UpdateCountryDto } from './country.dto';
 import calculatePagination from 'src/utils/calculatePagination';
 
 @Injectable()
@@ -74,6 +74,40 @@ export class CountryService {
     if (!country) {
       throw new HttpException('Country not found', HttpStatus.NOT_FOUND);
     }
+
+    return country;
+  }
+
+  // ------------------------------- Update Country -------------------------------
+  public async updateCountry(updateCountryDto: UpdateCountryDto) {
+    const { id, name, code } = updateCountryDto;
+
+    // Check if country exists
+    const existingCountry = await this.countryRepository.findById(id);
+
+    if (!existingCountry) {
+      throw new HttpException('Country not found', HttpStatus.NOT_FOUND);
+    }
+
+    // Check if name or code already exists (if being changed)
+    if (name || code) {
+      const duplicateCountry = await this.countryRepository.findByNameOrCode(
+        name || existingCountry.name,
+        code !== undefined ? code : existingCountry.code ?? undefined,
+      );
+
+      if (duplicateCountry && duplicateCountry.id !== id) {
+        throw new HttpException(
+          'Country with this name or code already exists',
+          HttpStatus.CONFLICT,
+        );
+      }
+    }
+
+    const country = await this.countryRepository.update(id, {
+      name,
+      code,
+    });
 
     return country;
   }

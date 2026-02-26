@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ThanaRepository } from './thana.repository';
-import { CreateThanaDto } from './thana.dto';
+import { CreateThanaDto, UpdateThanaDto } from './thana.dto';
 import calculatePagination from 'src/utils/calculatePagination';
 
 @Injectable()
@@ -80,5 +80,56 @@ export class ThanaService {
         totalCount: total,
       },
     };
+  }
+
+  // ------------------------------- Update Thana -------------------------------
+  public async updateThana(updateThanaDto: UpdateThanaDto) {
+    const { id, name, districtId } = updateThanaDto;
+
+    // Check if thana exists
+    const existingThana = await this.thanaRepository.findById(id);
+
+    if (!existingThana) {
+      throw new HttpException('Thana not found', HttpStatus.NOT_FOUND);
+    }
+
+    // Check if district exists (if being changed)
+    if (districtId) {
+      const district = await this.thanaRepository.findDistrictById(districtId);
+
+      if (!district) {
+        throw new HttpException('District not found', HttpStatus.NOT_FOUND);
+      }
+    }
+
+    // Check if thana name already exists in the district (if being changed)
+    if (name || districtId) {
+      const targetDistrictId = districtId || existingThana.districtId;
+      const targetName = name || existingThana.name;
+
+      const duplicateThana = await this.thanaRepository.findByNameAndDistrict(
+        targetName,
+        targetDistrictId,
+      );
+
+      if (duplicateThana && duplicateThana.id !== id) {
+        throw new HttpException(
+          'Thana with this name already exists in this district',
+          HttpStatus.CONFLICT,
+        );
+      }
+    }
+
+    const updateData: any = {};
+    if (name) updateData.name = name;
+    if (districtId) {
+      updateData.district = {
+        connect: { id: districtId },
+      };
+    }
+
+    const thana = await this.thanaRepository.update(id, updateData);
+
+    return thana;
   }
 }

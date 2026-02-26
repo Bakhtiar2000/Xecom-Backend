@@ -162,4 +162,11 @@ export class CountryRepository {
       },
     };
   }
+
+  async update(id: string, data: Prisma.CountryUpdateInput) {
+    return this.prisma.country.update({
+      where: { id },
+      data,
+    });
+  }
 }

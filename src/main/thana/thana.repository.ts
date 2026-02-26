@@ -128,4 +128,11 @@ export class ThanaRepository {
       },
     });
   }
+
+  async update(id: string, data: Prisma.ThanaUpdateInput) {
+    return this.prisma.thana.update({
+      where: { id },
+      data,
+    });
+  }
 }

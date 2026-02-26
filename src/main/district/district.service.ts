@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { DistrictRepository } from './district.repository';
-import { CreateDistrictDto } from './district.dto';
+import { CreateDistrictDto, UpdateDistrictDto } from './district.dto';
 import calculatePagination from 'src/utils/calculatePagination';
 
 @Injectable()
@@ -85,6 +85,58 @@ export class DistrictService {
     if (!district) {
       throw new HttpException('District not found', HttpStatus.NOT_FOUND);
     }
+
+    return district;
+  }
+
+  // ------------------------------- Update District -------------------------------
+  public async updateDistrict(updateDistrictDto: UpdateDistrictDto) {
+    const { id, name, divisionId } = updateDistrictDto;
+
+    // Check if district exists
+    const existingDistrict = await this.districtRepository.findById(id);
+
+    if (!existingDistrict) {
+      throw new HttpException('District not found', HttpStatus.NOT_FOUND);
+    }
+
+    // Check if division exists (if being changed)
+    if (divisionId) {
+      const division = await this.districtRepository.findDivisionById(divisionId);
+
+      if (!division) {
+        throw new HttpException('Division not found', HttpStatus.NOT_FOUND);
+      }
+    }
+
+    // Check if district name already exists in the division (if being changed)
+    if (name || divisionId) {
+      const targetDivisionId = divisionId || existingDistrict.divisionId;
+      const targetName = name || existingDistrict.name;
+
+      const duplicateDistrict =
+        await this.districtRepository.findByNameAndDivision(
+          targetName,
+          targetDivisionId,
+        );
+
+      if (duplicateDistrict && duplicateDistrict.id !== id) {
+        throw new HttpException(
+          'District with this name already exists in this division',
+          HttpStatus.CONFLICT,
+        );
+      }
+    }
+
+    const updateData: any = {};
+    if (name) updateData.name = name;
+    if (divisionId) {
+      updateData.division = {
+        connect: { id: divisionId },
+      };
+    }
+
+    const district = await this.districtRepository.update(id, updateData);
 
     return district;
   }

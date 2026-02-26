@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { DivisionRepository } from './division.repository';
-import { CreateDivisionDto } from './division.dto';
+import { CreateDivisionDto, UpdateDivisionDto } from './division.dto';
 import calculatePagination from 'src/utils/calculatePagination';
 
 @Injectable()
@@ -85,6 +85,58 @@ export class DivisionService {
     if (!division) {
       throw new HttpException('Division not found', HttpStatus.NOT_FOUND);
     }
+
+    return division;
+  }
+
+  // ------------------------------- Update Division -------------------------------
+  public async updateDivision(updateDivisionDto: UpdateDivisionDto) {
+    const { id, name, countryId } = updateDivisionDto;
+
+    // Check if division exists
+    const existingDivision = await this.divisionRepository.findById(id);
+
+    if (!existingDivision) {
+      throw new HttpException('Division not found', HttpStatus.NOT_FOUND);
+    }
+
+    // Check if country exists (if being changed)
+    if (countryId) {
+      const country = await this.divisionRepository.findCountryById(countryId);
+
+      if (!country) {
+        throw new HttpException('Country not found', HttpStatus.NOT_FOUND);
+      }
+    }
+
+    // Check if division name already exists in the country (if being changed)
+    if (name || countryId) {
+      const targetCountryId = countryId || existingDivision.countryId;
+      const targetName = name || existingDivision.name;
+
+      const duplicateDivision =
+        await this.divisionRepository.findByNameAndCountry(
+          targetName,
+          targetCountryId,
+        );
+
+      if (duplicateDivision && duplicateDivision.id !== id) {
+        throw new HttpException(
+          'Division with this name already exists in this country',
+          HttpStatus.CONFLICT,
+        );
+      }
+    }
+
+    const updateData: any = {};
+    if (name) updateData.name = name;
+    if (countryId) {
+      updateData.country = {
+        connect: { id: countryId },
+      };
+    }
+
+    const division = await this.divisionRepository.update(id, updateData);
 
     return division;
   }

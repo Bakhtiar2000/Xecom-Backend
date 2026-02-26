@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Post,
+  Put,
   Body,
   Param,
   Query,
@@ -10,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CountryService } from './country.service';
-import { CreateCountryDto } from './country.dto';
+import { CreateCountryDto, UpdateCountryDto } from './country.dto';
 import sendResponse from 'src/utils/sendResponse';
 import type { Response } from 'express';
 import { IdDto } from 'src/common/id.dto';
@@ -75,6 +76,24 @@ export class CountryController {
       statusCode: HttpStatus.OK,
       success: true,
       message: 'Country fetched successfully',
+      data: result,
+    });
+  }
+
+  // Update Country
+  @Put(':id')
+  @UseGuards(AuthGuard, RoleGuardWith([UserRole.ADMIN, UserRole.SUPER_ADMIN]))
+  async updateCountry(
+    @Param() param: IdDto,
+    @Body() updateCountryDto: UpdateCountryDto,
+    @Res() res: Response,
+  ) {
+    updateCountryDto.id = param.id;
+    const result = await this.countryService.updateCountry(updateCountryDto);
+    sendResponse(res, {
+      statusCode: HttpStatus.OK,
+      success: true,
+      message: 'Country updated successfully',
       data: result,
     });
   }

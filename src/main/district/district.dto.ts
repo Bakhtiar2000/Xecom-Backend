@@ -1,4 +1,4 @@
-import { IsString, Length, IsUUID } from 'class-validator';
+import { IsString, Length, IsUUID, IsOptional } from 'class-validator';
 
 export class CreateDistrictDto {
     @IsString()
@@ -8,4 +8,19 @@ export class CreateDistrictDto {
     @IsString()
     @IsUUID()
     divisionId: string;
+}
+
+export class UpdateDistrictDto {
+    @IsUUID()
+    id: string;
+
+    @IsString()
+    @IsOptional()
+    @Length(2, 100)
+    name?: string;
+
+    @IsString()
+    @IsOptional()
+    @IsUUID()
+    divisionId?: string;
 }

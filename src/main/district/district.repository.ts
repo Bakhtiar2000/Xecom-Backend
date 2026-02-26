@@ -112,4 +112,11 @@ export class DistrictRepository {
       },
     });
   }
+
+  async update(id: string, data: Prisma.DistrictUpdateInput) {
+    return this.prisma.district.update({
+      where: { id },
+      data,
+    });
+  }
 }
