@@ -65,13 +65,14 @@ model Thana {
 }
 
 model Address {
-  id         String   @id @default(uuid())
-  userId     String?
-  thanaId    String
-  street     String
-  postalCode String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id          String      @id @default(uuid())
+  userId      String?
+  thanaId     String
+  street      String
+  postalCode  String?
+  addressType AddressType // ----------------- NEW -----------------
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 
   // Relationships
   thana  Thana   @relation(fields: [thanaId], references: [id])

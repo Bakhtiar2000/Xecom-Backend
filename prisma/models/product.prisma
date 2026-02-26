@@ -3,20 +3,21 @@
 // ========================================
 
 model Category {
-  id             String   @id @default(uuid())
+  id             String           @id @default(uuid())
   tenantId       String?
   name           String
   slug           String
   description    String?
   parentId       String?
   imageUrl       String?
-  isActive       Boolean  @default(true)
-  sortOrder      Int      @default(0)
+  targetAudience TargetAudience[] // ----------------- NEW -----------------
+  isActive       Boolean          @default(true)
+  sortOrder      Int              @default(0)
   seoTitle       String?
   seoDescription String?
-  metadata       Json     @default("{}")
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  metadata       Json             @default("{}")
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
 
   tenant   Tenant?    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   parent   Category?  @relation("CategoryParent", fields: [parentId], references: [id], onDelete: Cascade)
@@ -48,7 +49,7 @@ model Brand {
 }
 
 model Product {
-  id               String        @id @default(uuid())
+  id               String             @id @default(uuid())
   tenantId         String?
   name             String
   slug             String
@@ -56,26 +57,27 @@ model Product {
   fullDescription  String?
   brandId          String?
   categoryId       String?
-  status           ProductStatus @default(DRAFT)
-  featured         Boolean       @default(false)
+  status           ProductStatus      @default(DRAFT)
+  featured         Boolean            @default(false)
   weight           Decimal?
+  weightUnit       ProductWeightUnit? @default(G) // ----------------- NEW -----------------
   tags             String[] // Might be better as a separate table for complex queries. To be thought later.
   seoTitle         String?
   seoDescription   String?
   metaKeywords     String[]
   warranty         String?
-  specifications   Json          @default("{}")
+  specifications   Json               @default("{}")
   videoUrl         String?
   manualUrl        String?
-  minOrderQty      Int           @default(1)
+  minOrderQty      Int                @default(1)
   maxOrderQty      Int?
-  isBundle         Boolean       @default(false)
-  totalSales       Int           @default(0)
-  viewCount        Int           @default(0)
+  isBundle         Boolean            @default(false)
+  totalSales       Int                @default(0)
+  viewCount        Int                @default(0)
   avgRating        Decimal?
-  reviewCount      Int           @default(0)
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
+  reviewCount      Int                @default(0)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
 
   tenant      Tenant?           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   brand       Brand?            @relation(fields: [brandId], references: [id])
@@ -179,15 +181,15 @@ model ProductImage {
 }
 
 model ProductDimension {
-  id        String   @id @default(uuid())
-  productId String   @unique
+  id        String                @id @default(uuid())
+  productId String                @unique
   length    Decimal?
   width     Decimal?
   height    Decimal?
-  unit      String?  @default("cm") // cm, inch, m, etc.
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  unit      ProductDimensionUnit? @default(CM) // ----------------- NEW -----------------
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @updatedAt
+  product   Product               @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@map("product_dimensions")
 }

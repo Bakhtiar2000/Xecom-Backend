@@ -19,6 +19,7 @@ import { ProductModule } from './main/product/product.module';
 import { ProductRelationModule } from './main/product-relation/product-relation.module';
 import { AttributeModule } from './main/attribute/attribute.module';
 import { ProductVariantModule } from './main/product-variant/product-variant.module';
+import { WishlistModule } from './main/wishlist/wishlist.module';
 
 @Module({
   imports: [
@@ -42,8 +43,9 @@ import { ProductVariantModule } from './main/product-variant/product-variant.mod
     ProductRelationModule,
     AttributeModule,
     ProductVariantModule,
+    WishlistModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

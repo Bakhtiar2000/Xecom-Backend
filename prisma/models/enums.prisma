@@ -54,6 +54,12 @@ enum CustomerType {
   WHOLESALE
 }
 
+enum AddressType {
+  HOME
+  OFFICE
+  OTHER
+}
+
 // Product Enums
 enum ProductStatus {
   ACTIVE
@@ -67,6 +73,27 @@ enum ProductRelationType {
   RELATED
   CROSS_SELL
   UP_SELL
+}
+
+enum ProductDimensionUnit {
+  CM
+  INCH
+  METER
+  FOOT
+  YARD
+}
+
+enum ProductWeightUnit {
+  KG
+  G
+  LB
+  OZ
+}
+
+enum TargetAudience {
+  MEN
+  WOMEN
+  KIDS
 }
 
 // Order Enums
