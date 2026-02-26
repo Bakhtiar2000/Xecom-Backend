@@ -20,6 +20,7 @@ import { ProductRelationModule } from './main/product-relation/product-relation.
 import { AttributeModule } from './main/attribute/attribute.module';
 import { ProductVariantModule } from './main/product-variant/product-variant.module';
 import { WishlistModule } from './main/wishlist/wishlist.module';
+import { ReviewModule } from './main/review/review.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { WishlistModule } from './main/wishlist/wishlist.module';
     AttributeModule,
     ProductVariantModule,
     WishlistModule,
+    ReviewModule,
   ],
   controllers: [AppController],
   providers: [AppService],
