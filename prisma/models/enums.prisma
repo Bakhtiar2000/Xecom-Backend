@@ -96,6 +96,12 @@ enum TargetAudience {
   KIDS
 }
 
+enum Currency {
+  USD
+  EUR
+  BDT
+}
+
 // Order Enums
 enum OrderStatus {
   PENDING

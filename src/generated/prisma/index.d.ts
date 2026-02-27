@@ -279,6 +279,15 @@ export const CustomerType: {
 export type CustomerType = (typeof CustomerType)[keyof typeof CustomerType]
 
 
+export const AddressType: {
+  HOME: 'HOME',
+  OFFICE: 'OFFICE',
+  OTHER: 'OTHER'
+};
+
+export type AddressType = (typeof AddressType)[keyof typeof AddressType]
+
+
 export const ProductStatus: {
   ACTIVE: 'ACTIVE',
   INACTIVE: 'INACTIVE',
@@ -297,6 +306,45 @@ export const ProductRelationType: {
 };
 
 export type ProductRelationType = (typeof ProductRelationType)[keyof typeof ProductRelationType]
+
+
+export const ProductDimensionUnit: {
+  CM: 'CM',
+  INCH: 'INCH',
+  METER: 'METER',
+  FOOT: 'FOOT',
+  YARD: 'YARD'
+};
+
+export type ProductDimensionUnit = (typeof ProductDimensionUnit)[keyof typeof ProductDimensionUnit]
+
+
+export const ProductWeightUnit: {
+  KG: 'KG',
+  G: 'G',
+  LB: 'LB',
+  OZ: 'OZ'
+};
+
+export type ProductWeightUnit = (typeof ProductWeightUnit)[keyof typeof ProductWeightUnit]
+
+
+export const TargetAudience: {
+  MEN: 'MEN',
+  WOMEN: 'WOMEN',
+  KIDS: 'KIDS'
+};
+
+export type TargetAudience = (typeof TargetAudience)[keyof typeof TargetAudience]
+
+
+export const Currency: {
+  USD: 'USD',
+  EUR: 'EUR',
+  BDT: 'BDT'
+};
+
+export type Currency = (typeof Currency)[keyof typeof Currency]
 
 
 export const OrderStatus: {
@@ -469,6 +517,10 @@ export type CustomerType = $Enums.CustomerType
 
 export const CustomerType: typeof $Enums.CustomerType
 
+export type AddressType = $Enums.AddressType
+
+export const AddressType: typeof $Enums.AddressType
+
 export type ProductStatus = $Enums.ProductStatus
 
 export const ProductStatus: typeof $Enums.ProductStatus
@@ -476,6 +528,22 @@ export const ProductStatus: typeof $Enums.ProductStatus
 export type ProductRelationType = $Enums.ProductRelationType
 
 export const ProductRelationType: typeof $Enums.ProductRelationType
+
+export type ProductDimensionUnit = $Enums.ProductDimensionUnit
+
+export const ProductDimensionUnit: typeof $Enums.ProductDimensionUnit
+
+export type ProductWeightUnit = $Enums.ProductWeightUnit
+
+export const ProductWeightUnit: typeof $Enums.ProductWeightUnit
+
+export type TargetAudience = $Enums.TargetAudience
+
+export const TargetAudience: typeof $Enums.TargetAudience
+
+export type Currency = $Enums.Currency
+
+export const Currency: typeof $Enums.Currency
 
 export type OrderStatus = $Enums.OrderStatus
 
@@ -10875,6 +10943,7 @@ export namespace Prisma {
     thanaId: string | null
     street: string | null
     postalCode: string | null
+    addressType: $Enums.AddressType | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -10885,6 +10954,7 @@ export namespace Prisma {
     thanaId: string | null
     street: string | null
     postalCode: string | null
+    addressType: $Enums.AddressType | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -10895,6 +10965,7 @@ export namespace Prisma {
     thanaId: number
     street: number
     postalCode: number
+    addressType: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -10907,6 +10978,7 @@ export namespace Prisma {
     thanaId?: true
     street?: true
     postalCode?: true
+    addressType?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -10917,6 +10989,7 @@ export namespace Prisma {
     thanaId?: true
     street?: true
     postalCode?: true
+    addressType?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -10927,6 +11000,7 @@ export namespace Prisma {
     thanaId?: true
     street?: true
     postalCode?: true
+    addressType?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -11010,6 +11084,7 @@ export namespace Prisma {
     thanaId: string
     street: string
     postalCode: string | null
+    addressType: $Enums.AddressType | null
     createdAt: Date
     updatedAt: Date
     _count: AddressCountAggregateOutputType | null
@@ -11037,6 +11112,7 @@ export namespace Prisma {
     thanaId?: boolean
     street?: boolean
     postalCode?: boolean
+    addressType?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     thana?: boolean | ThanaDefaultArgs<ExtArgs>
@@ -11051,6 +11127,7 @@ export namespace Prisma {
     thanaId?: boolean
     street?: boolean
     postalCode?: boolean
+    addressType?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     thana?: boolean | ThanaDefaultArgs<ExtArgs>
@@ -11063,6 +11140,7 @@ export namespace Prisma {
     thanaId?: boolean
     street?: boolean
     postalCode?: boolean
+    addressType?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     thana?: boolean | ThanaDefaultArgs<ExtArgs>
@@ -11075,11 +11153,12 @@ export namespace Prisma {
     thanaId?: boolean
     street?: boolean
     postalCode?: boolean
+    addressType?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type AddressOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "thanaId" | "street" | "postalCode" | "createdAt" | "updatedAt", ExtArgs["result"]["address"]>
+  export type AddressOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "thanaId" | "street" | "postalCode" | "addressType" | "createdAt" | "updatedAt", ExtArgs["result"]["address"]>
   export type AddressInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     thana?: boolean | ThanaDefaultArgs<ExtArgs>
     User?: boolean | Address$UserArgs<ExtArgs>
@@ -11108,6 +11187,7 @@ export namespace Prisma {
       thanaId: string
       street: string
       postalCode: string | null
+      addressType: $Enums.AddressType | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["address"]>
@@ -11541,6 +11621,7 @@ export namespace Prisma {
     readonly thanaId: FieldRef<"Address", 'String'>
     readonly street: FieldRef<"Address", 'String'>
     readonly postalCode: FieldRef<"Address", 'String'>
+    readonly addressType: FieldRef<"Address", 'AddressType'>
     readonly createdAt: FieldRef<"Address", 'DateTime'>
     readonly updatedAt: FieldRef<"Address", 'DateTime'>
   }
@@ -13347,7 +13428,7 @@ export namespace Prisma {
     shippingCost: Decimal | null
     discount: Decimal | null
     total: Decimal | null
-    currency: string | null
+    currency: $Enums.Currency | null
     notes: string | null
     internalNotes: string | null
     couponCode: string | null
@@ -13373,7 +13454,7 @@ export namespace Prisma {
     shippingCost: Decimal | null
     discount: Decimal | null
     total: Decimal | null
-    currency: string | null
+    currency: $Enums.Currency | null
     notes: string | null
     internalNotes: string | null
     couponCode: string | null
@@ -13608,7 +13689,7 @@ export namespace Prisma {
     shippingCost: Decimal
     discount: Decimal
     total: Decimal
-    currency: string
+    currency: $Enums.Currency
     notes: string | null
     internalNotes: string | null
     couponCode: string | null
@@ -13804,7 +13885,7 @@ export namespace Prisma {
       shippingCost: Prisma.Decimal
       discount: Prisma.Decimal
       total: Prisma.Decimal
-      currency: string
+      currency: $Enums.Currency
       notes: string | null
       internalNotes: string | null
       couponCode: string | null
@@ -14257,7 +14338,7 @@ export namespace Prisma {
     readonly shippingCost: FieldRef<"Order", 'Decimal'>
     readonly discount: FieldRef<"Order", 'Decimal'>
     readonly total: FieldRef<"Order", 'Decimal'>
-    readonly currency: FieldRef<"Order", 'String'>
+    readonly currency: FieldRef<"Order", 'Currency'>
     readonly notes: FieldRef<"Order", 'String'>
     readonly internalNotes: FieldRef<"Order", 'String'>
     readonly couponCode: FieldRef<"Order", 'String'>
@@ -15965,7 +16046,7 @@ export namespace Prisma {
     provider: string | null
     providerTransactionId: string | null
     amount: Decimal | null
-    currency: string | null
+    currency: $Enums.Currency | null
     status: $Enums.PaymentStatus | null
     failureReason: string | null
     createdAt: Date | null
@@ -15979,7 +16060,7 @@ export namespace Prisma {
     provider: string | null
     providerTransactionId: string | null
     amount: Decimal | null
-    currency: string | null
+    currency: $Enums.Currency | null
     status: $Enums.PaymentStatus | null
     failureReason: string | null
     createdAt: Date | null
@@ -16148,7 +16229,7 @@ export namespace Prisma {
     provider: string
     providerTransactionId: string | null
     amount: Decimal
-    currency: string
+    currency: $Enums.Currency
     status: $Enums.PaymentStatus
     failureReason: string | null
     metadata: JsonValue
@@ -16261,7 +16342,7 @@ export namespace Prisma {
       provider: string
       providerTransactionId: string | null
       amount: Prisma.Decimal
-      currency: string
+      currency: $Enums.Currency
       status: $Enums.PaymentStatus
       failureReason: string | null
       metadata: Prisma.JsonValue
@@ -16697,7 +16778,7 @@ export namespace Prisma {
     readonly provider: FieldRef<"Payment", 'String'>
     readonly providerTransactionId: FieldRef<"Payment", 'String'>
     readonly amount: FieldRef<"Payment", 'Decimal'>
-    readonly currency: FieldRef<"Payment", 'String'>
+    readonly currency: FieldRef<"Payment", 'Currency'>
     readonly status: FieldRef<"Payment", 'PaymentStatus'>
     readonly failureReason: FieldRef<"Payment", 'String'>
     readonly metadata: FieldRef<"Payment", 'Json'>
@@ -22866,6 +22947,7 @@ export namespace Prisma {
     description: number
     parentId: number
     imageUrl: number
+    targetAudience: number
     isActive: number
     sortOrder: number
     seoTitle: number
@@ -22925,6 +23007,7 @@ export namespace Prisma {
     description?: true
     parentId?: true
     imageUrl?: true
+    targetAudience?: true
     isActive?: true
     sortOrder?: true
     seoTitle?: true
@@ -23029,6 +23112,7 @@ export namespace Prisma {
     description: string | null
     parentId: string | null
     imageUrl: string | null
+    targetAudience: $Enums.TargetAudience[]
     isActive: boolean
     sortOrder: number
     seoTitle: string | null
@@ -23065,6 +23149,7 @@ export namespace Prisma {
     description?: boolean
     parentId?: boolean
     imageUrl?: boolean
+    targetAudience?: boolean
     isActive?: boolean
     sortOrder?: boolean
     seoTitle?: boolean
@@ -23087,6 +23172,7 @@ export namespace Prisma {
     description?: boolean
     parentId?: boolean
     imageUrl?: boolean
+    targetAudience?: boolean
     isActive?: boolean
     sortOrder?: boolean
     seoTitle?: boolean
@@ -23106,6 +23192,7 @@ export namespace Prisma {
     description?: boolean
     parentId?: boolean
     imageUrl?: boolean
+    targetAudience?: boolean
     isActive?: boolean
     sortOrder?: boolean
     seoTitle?: boolean
@@ -23125,6 +23212,7 @@ export namespace Prisma {
     description?: boolean
     parentId?: boolean
     imageUrl?: boolean
+    targetAudience?: boolean
     isActive?: boolean
     sortOrder?: boolean
     seoTitle?: boolean
@@ -23134,7 +23222,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type CategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "name" | "slug" | "description" | "parentId" | "imageUrl" | "isActive" | "sortOrder" | "seoTitle" | "seoDescription" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["category"]>
+  export type CategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "name" | "slug" | "description" | "parentId" | "imageUrl" | "targetAudience" | "isActive" | "sortOrder" | "seoTitle" | "seoDescription" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["category"]>
   export type CategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tenant?: boolean | Category$tenantArgs<ExtArgs>
     parent?: boolean | Category$parentArgs<ExtArgs>
@@ -23167,6 +23255,7 @@ export namespace Prisma {
       description: string | null
       parentId: string | null
       imageUrl: string | null
+      targetAudience: $Enums.TargetAudience[]
       isActive: boolean
       sortOrder: number
       seoTitle: string | null
@@ -23608,6 +23697,7 @@ export namespace Prisma {
     readonly description: FieldRef<"Category", 'String'>
     readonly parentId: FieldRef<"Category", 'String'>
     readonly imageUrl: FieldRef<"Category", 'String'>
+    readonly targetAudience: FieldRef<"Category", 'TargetAudience[]'>
     readonly isActive: FieldRef<"Category", 'Boolean'>
     readonly sortOrder: FieldRef<"Category", 'Int'>
     readonly seoTitle: FieldRef<"Category", 'String'>
@@ -25340,6 +25430,7 @@ export namespace Prisma {
     status: $Enums.ProductStatus | null
     featured: boolean | null
     weight: Decimal | null
+    weightUnit: $Enums.ProductWeightUnit | null
     seoTitle: string | null
     seoDescription: string | null
     warranty: string | null
@@ -25368,6 +25459,7 @@ export namespace Prisma {
     status: $Enums.ProductStatus | null
     featured: boolean | null
     weight: Decimal | null
+    weightUnit: $Enums.ProductWeightUnit | null
     seoTitle: string | null
     seoDescription: string | null
     warranty: string | null
@@ -25396,6 +25488,7 @@ export namespace Prisma {
     status: number
     featured: number
     weight: number
+    weightUnit: number
     tags: number
     seoTitle: number
     seoDescription: number
@@ -25449,6 +25542,7 @@ export namespace Prisma {
     status?: true
     featured?: true
     weight?: true
+    weightUnit?: true
     seoTitle?: true
     seoDescription?: true
     warranty?: true
@@ -25477,6 +25571,7 @@ export namespace Prisma {
     status?: true
     featured?: true
     weight?: true
+    weightUnit?: true
     seoTitle?: true
     seoDescription?: true
     warranty?: true
@@ -25505,6 +25600,7 @@ export namespace Prisma {
     status?: true
     featured?: true
     weight?: true
+    weightUnit?: true
     tags?: true
     seoTitle?: true
     seoDescription?: true
@@ -25623,6 +25719,7 @@ export namespace Prisma {
     status: $Enums.ProductStatus
     featured: boolean
     weight: Decimal | null
+    weightUnit: $Enums.ProductWeightUnit | null
     tags: string[]
     seoTitle: string | null
     seoDescription: string | null
@@ -25673,6 +25770,7 @@ export namespace Prisma {
     status?: boolean
     featured?: boolean
     weight?: boolean
+    weightUnit?: boolean
     tags?: boolean
     seoTitle?: boolean
     seoDescription?: boolean
@@ -25718,6 +25816,7 @@ export namespace Prisma {
     status?: boolean
     featured?: boolean
     weight?: boolean
+    weightUnit?: boolean
     tags?: boolean
     seoTitle?: boolean
     seoDescription?: boolean
@@ -25752,6 +25851,7 @@ export namespace Prisma {
     status?: boolean
     featured?: boolean
     weight?: boolean
+    weightUnit?: boolean
     tags?: boolean
     seoTitle?: boolean
     seoDescription?: boolean
@@ -25786,6 +25886,7 @@ export namespace Prisma {
     status?: boolean
     featured?: boolean
     weight?: boolean
+    weightUnit?: boolean
     tags?: boolean
     seoTitle?: boolean
     seoDescription?: boolean
@@ -25805,7 +25906,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "name" | "slug" | "shortDescription" | "fullDescription" | "brandId" | "categoryId" | "status" | "featured" | "weight" | "tags" | "seoTitle" | "seoDescription" | "metaKeywords" | "warranty" | "specifications" | "videoUrl" | "manualUrl" | "minOrderQty" | "maxOrderQty" | "isBundle" | "totalSales" | "viewCount" | "avgRating" | "reviewCount" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "name" | "slug" | "shortDescription" | "fullDescription" | "brandId" | "categoryId" | "status" | "featured" | "weight" | "weightUnit" | "tags" | "seoTitle" | "seoDescription" | "metaKeywords" | "warranty" | "specifications" | "videoUrl" | "manualUrl" | "minOrderQty" | "maxOrderQty" | "isBundle" | "totalSales" | "viewCount" | "avgRating" | "reviewCount" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tenant?: boolean | Product$tenantArgs<ExtArgs>
     brand?: boolean | Product$brandArgs<ExtArgs>
@@ -25862,6 +25963,7 @@ export namespace Prisma {
       status: $Enums.ProductStatus
       featured: boolean
       weight: Prisma.Decimal | null
+      weightUnit: $Enums.ProductWeightUnit | null
       tags: string[]
       seoTitle: string | null
       seoDescription: string | null
@@ -26326,6 +26428,7 @@ export namespace Prisma {
     readonly status: FieldRef<"Product", 'ProductStatus'>
     readonly featured: FieldRef<"Product", 'Boolean'>
     readonly weight: FieldRef<"Product", 'Decimal'>
+    readonly weightUnit: FieldRef<"Product", 'ProductWeightUnit'>
     readonly tags: FieldRef<"Product", 'String[]'>
     readonly seoTitle: FieldRef<"Product", 'String'>
     readonly seoDescription: FieldRef<"Product", 'String'>
@@ -34801,7 +34904,7 @@ export namespace Prisma {
     length: Decimal | null
     width: Decimal | null
     height: Decimal | null
-    unit: string | null
+    unit: $Enums.ProductDimensionUnit | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -34812,7 +34915,7 @@ export namespace Prisma {
     length: Decimal | null
     width: Decimal | null
     height: Decimal | null
-    unit: string | null
+    unit: $Enums.ProductDimensionUnit | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -34968,7 +35071,7 @@ export namespace Prisma {
     length: Decimal | null
     width: Decimal | null
     height: Decimal | null
-    unit: string | null
+    unit: $Enums.ProductDimensionUnit | null
     createdAt: Date
     updatedAt: Date
     _count: ProductDimensionCountAggregateOutputType | null
@@ -35061,7 +35164,7 @@ export namespace Prisma {
       length: Prisma.Decimal | null
       width: Prisma.Decimal | null
       height: Prisma.Decimal | null
-      unit: string | null
+      unit: $Enums.ProductDimensionUnit | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["productDimension"]>
@@ -35493,7 +35596,7 @@ export namespace Prisma {
     readonly length: FieldRef<"ProductDimension", 'Decimal'>
     readonly width: FieldRef<"ProductDimension", 'Decimal'>
     readonly height: FieldRef<"ProductDimension", 'Decimal'>
-    readonly unit: FieldRef<"ProductDimension", 'String'>
+    readonly unit: FieldRef<"ProductDimension", 'ProductDimensionUnit'>
     readonly createdAt: FieldRef<"ProductDimension", 'DateTime'>
     readonly updatedAt: FieldRef<"ProductDimension", 'DateTime'>
   }
@@ -49217,7 +49320,7 @@ export namespace Prisma {
     loyaltyPoints: number | null
     totalSpent: Decimal | null
     preferredLanguage: string | null
-    preferredCurrency: string | null
+    preferredCurrency: $Enums.Currency | null
     marketingOptIn: boolean | null
     referralCode: string | null
     referredBy: string | null
@@ -49238,7 +49341,7 @@ export namespace Prisma {
     loyaltyPoints: number | null
     totalSpent: Decimal | null
     preferredLanguage: string | null
-    preferredCurrency: string | null
+    preferredCurrency: $Enums.Currency | null
     marketingOptIn: boolean | null
     referralCode: string | null
     referredBy: string | null
@@ -49442,7 +49545,7 @@ export namespace Prisma {
     loyaltyPoints: number
     totalSpent: Decimal
     preferredLanguage: string | null
-    preferredCurrency: string | null
+    preferredCurrency: $Enums.Currency | null
     marketingOptIn: boolean
     referralCode: string | null
     referredBy: string | null
@@ -49606,7 +49709,7 @@ export namespace Prisma {
       loyaltyPoints: number
       totalSpent: Prisma.Decimal
       preferredLanguage: string | null
-      preferredCurrency: string | null
+      preferredCurrency: $Enums.Currency | null
       marketingOptIn: boolean
       referralCode: string | null
       referredBy: string | null
@@ -50053,7 +50156,7 @@ export namespace Prisma {
     readonly loyaltyPoints: FieldRef<"Customer", 'Int'>
     readonly totalSpent: FieldRef<"Customer", 'Decimal'>
     readonly preferredLanguage: FieldRef<"Customer", 'String'>
-    readonly preferredCurrency: FieldRef<"Customer", 'String'>
+    readonly preferredCurrency: FieldRef<"Customer", 'Currency'>
     readonly marketingOptIn: FieldRef<"Customer", 'Boolean'>
     readonly referralCode: FieldRef<"Customer", 'String'>
     readonly referredBy: FieldRef<"Customer", 'String'>
@@ -50673,6 +50776,7 @@ export namespace Prisma {
     thanaId: 'thanaId',
     street: 'street',
     postalCode: 'postalCode',
+    addressType: 'addressType',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -50843,6 +50947,7 @@ export namespace Prisma {
     description: 'description',
     parentId: 'parentId',
     imageUrl: 'imageUrl',
+    targetAudience: 'targetAudience',
     isActive: 'isActive',
     sortOrder: 'sortOrder',
     seoTitle: 'seoTitle',
@@ -50884,6 +50989,7 @@ export namespace Prisma {
     status: 'status',
     featured: 'featured',
     weight: 'weight',
+    weightUnit: 'weightUnit',
     tags: 'tags',
     seoTitle: 'seoTitle',
     seoDescription: 'seoDescription',
@@ -51334,6 +51440,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'AddressType'
+   */
+  export type EnumAddressTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AddressType'>
+    
+
+
+  /**
+   * Reference to a field of type 'AddressType[]'
+   */
+  export type ListEnumAddressTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AddressType[]'>
+    
+
+
+  /**
    * Reference to a field of type 'CouponType'
    */
   export type EnumCouponTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CouponType'>
@@ -51386,6 +51506,20 @@ export namespace Prisma {
    * Reference to a field of type 'PaymentStatus[]'
    */
   export type ListEnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Currency'
+   */
+  export type EnumCurrencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Currency'>
+    
+
+
+  /**
+   * Reference to a field of type 'Currency[]'
+   */
+  export type ListEnumCurrencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Currency[]'>
     
 
 
@@ -51460,6 +51594,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'TargetAudience[]'
+   */
+  export type ListEnumTargetAudienceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TargetAudience[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'TargetAudience'
+   */
+  export type EnumTargetAudienceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TargetAudience'>
+    
+
+
+  /**
    * Reference to a field of type 'ProductStatus'
    */
   export type EnumProductStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProductStatus'>
@@ -51474,6 +51622,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'ProductWeightUnit'
+   */
+  export type EnumProductWeightUnitFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProductWeightUnit'>
+    
+
+
+  /**
+   * Reference to a field of type 'ProductWeightUnit[]'
+   */
+  export type ListEnumProductWeightUnitFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProductWeightUnit[]'>
+    
+
+
+  /**
    * Reference to a field of type 'ProductRelationType'
    */
   export type EnumProductRelationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProductRelationType'>
@@ -51484,6 +51646,20 @@ export namespace Prisma {
    * Reference to a field of type 'ProductRelationType[]'
    */
   export type ListEnumProductRelationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProductRelationType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ProductDimensionUnit'
+   */
+  export type EnumProductDimensionUnitFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProductDimensionUnit'>
+    
+
+
+  /**
+   * Reference to a field of type 'ProductDimensionUnit[]'
+   */
+  export type ListEnumProductDimensionUnitFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProductDimensionUnit[]'>
     
 
 
@@ -51972,6 +52148,7 @@ export namespace Prisma {
     thanaId?: StringFilter<"Address"> | string
     street?: StringFilter<"Address"> | string
     postalCode?: StringNullableFilter<"Address"> | string | null
+    addressType?: EnumAddressTypeNullableFilter<"Address"> | $Enums.AddressType | null
     createdAt?: DateTimeFilter<"Address"> | Date | string
     updatedAt?: DateTimeFilter<"Address"> | Date | string
     thana?: XOR<ThanaScalarRelationFilter, ThanaWhereInput>
@@ -51985,6 +52162,7 @@ export namespace Prisma {
     thanaId?: SortOrder
     street?: SortOrder
     postalCode?: SortOrderInput | SortOrder
+    addressType?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     thana?: ThanaOrderByWithRelationInput
@@ -52001,6 +52179,7 @@ export namespace Prisma {
     thanaId?: StringFilter<"Address"> | string
     street?: StringFilter<"Address"> | string
     postalCode?: StringNullableFilter<"Address"> | string | null
+    addressType?: EnumAddressTypeNullableFilter<"Address"> | $Enums.AddressType | null
     createdAt?: DateTimeFilter<"Address"> | Date | string
     updatedAt?: DateTimeFilter<"Address"> | Date | string
     thana?: XOR<ThanaScalarRelationFilter, ThanaWhereInput>
@@ -52014,6 +52193,7 @@ export namespace Prisma {
     thanaId?: SortOrder
     street?: SortOrder
     postalCode?: SortOrderInput | SortOrder
+    addressType?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: AddressCountOrderByAggregateInput
@@ -52030,6 +52210,7 @@ export namespace Prisma {
     thanaId?: StringWithAggregatesFilter<"Address"> | string
     street?: StringWithAggregatesFilter<"Address"> | string
     postalCode?: StringNullableWithAggregatesFilter<"Address"> | string | null
+    addressType?: EnumAddressTypeNullableWithAggregatesFilter<"Address"> | $Enums.AddressType | null
     createdAt?: DateTimeWithAggregatesFilter<"Address"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Address"> | Date | string
   }
@@ -52179,7 +52360,7 @@ export namespace Prisma {
     shippingCost?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
     discount?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
     total?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
-    currency?: StringFilter<"Order"> | string
+    currency?: EnumCurrencyFilter<"Order"> | $Enums.Currency
     notes?: StringNullableFilter<"Order"> | string | null
     internalNotes?: StringNullableFilter<"Order"> | string | null
     couponCode?: StringNullableFilter<"Order"> | string | null
@@ -52249,7 +52430,7 @@ export namespace Prisma {
     shippingCost?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
     discount?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
     total?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
-    currency?: StringFilter<"Order"> | string
+    currency?: EnumCurrencyFilter<"Order"> | $Enums.Currency
     notes?: StringNullableFilter<"Order"> | string | null
     internalNotes?: StringNullableFilter<"Order"> | string | null
     couponCode?: StringNullableFilter<"Order"> | string | null
@@ -52316,7 +52497,7 @@ export namespace Prisma {
     shippingCost?: DecimalWithAggregatesFilter<"Order"> | Decimal | DecimalJsLike | number | string
     discount?: DecimalWithAggregatesFilter<"Order"> | Decimal | DecimalJsLike | number | string
     total?: DecimalWithAggregatesFilter<"Order"> | Decimal | DecimalJsLike | number | string
-    currency?: StringWithAggregatesFilter<"Order"> | string
+    currency?: EnumCurrencyWithAggregatesFilter<"Order"> | $Enums.Currency
     notes?: StringNullableWithAggregatesFilter<"Order"> | string | null
     internalNotes?: StringNullableWithAggregatesFilter<"Order"> | string | null
     couponCode?: StringNullableWithAggregatesFilter<"Order"> | string | null
@@ -52411,7 +52592,7 @@ export namespace Prisma {
     provider?: StringFilter<"Payment"> | string
     providerTransactionId?: StringNullableFilter<"Payment"> | string | null
     amount?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
-    currency?: StringFilter<"Payment"> | string
+    currency?: EnumCurrencyFilter<"Payment"> | $Enums.Currency
     status?: EnumPaymentStatusFilter<"Payment"> | $Enums.PaymentStatus
     failureReason?: StringNullableFilter<"Payment"> | string | null
     metadata?: JsonFilter<"Payment">
@@ -52446,7 +52627,7 @@ export namespace Prisma {
     provider?: StringFilter<"Payment"> | string
     providerTransactionId?: StringNullableFilter<"Payment"> | string | null
     amount?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
-    currency?: StringFilter<"Payment"> | string
+    currency?: EnumCurrencyFilter<"Payment"> | $Enums.Currency
     status?: EnumPaymentStatusFilter<"Payment"> | $Enums.PaymentStatus
     failureReason?: StringNullableFilter<"Payment"> | string | null
     metadata?: JsonFilter<"Payment">
@@ -52485,7 +52666,7 @@ export namespace Prisma {
     provider?: StringWithAggregatesFilter<"Payment"> | string
     providerTransactionId?: StringNullableWithAggregatesFilter<"Payment"> | string | null
     amount?: DecimalWithAggregatesFilter<"Payment"> | Decimal | DecimalJsLike | number | string
-    currency?: StringWithAggregatesFilter<"Payment"> | string
+    currency?: EnumCurrencyWithAggregatesFilter<"Payment"> | $Enums.Currency
     status?: EnumPaymentStatusWithAggregatesFilter<"Payment"> | $Enums.PaymentStatus
     failureReason?: StringNullableWithAggregatesFilter<"Payment"> | string | null
     metadata?: JsonWithAggregatesFilter<"Payment">
@@ -52871,6 +53052,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"Category"> | string | null
     parentId?: StringNullableFilter<"Category"> | string | null
     imageUrl?: StringNullableFilter<"Category"> | string | null
+    targetAudience?: EnumTargetAudienceNullableListFilter<"Category">
     isActive?: BoolFilter<"Category"> | boolean
     sortOrder?: IntFilter<"Category"> | number
     seoTitle?: StringNullableFilter<"Category"> | string | null
@@ -52892,6 +53074,7 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     parentId?: SortOrderInput | SortOrder
     imageUrl?: SortOrderInput | SortOrder
+    targetAudience?: SortOrder
     isActive?: SortOrder
     sortOrder?: SortOrder
     seoTitle?: SortOrderInput | SortOrder
@@ -52917,6 +53100,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"Category"> | string | null
     parentId?: StringNullableFilter<"Category"> | string | null
     imageUrl?: StringNullableFilter<"Category"> | string | null
+    targetAudience?: EnumTargetAudienceNullableListFilter<"Category">
     isActive?: BoolFilter<"Category"> | boolean
     sortOrder?: IntFilter<"Category"> | number
     seoTitle?: StringNullableFilter<"Category"> | string | null
@@ -52938,6 +53122,7 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     parentId?: SortOrderInput | SortOrder
     imageUrl?: SortOrderInput | SortOrder
+    targetAudience?: SortOrder
     isActive?: SortOrder
     sortOrder?: SortOrder
     seoTitle?: SortOrderInput | SortOrder
@@ -52963,6 +53148,7 @@ export namespace Prisma {
     description?: StringNullableWithAggregatesFilter<"Category"> | string | null
     parentId?: StringNullableWithAggregatesFilter<"Category"> | string | null
     imageUrl?: StringNullableWithAggregatesFilter<"Category"> | string | null
+    targetAudience?: EnumTargetAudienceNullableListFilter<"Category">
     isActive?: BoolWithAggregatesFilter<"Category"> | boolean
     sortOrder?: IntWithAggregatesFilter<"Category"> | number
     seoTitle?: StringNullableWithAggregatesFilter<"Category"> | string | null
@@ -53076,6 +53262,7 @@ export namespace Prisma {
     status?: EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
     featured?: BoolFilter<"Product"> | boolean
     weight?: DecimalNullableFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: EnumProductWeightUnitNullableFilter<"Product"> | $Enums.ProductWeightUnit | null
     tags?: StringNullableListFilter<"Product">
     seoTitle?: StringNullableFilter<"Product"> | string | null
     seoDescription?: StringNullableFilter<"Product"> | string | null
@@ -53120,6 +53307,7 @@ export namespace Prisma {
     status?: SortOrder
     featured?: SortOrder
     weight?: SortOrderInput | SortOrder
+    weightUnit?: SortOrderInput | SortOrder
     tags?: SortOrder
     seoTitle?: SortOrderInput | SortOrder
     seoDescription?: SortOrderInput | SortOrder
@@ -53168,6 +53356,7 @@ export namespace Prisma {
     status?: EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
     featured?: BoolFilter<"Product"> | boolean
     weight?: DecimalNullableFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: EnumProductWeightUnitNullableFilter<"Product"> | $Enums.ProductWeightUnit | null
     tags?: StringNullableListFilter<"Product">
     seoTitle?: StringNullableFilter<"Product"> | string | null
     seoDescription?: StringNullableFilter<"Product"> | string | null
@@ -53212,6 +53401,7 @@ export namespace Prisma {
     status?: SortOrder
     featured?: SortOrder
     weight?: SortOrderInput | SortOrder
+    weightUnit?: SortOrderInput | SortOrder
     tags?: SortOrder
     seoTitle?: SortOrderInput | SortOrder
     seoDescription?: SortOrderInput | SortOrder
@@ -53251,6 +53441,7 @@ export namespace Prisma {
     status?: EnumProductStatusWithAggregatesFilter<"Product"> | $Enums.ProductStatus
     featured?: BoolWithAggregatesFilter<"Product"> | boolean
     weight?: DecimalNullableWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: EnumProductWeightUnitNullableWithAggregatesFilter<"Product"> | $Enums.ProductWeightUnit | null
     tags?: StringNullableListFilter<"Product">
     seoTitle?: StringNullableWithAggregatesFilter<"Product"> | string | null
     seoDescription?: StringNullableWithAggregatesFilter<"Product"> | string | null
@@ -53702,7 +53893,7 @@ export namespace Prisma {
     length?: DecimalNullableFilter<"ProductDimension"> | Decimal | DecimalJsLike | number | string | null
     width?: DecimalNullableFilter<"ProductDimension"> | Decimal | DecimalJsLike | number | string | null
     height?: DecimalNullableFilter<"ProductDimension"> | Decimal | DecimalJsLike | number | string | null
-    unit?: StringNullableFilter<"ProductDimension"> | string | null
+    unit?: EnumProductDimensionUnitNullableFilter<"ProductDimension"> | $Enums.ProductDimensionUnit | null
     createdAt?: DateTimeFilter<"ProductDimension"> | Date | string
     updatedAt?: DateTimeFilter<"ProductDimension"> | Date | string
     product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
@@ -53729,7 +53920,7 @@ export namespace Prisma {
     length?: DecimalNullableFilter<"ProductDimension"> | Decimal | DecimalJsLike | number | string | null
     width?: DecimalNullableFilter<"ProductDimension"> | Decimal | DecimalJsLike | number | string | null
     height?: DecimalNullableFilter<"ProductDimension"> | Decimal | DecimalJsLike | number | string | null
-    unit?: StringNullableFilter<"ProductDimension"> | string | null
+    unit?: EnumProductDimensionUnitNullableFilter<"ProductDimension"> | $Enums.ProductDimensionUnit | null
     createdAt?: DateTimeFilter<"ProductDimension"> | Date | string
     updatedAt?: DateTimeFilter<"ProductDimension"> | Date | string
     product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
@@ -53760,7 +53951,7 @@ export namespace Prisma {
     length?: DecimalNullableWithAggregatesFilter<"ProductDimension"> | Decimal | DecimalJsLike | number | string | null
     width?: DecimalNullableWithAggregatesFilter<"ProductDimension"> | Decimal | DecimalJsLike | number | string | null
     height?: DecimalNullableWithAggregatesFilter<"ProductDimension"> | Decimal | DecimalJsLike | number | string | null
-    unit?: StringNullableWithAggregatesFilter<"ProductDimension"> | string | null
+    unit?: EnumProductDimensionUnitNullableWithAggregatesFilter<"ProductDimension"> | $Enums.ProductDimensionUnit | null
     createdAt?: DateTimeWithAggregatesFilter<"ProductDimension"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ProductDimension"> | Date | string
   }
@@ -54814,7 +55005,7 @@ export namespace Prisma {
     loyaltyPoints?: IntFilter<"Customer"> | number
     totalSpent?: DecimalFilter<"Customer"> | Decimal | DecimalJsLike | number | string
     preferredLanguage?: StringNullableFilter<"Customer"> | string | null
-    preferredCurrency?: StringNullableFilter<"Customer"> | string | null
+    preferredCurrency?: EnumCurrencyNullableFilter<"Customer"> | $Enums.Currency | null
     marketingOptIn?: BoolFilter<"Customer"> | boolean
     referralCode?: StringNullableFilter<"Customer"> | string | null
     referredBy?: StringNullableFilter<"Customer"> | string | null
@@ -54872,7 +55063,7 @@ export namespace Prisma {
     loyaltyPoints?: IntFilter<"Customer"> | number
     totalSpent?: DecimalFilter<"Customer"> | Decimal | DecimalJsLike | number | string
     preferredLanguage?: StringNullableFilter<"Customer"> | string | null
-    preferredCurrency?: StringNullableFilter<"Customer"> | string | null
+    preferredCurrency?: EnumCurrencyNullableFilter<"Customer"> | $Enums.Currency | null
     marketingOptIn?: BoolFilter<"Customer"> | boolean
     referredBy?: StringNullableFilter<"Customer"> | string | null
     vatNumber?: StringNullableFilter<"Customer"> | string | null
@@ -54927,7 +55118,7 @@ export namespace Prisma {
     loyaltyPoints?: IntWithAggregatesFilter<"Customer"> | number
     totalSpent?: DecimalWithAggregatesFilter<"Customer"> | Decimal | DecimalJsLike | number | string
     preferredLanguage?: StringNullableWithAggregatesFilter<"Customer"> | string | null
-    preferredCurrency?: StringNullableWithAggregatesFilter<"Customer"> | string | null
+    preferredCurrency?: EnumCurrencyNullableWithAggregatesFilter<"Customer"> | $Enums.Currency | null
     marketingOptIn?: BoolWithAggregatesFilter<"Customer"> | boolean
     referralCode?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     referredBy?: StringNullableWithAggregatesFilter<"Customer"> | string | null
@@ -55277,6 +55468,7 @@ export namespace Prisma {
     id?: string
     street: string
     postalCode?: string | null
+    addressType?: $Enums.AddressType | null
     createdAt?: Date | string
     updatedAt?: Date | string
     thana: ThanaCreateNestedOneWithoutAddressesInput
@@ -55290,6 +55482,7 @@ export namespace Prisma {
     thanaId: string
     street: string
     postalCode?: string | null
+    addressType?: $Enums.AddressType | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutAddressInput
@@ -55299,6 +55492,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     street?: StringFieldUpdateOperationsInput | string
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    addressType?: NullableEnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     thana?: ThanaUpdateOneRequiredWithoutAddressesNestedInput
@@ -55312,6 +55506,7 @@ export namespace Prisma {
     thanaId?: StringFieldUpdateOperationsInput | string
     street?: StringFieldUpdateOperationsInput | string
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    addressType?: NullableEnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutAddressNestedInput
@@ -55323,6 +55518,7 @@ export namespace Prisma {
     thanaId: string
     street: string
     postalCode?: string | null
+    addressType?: $Enums.AddressType | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -55331,6 +55527,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     street?: StringFieldUpdateOperationsInput | string
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    addressType?: NullableEnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -55341,6 +55538,7 @@ export namespace Prisma {
     thanaId?: StringFieldUpdateOperationsInput | string
     street?: StringFieldUpdateOperationsInput | string
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    addressType?: NullableEnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -55509,7 +55707,7 @@ export namespace Prisma {
     shippingCost?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
-    currency?: string
+    currency?: $Enums.Currency
     notes?: string | null
     internalNotes?: string | null
     couponCode?: string | null
@@ -55542,7 +55740,7 @@ export namespace Prisma {
     shippingCost?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
-    currency?: string
+    currency?: $Enums.Currency
     notes?: string | null
     internalNotes?: string | null
     couponCode?: string | null
@@ -55569,7 +55767,7 @@ export namespace Prisma {
     shippingCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     couponCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -55602,7 +55800,7 @@ export namespace Prisma {
     shippingCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     couponCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -55632,7 +55830,7 @@ export namespace Prisma {
     shippingCost?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
-    currency?: string
+    currency?: $Enums.Currency
     notes?: string | null
     internalNotes?: string | null
     couponCode?: string | null
@@ -55655,7 +55853,7 @@ export namespace Prisma {
     shippingCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     couponCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -55681,7 +55879,7 @@ export namespace Prisma {
     shippingCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     couponCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -55766,7 +55964,7 @@ export namespace Prisma {
     provider: string
     providerTransactionId?: string | null
     amount: Decimal | DecimalJsLike | number | string
-    currency?: string
+    currency?: $Enums.Currency
     status?: $Enums.PaymentStatus
     failureReason?: string | null
     metadata?: JsonNullValueInput | InputJsonValue
@@ -55782,7 +55980,7 @@ export namespace Prisma {
     provider: string
     providerTransactionId?: string | null
     amount: Decimal | DecimalJsLike | number | string
-    currency?: string
+    currency?: $Enums.Currency
     status?: $Enums.PaymentStatus
     failureReason?: string | null
     metadata?: JsonNullValueInput | InputJsonValue
@@ -55796,7 +55994,7 @@ export namespace Prisma {
     provider?: StringFieldUpdateOperationsInput | string
     providerTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     failureReason?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: JsonNullValueInput | InputJsonValue
@@ -55812,7 +56010,7 @@ export namespace Prisma {
     provider?: StringFieldUpdateOperationsInput | string
     providerTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     failureReason?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: JsonNullValueInput | InputJsonValue
@@ -55827,7 +56025,7 @@ export namespace Prisma {
     provider: string
     providerTransactionId?: string | null
     amount: Decimal | DecimalJsLike | number | string
-    currency?: string
+    currency?: $Enums.Currency
     status?: $Enums.PaymentStatus
     failureReason?: string | null
     metadata?: JsonNullValueInput | InputJsonValue
@@ -55841,7 +56039,7 @@ export namespace Prisma {
     provider?: StringFieldUpdateOperationsInput | string
     providerTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     failureReason?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: JsonNullValueInput | InputJsonValue
@@ -55856,7 +56054,7 @@ export namespace Prisma {
     provider?: StringFieldUpdateOperationsInput | string
     providerTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     failureReason?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: JsonNullValueInput | InputJsonValue
@@ -56257,6 +56455,7 @@ export namespace Prisma {
     slug: string
     description?: string | null
     imageUrl?: string | null
+    targetAudience?: CategoryCreatetargetAudienceInput | $Enums.TargetAudience[]
     isActive?: boolean
     sortOrder?: number
     seoTitle?: string | null
@@ -56278,6 +56477,7 @@ export namespace Prisma {
     description?: string | null
     parentId?: string | null
     imageUrl?: string | null
+    targetAudience?: CategoryCreatetargetAudienceInput | $Enums.TargetAudience[]
     isActive?: boolean
     sortOrder?: number
     seoTitle?: string | null
@@ -56295,6 +56495,7 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAudience?: CategoryUpdatetargetAudienceInput | $Enums.TargetAudience[]
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
@@ -56316,6 +56517,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAudience?: CategoryUpdatetargetAudienceInput | $Enums.TargetAudience[]
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
@@ -56335,6 +56537,7 @@ export namespace Prisma {
     description?: string | null
     parentId?: string | null
     imageUrl?: string | null
+    targetAudience?: CategoryCreatetargetAudienceInput | $Enums.TargetAudience[]
     isActive?: boolean
     sortOrder?: number
     seoTitle?: string | null
@@ -56350,6 +56553,7 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAudience?: CategoryUpdatetargetAudienceInput | $Enums.TargetAudience[]
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
@@ -56367,6 +56571,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAudience?: CategoryUpdatetargetAudienceInput | $Enums.TargetAudience[]
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
@@ -56486,6 +56691,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -56530,6 +56736,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -56568,6 +56775,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -56612,6 +56820,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -56653,6 +56862,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -56681,6 +56891,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -56712,6 +56923,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -57158,7 +57370,7 @@ export namespace Prisma {
     length?: Decimal | DecimalJsLike | number | string | null
     width?: Decimal | DecimalJsLike | number | string | null
     height?: Decimal | DecimalJsLike | number | string | null
-    unit?: string | null
+    unit?: $Enums.ProductDimensionUnit | null
     createdAt?: Date | string
     updatedAt?: Date | string
     product: ProductCreateNestedOneWithoutDimensionInput
@@ -57170,7 +57382,7 @@ export namespace Prisma {
     length?: Decimal | DecimalJsLike | number | string | null
     width?: Decimal | DecimalJsLike | number | string | null
     height?: Decimal | DecimalJsLike | number | string | null
-    unit?: string | null
+    unit?: $Enums.ProductDimensionUnit | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -57180,7 +57392,7 @@ export namespace Prisma {
     length?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     width?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     height?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    unit?: NullableStringFieldUpdateOperationsInput | string | null
+    unit?: NullableEnumProductDimensionUnitFieldUpdateOperationsInput | $Enums.ProductDimensionUnit | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     product?: ProductUpdateOneRequiredWithoutDimensionNestedInput
@@ -57192,7 +57404,7 @@ export namespace Prisma {
     length?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     width?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     height?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    unit?: NullableStringFieldUpdateOperationsInput | string | null
+    unit?: NullableEnumProductDimensionUnitFieldUpdateOperationsInput | $Enums.ProductDimensionUnit | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -57203,7 +57415,7 @@ export namespace Prisma {
     length?: Decimal | DecimalJsLike | number | string | null
     width?: Decimal | DecimalJsLike | number | string | null
     height?: Decimal | DecimalJsLike | number | string | null
-    unit?: string | null
+    unit?: $Enums.ProductDimensionUnit | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -57213,7 +57425,7 @@ export namespace Prisma {
     length?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     width?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     height?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    unit?: NullableStringFieldUpdateOperationsInput | string | null
+    unit?: NullableEnumProductDimensionUnitFieldUpdateOperationsInput | $Enums.ProductDimensionUnit | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -57224,7 +57436,7 @@ export namespace Prisma {
     length?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     width?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     height?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    unit?: NullableStringFieldUpdateOperationsInput | string | null
+    unit?: NullableEnumProductDimensionUnitFieldUpdateOperationsInput | $Enums.ProductDimensionUnit | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -58415,7 +58627,7 @@ export namespace Prisma {
     loyaltyPoints?: number
     totalSpent?: Decimal | DecimalJsLike | number | string
     preferredLanguage?: string | null
-    preferredCurrency?: string | null
+    preferredCurrency?: $Enums.Currency | null
     marketingOptIn?: boolean
     referralCode?: string | null
     vatNumber?: string | null
@@ -58441,7 +58653,7 @@ export namespace Prisma {
     loyaltyPoints?: number
     totalSpent?: Decimal | DecimalJsLike | number | string
     preferredLanguage?: string | null
-    preferredCurrency?: string | null
+    preferredCurrency?: $Enums.Currency | null
     marketingOptIn?: boolean
     referralCode?: string | null
     referredBy?: string | null
@@ -58465,7 +58677,7 @@ export namespace Prisma {
     loyaltyPoints?: IntFieldUpdateOperationsInput | number
     totalSpent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     preferredLanguage?: NullableStringFieldUpdateOperationsInput | string | null
-    preferredCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredCurrency?: NullableEnumCurrencyFieldUpdateOperationsInput | $Enums.Currency | null
     marketingOptIn?: BoolFieldUpdateOperationsInput | boolean
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     vatNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58491,7 +58703,7 @@ export namespace Prisma {
     loyaltyPoints?: IntFieldUpdateOperationsInput | number
     totalSpent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     preferredLanguage?: NullableStringFieldUpdateOperationsInput | string | null
-    preferredCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredCurrency?: NullableEnumCurrencyFieldUpdateOperationsInput | $Enums.Currency | null
     marketingOptIn?: BoolFieldUpdateOperationsInput | boolean
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58516,7 +58728,7 @@ export namespace Prisma {
     loyaltyPoints?: number
     totalSpent?: Decimal | DecimalJsLike | number | string
     preferredLanguage?: string | null
-    preferredCurrency?: string | null
+    preferredCurrency?: $Enums.Currency | null
     marketingOptIn?: boolean
     referralCode?: string | null
     referredBy?: string | null
@@ -58536,7 +58748,7 @@ export namespace Prisma {
     loyaltyPoints?: IntFieldUpdateOperationsInput | number
     totalSpent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     preferredLanguage?: NullableStringFieldUpdateOperationsInput | string | null
-    preferredCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredCurrency?: NullableEnumCurrencyFieldUpdateOperationsInput | $Enums.Currency | null
     marketingOptIn?: BoolFieldUpdateOperationsInput | boolean
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     vatNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58556,7 +58768,7 @@ export namespace Prisma {
     loyaltyPoints?: IntFieldUpdateOperationsInput | number
     totalSpent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     preferredLanguage?: NullableStringFieldUpdateOperationsInput | string | null
-    preferredCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredCurrency?: NullableEnumCurrencyFieldUpdateOperationsInput | $Enums.Currency | null
     marketingOptIn?: BoolFieldUpdateOperationsInput | boolean
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58942,6 +59154,13 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type EnumAddressTypeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.AddressType | EnumAddressTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.AddressType[] | ListEnumAddressTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.AddressType[] | ListEnumAddressTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumAddressTypeNullableFilter<$PrismaModel> | $Enums.AddressType | null
+  }
+
   export type ThanaScalarRelationFilter = {
     is?: ThanaWhereInput
     isNot?: ThanaWhereInput
@@ -58968,6 +59187,7 @@ export namespace Prisma {
     thanaId?: SortOrder
     street?: SortOrder
     postalCode?: SortOrder
+    addressType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -58978,6 +59198,7 @@ export namespace Prisma {
     thanaId?: SortOrder
     street?: SortOrder
     postalCode?: SortOrder
+    addressType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -58988,8 +59209,19 @@ export namespace Prisma {
     thanaId?: SortOrder
     street?: SortOrder
     postalCode?: SortOrder
+    addressType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type EnumAddressTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AddressType | EnumAddressTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.AddressType[] | ListEnumAddressTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.AddressType[] | ListEnumAddressTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumAddressTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.AddressType | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumAddressTypeNullableFilter<$PrismaModel>
+    _max?: NestedEnumAddressTypeNullableFilter<$PrismaModel>
   }
 
   export type EnumCouponTypeFilter<$PrismaModel = never> = {
@@ -59227,6 +59459,13 @@ export namespace Prisma {
     not?: NestedEnumPaymentStatusFilter<$PrismaModel> | $Enums.PaymentStatus
   }
 
+  export type EnumCurrencyFilter<$PrismaModel = never> = {
+    equals?: $Enums.Currency | EnumCurrencyFieldRefInput<$PrismaModel>
+    in?: $Enums.Currency[] | ListEnumCurrencyFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Currency[] | ListEnumCurrencyFieldRefInput<$PrismaModel>
+    not?: NestedEnumCurrencyFilter<$PrismaModel> | $Enums.Currency
+  }
+
   export type CustomerScalarRelationFilter = {
     is?: CustomerWhereInput
     isNot?: CustomerWhereInput
@@ -59394,6 +59633,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPaymentStatusFilter<$PrismaModel>
     _max?: NestedEnumPaymentStatusFilter<$PrismaModel>
+  }
+
+  export type EnumCurrencyWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Currency | EnumCurrencyFieldRefInput<$PrismaModel>
+    in?: $Enums.Currency[] | ListEnumCurrencyFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Currency[] | ListEnumCurrencyFieldRefInput<$PrismaModel>
+    not?: NestedEnumCurrencyWithAggregatesFilter<$PrismaModel> | $Enums.Currency
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCurrencyFilter<$PrismaModel>
+    _max?: NestedEnumCurrencyFilter<$PrismaModel>
   }
 
   export type OrderScalarRelationFilter = {
@@ -59843,6 +60092,14 @@ export namespace Prisma {
     quantity?: SortOrder
   }
 
+  export type EnumTargetAudienceNullableListFilter<$PrismaModel = never> = {
+    equals?: $Enums.TargetAudience[] | ListEnumTargetAudienceFieldRefInput<$PrismaModel> | null
+    has?: $Enums.TargetAudience | EnumTargetAudienceFieldRefInput<$PrismaModel> | null
+    hasEvery?: $Enums.TargetAudience[] | ListEnumTargetAudienceFieldRefInput<$PrismaModel>
+    hasSome?: $Enums.TargetAudience[] | ListEnumTargetAudienceFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type CategoryNullableScalarRelationFilter = {
     is?: CategoryWhereInput | null
     isNot?: CategoryWhereInput | null
@@ -59881,6 +60138,7 @@ export namespace Prisma {
     description?: SortOrder
     parentId?: SortOrder
     imageUrl?: SortOrder
+    targetAudience?: SortOrder
     isActive?: SortOrder
     sortOrder?: SortOrder
     seoTitle?: SortOrder
@@ -59982,6 +60240,13 @@ export namespace Prisma {
     not?: NestedEnumProductStatusFilter<$PrismaModel> | $Enums.ProductStatus
   }
 
+  export type EnumProductWeightUnitNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductWeightUnit | EnumProductWeightUnitFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ProductWeightUnit[] | ListEnumProductWeightUnitFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ProductWeightUnit[] | ListEnumProductWeightUnitFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumProductWeightUnitNullableFilter<$PrismaModel> | $Enums.ProductWeightUnit | null
+  }
+
   export type BrandNullableScalarRelationFilter = {
     is?: BrandWhereInput | null
     isNot?: BrandWhereInput | null
@@ -60079,6 +60344,7 @@ export namespace Prisma {
     status?: SortOrder
     featured?: SortOrder
     weight?: SortOrder
+    weightUnit?: SortOrder
     tags?: SortOrder
     seoTitle?: SortOrder
     seoDescription?: SortOrder
@@ -60120,6 +60386,7 @@ export namespace Prisma {
     status?: SortOrder
     featured?: SortOrder
     weight?: SortOrder
+    weightUnit?: SortOrder
     seoTitle?: SortOrder
     seoDescription?: SortOrder
     warranty?: SortOrder
@@ -60148,6 +60415,7 @@ export namespace Prisma {
     status?: SortOrder
     featured?: SortOrder
     weight?: SortOrder
+    weightUnit?: SortOrder
     seoTitle?: SortOrder
     seoDescription?: SortOrder
     warranty?: SortOrder
@@ -60182,6 +60450,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumProductStatusFilter<$PrismaModel>
     _max?: NestedEnumProductStatusFilter<$PrismaModel>
+  }
+
+  export type EnumProductWeightUnitNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductWeightUnit | EnumProductWeightUnitFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ProductWeightUnit[] | ListEnumProductWeightUnitFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ProductWeightUnit[] | ListEnumProductWeightUnitFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumProductWeightUnitNullableWithAggregatesFilter<$PrismaModel> | $Enums.ProductWeightUnit | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumProductWeightUnitNullableFilter<$PrismaModel>
+    _max?: NestedEnumProductWeightUnitNullableFilter<$PrismaModel>
   }
 
   export type BundleItemCountOrderByAggregateInput = {
@@ -60454,6 +60732,13 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type EnumProductDimensionUnitNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductDimensionUnit | EnumProductDimensionUnitFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ProductDimensionUnit[] | ListEnumProductDimensionUnitFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ProductDimensionUnit[] | ListEnumProductDimensionUnitFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumProductDimensionUnitNullableFilter<$PrismaModel> | $Enums.ProductDimensionUnit | null
+  }
+
   export type ProductDimensionCountOrderByAggregateInput = {
     id?: SortOrder
     productId?: SortOrder
@@ -60497,6 +60782,16 @@ export namespace Prisma {
     length?: SortOrder
     width?: SortOrder
     height?: SortOrder
+  }
+
+  export type EnumProductDimensionUnitNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductDimensionUnit | EnumProductDimensionUnitFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ProductDimensionUnit[] | ListEnumProductDimensionUnitFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ProductDimensionUnit[] | ListEnumProductDimensionUnitFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumProductDimensionUnitNullableWithAggregatesFilter<$PrismaModel> | $Enums.ProductDimensionUnit | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumProductDimensionUnitNullableFilter<$PrismaModel>
+    _max?: NestedEnumProductDimensionUnitNullableFilter<$PrismaModel>
   }
 
   export type ProductFaqCountOrderByAggregateInput = {
@@ -61331,6 +61626,13 @@ export namespace Prisma {
     not?: NestedEnumCustomerTypeFilter<$PrismaModel> | $Enums.CustomerType
   }
 
+  export type EnumCurrencyNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.Currency | EnumCurrencyFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Currency[] | ListEnumCurrencyFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Currency[] | ListEnumCurrencyFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumCurrencyNullableFilter<$PrismaModel> | $Enums.Currency | null
+  }
+
   export type CartListRelationFilter = {
     every?: CartWhereInput
     some?: CartWhereInput
@@ -61432,6 +61734,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumCustomerTypeFilter<$PrismaModel>
     _max?: NestedEnumCustomerTypeFilter<$PrismaModel>
+  }
+
+  export type EnumCurrencyNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Currency | EnumCurrencyFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Currency[] | ListEnumCurrencyFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Currency[] | ListEnumCurrencyFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumCurrencyNullableWithAggregatesFilter<$PrismaModel> | $Enums.Currency | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumCurrencyNullableFilter<$PrismaModel>
+    _max?: NestedEnumCurrencyNullableFilter<$PrismaModel>
   }
 
   export type ProductVariantCreateNestedOneWithoutInventoryLogsInput = {
@@ -61712,6 +62024,10 @@ export namespace Prisma {
     connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
   }
 
+  export type NullableEnumAddressTypeFieldUpdateOperationsInput = {
+    set?: $Enums.AddressType | null
+  }
+
   export type ThanaUpdateOneRequiredWithoutAddressesNestedInput = {
     create?: XOR<ThanaCreateWithoutAddressesInput, ThanaUncheckedCreateWithoutAddressesInput>
     connectOrCreate?: ThanaCreateOrConnectWithoutAddressesInput
@@ -61904,6 +62220,10 @@ export namespace Prisma {
 
   export type EnumPaymentStatusFieldUpdateOperationsInput = {
     set?: $Enums.PaymentStatus
+  }
+
+  export type EnumCurrencyFieldUpdateOperationsInput = {
+    set?: $Enums.Currency
   }
 
   export type TenantUpdateOneWithoutOrdersNestedInput = {
@@ -62284,6 +62604,10 @@ export namespace Prisma {
     update?: XOR<XOR<ProductVariantUpdateToOneWithWhereWithoutCartItemsInput, ProductVariantUpdateWithoutCartItemsInput>, ProductVariantUncheckedUpdateWithoutCartItemsInput>
   }
 
+  export type CategoryCreatetargetAudienceInput = {
+    set: $Enums.TargetAudience[]
+  }
+
   export type TenantCreateNestedOneWithoutCategoriesInput = {
     create?: XOR<TenantCreateWithoutCategoriesInput, TenantUncheckedCreateWithoutCategoriesInput>
     connectOrCreate?: TenantCreateOrConnectWithoutCategoriesInput
@@ -62322,6 +62646,11 @@ export namespace Prisma {
     connectOrCreate?: ProductCreateOrConnectWithoutCategoryInput | ProductCreateOrConnectWithoutCategoryInput[]
     createMany?: ProductCreateManyCategoryInputEnvelope
     connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+  }
+
+  export type CategoryUpdatetargetAudienceInput = {
+    set?: $Enums.TargetAudience[]
+    push?: $Enums.TargetAudience | $Enums.TargetAudience[]
   }
 
   export type TenantUpdateOneWithoutCategoriesNestedInput = {
@@ -62624,6 +62953,10 @@ export namespace Prisma {
 
   export type EnumProductStatusFieldUpdateOperationsInput = {
     set?: $Enums.ProductStatus
+  }
+
+  export type NullableEnumProductWeightUnitFieldUpdateOperationsInput = {
+    set?: $Enums.ProductWeightUnit | null
   }
 
   export type ProductUpdatetagsInput = {
@@ -63310,6 +63643,10 @@ export namespace Prisma {
     create?: XOR<ProductCreateWithoutDimensionInput, ProductUncheckedCreateWithoutDimensionInput>
     connectOrCreate?: ProductCreateOrConnectWithoutDimensionInput
     connect?: ProductWhereUniqueInput
+  }
+
+  export type NullableEnumProductDimensionUnitFieldUpdateOperationsInput = {
+    set?: $Enums.ProductDimensionUnit | null
   }
 
   export type ProductUpdateOneRequiredWithoutDimensionNestedInput = {
@@ -64260,6 +64597,10 @@ export namespace Prisma {
     set?: $Enums.CustomerType
   }
 
+  export type NullableEnumCurrencyFieldUpdateOperationsInput = {
+    set?: $Enums.Currency | null
+  }
+
   export type UserUpdateOneRequiredWithoutCustomerNestedInput = {
     create?: XOR<UserCreateWithoutCustomerInput, UserUncheckedCreateWithoutCustomerInput>
     connectOrCreate?: UserCreateOrConnectWithoutCustomerInput
@@ -64556,6 +64897,23 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type NestedEnumAddressTypeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.AddressType | EnumAddressTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.AddressType[] | ListEnumAddressTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.AddressType[] | ListEnumAddressTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumAddressTypeNullableFilter<$PrismaModel> | $Enums.AddressType | null
+  }
+
+  export type NestedEnumAddressTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AddressType | EnumAddressTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.AddressType[] | ListEnumAddressTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.AddressType[] | ListEnumAddressTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumAddressTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.AddressType | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumAddressTypeNullableFilter<$PrismaModel>
+    _max?: NestedEnumAddressTypeNullableFilter<$PrismaModel>
+  }
+
   export type NestedEnumCouponTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.CouponType | EnumCouponTypeFieldRefInput<$PrismaModel>
     in?: $Enums.CouponType[] | ListEnumCouponTypeFieldRefInput<$PrismaModel>
@@ -64693,6 +65051,13 @@ export namespace Prisma {
     not?: NestedEnumPaymentStatusFilter<$PrismaModel> | $Enums.PaymentStatus
   }
 
+  export type NestedEnumCurrencyFilter<$PrismaModel = never> = {
+    equals?: $Enums.Currency | EnumCurrencyFieldRefInput<$PrismaModel>
+    in?: $Enums.Currency[] | ListEnumCurrencyFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Currency[] | ListEnumCurrencyFieldRefInput<$PrismaModel>
+    not?: NestedEnumCurrencyFilter<$PrismaModel> | $Enums.Currency
+  }
+
   export type NestedEnumOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.OrderStatus | EnumOrderStatusFieldRefInput<$PrismaModel>
     in?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
@@ -64711,6 +65076,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPaymentStatusFilter<$PrismaModel>
     _max?: NestedEnumPaymentStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumCurrencyWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Currency | EnumCurrencyFieldRefInput<$PrismaModel>
+    in?: $Enums.Currency[] | ListEnumCurrencyFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Currency[] | ListEnumCurrencyFieldRefInput<$PrismaModel>
+    not?: NestedEnumCurrencyWithAggregatesFilter<$PrismaModel> | $Enums.Currency
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCurrencyFilter<$PrismaModel>
+    _max?: NestedEnumCurrencyFilter<$PrismaModel>
   }
 
   export type NestedEnumPaymentMethodFilter<$PrismaModel = never> = {
@@ -64811,6 +65186,13 @@ export namespace Prisma {
     not?: NestedEnumProductStatusFilter<$PrismaModel> | $Enums.ProductStatus
   }
 
+  export type NestedEnumProductWeightUnitNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductWeightUnit | EnumProductWeightUnitFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ProductWeightUnit[] | ListEnumProductWeightUnitFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ProductWeightUnit[] | ListEnumProductWeightUnitFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumProductWeightUnitNullableFilter<$PrismaModel> | $Enums.ProductWeightUnit | null
+  }
+
   export type NestedEnumProductStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.ProductStatus | EnumProductStatusFieldRefInput<$PrismaModel>
     in?: $Enums.ProductStatus[] | ListEnumProductStatusFieldRefInput<$PrismaModel>
@@ -64819,6 +65201,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumProductStatusFilter<$PrismaModel>
     _max?: NestedEnumProductStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumProductWeightUnitNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductWeightUnit | EnumProductWeightUnitFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ProductWeightUnit[] | ListEnumProductWeightUnitFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ProductWeightUnit[] | ListEnumProductWeightUnitFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumProductWeightUnitNullableWithAggregatesFilter<$PrismaModel> | $Enums.ProductWeightUnit | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumProductWeightUnitNullableFilter<$PrismaModel>
+    _max?: NestedEnumProductWeightUnitNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumProductRelationTypeFilter<$PrismaModel = never> = {
@@ -64836,6 +65228,23 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumProductRelationTypeFilter<$PrismaModel>
     _max?: NestedEnumProductRelationTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumProductDimensionUnitNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductDimensionUnit | EnumProductDimensionUnitFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ProductDimensionUnit[] | ListEnumProductDimensionUnitFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ProductDimensionUnit[] | ListEnumProductDimensionUnitFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumProductDimensionUnitNullableFilter<$PrismaModel> | $Enums.ProductDimensionUnit | null
+  }
+
+  export type NestedEnumProductDimensionUnitNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductDimensionUnit | EnumProductDimensionUnitFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ProductDimensionUnit[] | ListEnumProductDimensionUnitFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ProductDimensionUnit[] | ListEnumProductDimensionUnitFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumProductDimensionUnitNullableWithAggregatesFilter<$PrismaModel> | $Enums.ProductDimensionUnit | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumProductDimensionUnitNullableFilter<$PrismaModel>
+    _max?: NestedEnumProductDimensionUnitNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumNotificationTypeFilter<$PrismaModel = never> = {
@@ -65021,6 +65430,13 @@ export namespace Prisma {
     not?: NestedEnumCustomerTypeFilter<$PrismaModel> | $Enums.CustomerType
   }
 
+  export type NestedEnumCurrencyNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.Currency | EnumCurrencyFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Currency[] | ListEnumCurrencyFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Currency[] | ListEnumCurrencyFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumCurrencyNullableFilter<$PrismaModel> | $Enums.Currency | null
+  }
+
   export type NestedEnumCustomerTypeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.CustomerType | EnumCustomerTypeFieldRefInput<$PrismaModel>
     in?: $Enums.CustomerType[] | ListEnumCustomerTypeFieldRefInput<$PrismaModel>
@@ -65029,6 +65445,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumCustomerTypeFilter<$PrismaModel>
     _max?: NestedEnumCustomerTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumCurrencyNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Currency | EnumCurrencyFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Currency[] | ListEnumCurrencyFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Currency[] | ListEnumCurrencyFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumCurrencyNullableWithAggregatesFilter<$PrismaModel> | $Enums.Currency | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumCurrencyNullableFilter<$PrismaModel>
+    _max?: NestedEnumCurrencyNullableFilter<$PrismaModel>
   }
 
   export type ProductVariantCreateWithoutInventoryLogsInput = {
@@ -65406,6 +65832,7 @@ export namespace Prisma {
     id?: string
     street: string
     postalCode?: string | null
+    addressType?: $Enums.AddressType | null
     createdAt?: Date | string
     updatedAt?: Date | string
     User?: UserCreateNestedOneWithoutAddressesInput
@@ -65417,6 +65844,7 @@ export namespace Prisma {
     userId?: string | null
     street: string
     postalCode?: string | null
+    addressType?: $Enums.AddressType | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutAddressInput
@@ -65486,6 +65914,7 @@ export namespace Prisma {
     thanaId?: StringFilter<"Address"> | string
     street?: StringFilter<"Address"> | string
     postalCode?: StringNullableFilter<"Address"> | string | null
+    addressType?: EnumAddressTypeNullableFilter<"Address"> | $Enums.AddressType | null
     createdAt?: DateTimeFilter<"Address"> | Date | string
     updatedAt?: DateTimeFilter<"Address"> | Date | string
   }
@@ -65579,7 +66008,7 @@ export namespace Prisma {
     shippingCost?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
-    currency?: string
+    currency?: $Enums.Currency
     notes?: string | null
     internalNotes?: string | null
     couponCode?: string | null
@@ -65610,7 +66039,7 @@ export namespace Prisma {
     shippingCost?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
-    currency?: string
+    currency?: $Enums.Currency
     notes?: string | null
     internalNotes?: string | null
     couponCode?: string | null
@@ -65759,7 +66188,7 @@ export namespace Prisma {
     shippingCost?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
     discount?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
     total?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
-    currency?: StringFilter<"Order"> | string
+    currency?: EnumCurrencyFilter<"Order"> | $Enums.Currency
     notes?: StringNullableFilter<"Order"> | string | null
     internalNotes?: StringNullableFilter<"Order"> | string | null
     couponCode?: StringNullableFilter<"Order"> | string | null
@@ -65998,7 +66427,7 @@ export namespace Prisma {
     loyaltyPoints?: number
     totalSpent?: Decimal | DecimalJsLike | number | string
     preferredLanguage?: string | null
-    preferredCurrency?: string | null
+    preferredCurrency?: $Enums.Currency | null
     marketingOptIn?: boolean
     referralCode?: string | null
     vatNumber?: string | null
@@ -66023,7 +66452,7 @@ export namespace Prisma {
     loyaltyPoints?: number
     totalSpent?: Decimal | DecimalJsLike | number | string
     preferredLanguage?: string | null
-    preferredCurrency?: string | null
+    preferredCurrency?: $Enums.Currency | null
     marketingOptIn?: boolean
     referralCode?: string | null
     referredBy?: string | null
@@ -66047,6 +66476,7 @@ export namespace Prisma {
     id?: string
     street: string
     postalCode?: string | null
+    addressType?: $Enums.AddressType | null
     createdAt?: Date | string
     updatedAt?: Date | string
     thana: ThanaCreateNestedOneWithoutAddressesInput
@@ -66059,6 +66489,7 @@ export namespace Prisma {
     thanaId: string
     street: string
     postalCode?: string | null
+    addressType?: $Enums.AddressType | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -66102,7 +66533,7 @@ export namespace Prisma {
     provider: string
     providerTransactionId?: string | null
     amount: Decimal | DecimalJsLike | number | string
-    currency?: string
+    currency?: $Enums.Currency
     status?: $Enums.PaymentStatus
     failureReason?: string | null
     metadata?: JsonNullValueInput | InputJsonValue
@@ -66116,7 +66547,7 @@ export namespace Prisma {
     provider: string
     providerTransactionId?: string | null
     amount: Decimal | DecimalJsLike | number | string
-    currency?: string
+    currency?: $Enums.Currency
     status?: $Enums.PaymentStatus
     failureReason?: string | null
     metadata?: JsonNullValueInput | InputJsonValue
@@ -66312,7 +66743,7 @@ export namespace Prisma {
     loyaltyPoints?: IntFieldUpdateOperationsInput | number
     totalSpent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     preferredLanguage?: NullableStringFieldUpdateOperationsInput | string | null
-    preferredCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredCurrency?: NullableEnumCurrencyFieldUpdateOperationsInput | $Enums.Currency | null
     marketingOptIn?: BoolFieldUpdateOperationsInput | boolean
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     vatNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66337,7 +66768,7 @@ export namespace Prisma {
     loyaltyPoints?: IntFieldUpdateOperationsInput | number
     totalSpent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     preferredLanguage?: NullableStringFieldUpdateOperationsInput | string | null
-    preferredCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredCurrency?: NullableEnumCurrencyFieldUpdateOperationsInput | $Enums.Currency | null
     marketingOptIn?: BoolFieldUpdateOperationsInput | boolean
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66367,6 +66798,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     street?: StringFieldUpdateOperationsInput | string
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    addressType?: NullableEnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     thana?: ThanaUpdateOneRequiredWithoutAddressesNestedInput
@@ -66379,6 +66811,7 @@ export namespace Prisma {
     thanaId?: StringFieldUpdateOperationsInput | string
     street?: StringFieldUpdateOperationsInput | string
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    addressType?: NullableEnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -66438,7 +66871,7 @@ export namespace Prisma {
     provider?: StringFilter<"Payment"> | string
     providerTransactionId?: StringNullableFilter<"Payment"> | string | null
     amount?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
-    currency?: StringFilter<"Payment"> | string
+    currency?: EnumCurrencyFilter<"Payment"> | $Enums.Currency
     status?: EnumPaymentStatusFilter<"Payment"> | $Enums.PaymentStatus
     failureReason?: StringNullableFilter<"Payment"> | string | null
     metadata?: JsonFilter<"Payment">
@@ -66527,7 +66960,7 @@ export namespace Prisma {
     shippingCost?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
-    currency?: string
+    currency?: $Enums.Currency
     notes?: string | null
     internalNotes?: string | null
     couponCode?: string | null
@@ -66559,7 +66992,7 @@ export namespace Prisma {
     shippingCost?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
-    currency?: string
+    currency?: $Enums.Currency
     notes?: string | null
     internalNotes?: string | null
     couponCode?: string | null
@@ -66588,6 +67021,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -66631,6 +67065,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -66721,7 +67156,7 @@ export namespace Prisma {
     shippingCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     couponCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66753,7 +67188,7 @@ export namespace Prisma {
     shippingCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     couponCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66788,6 +67223,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66831,6 +67267,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66911,7 +67348,7 @@ export namespace Prisma {
     shippingCost?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
-    currency?: string
+    currency?: $Enums.Currency
     notes?: string | null
     internalNotes?: string | null
     couponCode?: string | null
@@ -66943,7 +67380,7 @@ export namespace Prisma {
     shippingCost?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
-    currency?: string
+    currency?: $Enums.Currency
     notes?: string | null
     internalNotes?: string | null
     couponCode?: string | null
@@ -66985,7 +67422,7 @@ export namespace Prisma {
     shippingCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     couponCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -67017,7 +67454,7 @@ export namespace Prisma {
     shippingCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     couponCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -67043,7 +67480,7 @@ export namespace Prisma {
     shippingCost?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
-    currency?: string
+    currency?: $Enums.Currency
     notes?: string | null
     internalNotes?: string | null
     couponCode?: string | null
@@ -67075,7 +67512,7 @@ export namespace Prisma {
     shippingCost?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
-    currency?: string
+    currency?: $Enums.Currency
     notes?: string | null
     internalNotes?: string | null
     couponCode?: string | null
@@ -67117,7 +67554,7 @@ export namespace Prisma {
     shippingCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     couponCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -67149,7 +67586,7 @@ export namespace Prisma {
     shippingCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     couponCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -67175,7 +67612,7 @@ export namespace Prisma {
     shippingCost?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
-    currency?: string
+    currency?: $Enums.Currency
     notes?: string | null
     internalNotes?: string | null
     couponCode?: string | null
@@ -67207,7 +67644,7 @@ export namespace Prisma {
     shippingCost?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
-    currency?: string
+    currency?: $Enums.Currency
     notes?: string | null
     internalNotes?: string | null
     couponCode?: string | null
@@ -67275,7 +67712,7 @@ export namespace Prisma {
     shippingCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     couponCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -67307,7 +67744,7 @@ export namespace Prisma {
     shippingCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     couponCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -67438,7 +67875,7 @@ export namespace Prisma {
     loyaltyPoints?: number
     totalSpent?: Decimal | DecimalJsLike | number | string
     preferredLanguage?: string | null
-    preferredCurrency?: string | null
+    preferredCurrency?: $Enums.Currency | null
     marketingOptIn?: boolean
     referralCode?: string | null
     vatNumber?: string | null
@@ -67463,7 +67900,7 @@ export namespace Prisma {
     loyaltyPoints?: number
     totalSpent?: Decimal | DecimalJsLike | number | string
     preferredLanguage?: string | null
-    preferredCurrency?: string | null
+    preferredCurrency?: $Enums.Currency | null
     marketingOptIn?: boolean
     referralCode?: string | null
     referredBy?: string | null
@@ -67526,7 +67963,7 @@ export namespace Prisma {
     loyaltyPoints?: IntFieldUpdateOperationsInput | number
     totalSpent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     preferredLanguage?: NullableStringFieldUpdateOperationsInput | string | null
-    preferredCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredCurrency?: NullableEnumCurrencyFieldUpdateOperationsInput | $Enums.Currency | null
     marketingOptIn?: BoolFieldUpdateOperationsInput | boolean
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     vatNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -67551,7 +67988,7 @@ export namespace Prisma {
     loyaltyPoints?: IntFieldUpdateOperationsInput | number
     totalSpent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     preferredLanguage?: NullableStringFieldUpdateOperationsInput | string | null
-    preferredCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredCurrency?: NullableEnumCurrencyFieldUpdateOperationsInput | $Enums.Currency | null
     marketingOptIn?: BoolFieldUpdateOperationsInput | boolean
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -67786,6 +68223,7 @@ export namespace Prisma {
     slug: string
     description?: string | null
     imageUrl?: string | null
+    targetAudience?: CategoryCreatetargetAudienceInput | $Enums.TargetAudience[]
     isActive?: boolean
     sortOrder?: number
     seoTitle?: string | null
@@ -67806,6 +68244,7 @@ export namespace Prisma {
     description?: string | null
     parentId?: string | null
     imageUrl?: string | null
+    targetAudience?: CategoryCreatetargetAudienceInput | $Enums.TargetAudience[]
     isActive?: boolean
     sortOrder?: number
     seoTitle?: string | null
@@ -67827,6 +68266,7 @@ export namespace Prisma {
     slug: string
     description?: string | null
     imageUrl?: string | null
+    targetAudience?: CategoryCreatetargetAudienceInput | $Enums.TargetAudience[]
     isActive?: boolean
     sortOrder?: number
     seoTitle?: string | null
@@ -67846,6 +68286,7 @@ export namespace Prisma {
     slug: string
     description?: string | null
     imageUrl?: string | null
+    targetAudience?: CategoryCreatetargetAudienceInput | $Enums.TargetAudience[]
     isActive?: boolean
     sortOrder?: number
     seoTitle?: string | null
@@ -67876,6 +68317,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -67918,6 +68360,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -68051,6 +68494,7 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAudience?: CategoryUpdatetargetAudienceInput | $Enums.TargetAudience[]
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
@@ -68071,6 +68515,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAudience?: CategoryUpdatetargetAudienceInput | $Enums.TargetAudience[]
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
@@ -68108,6 +68553,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"Category"> | string | null
     parentId?: StringNullableFilter<"Category"> | string | null
     imageUrl?: StringNullableFilter<"Category"> | string | null
+    targetAudience?: EnumTargetAudienceNullableListFilter<"Category">
     isActive?: BoolFilter<"Category"> | boolean
     sortOrder?: IntFilter<"Category"> | number
     seoTitle?: StringNullableFilter<"Category"> | string | null
@@ -68148,6 +68594,7 @@ export namespace Prisma {
     status?: EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
     featured?: BoolFilter<"Product"> | boolean
     weight?: DecimalNullableFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: EnumProductWeightUnitNullableFilter<"Product"> | $Enums.ProductWeightUnit | null
     tags?: StringNullableListFilter<"Product">
     seoTitle?: StringNullableFilter<"Product"> | string | null
     seoDescription?: StringNullableFilter<"Product"> | string | null
@@ -68247,6 +68694,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -68289,6 +68737,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -68531,6 +68980,7 @@ export namespace Prisma {
     slug: string
     description?: string | null
     imageUrl?: string | null
+    targetAudience?: CategoryCreatetargetAudienceInput | $Enums.TargetAudience[]
     isActive?: boolean
     sortOrder?: number
     seoTitle?: string | null
@@ -68551,6 +69001,7 @@ export namespace Prisma {
     description?: string | null
     parentId?: string | null
     imageUrl?: string | null
+    targetAudience?: CategoryCreatetargetAudienceInput | $Enums.TargetAudience[]
     isActive?: boolean
     sortOrder?: number
     seoTitle?: string | null
@@ -68635,7 +69086,7 @@ export namespace Prisma {
     length?: Decimal | DecimalJsLike | number | string | null
     width?: Decimal | DecimalJsLike | number | string | null
     height?: Decimal | DecimalJsLike | number | string | null
-    unit?: string | null
+    unit?: $Enums.ProductDimensionUnit | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -68645,7 +69096,7 @@ export namespace Prisma {
     length?: Decimal | DecimalJsLike | number | string | null
     width?: Decimal | DecimalJsLike | number | string | null
     height?: Decimal | DecimalJsLike | number | string | null
-    unit?: string | null
+    unit?: $Enums.ProductDimensionUnit | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -68976,6 +69427,7 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAudience?: CategoryUpdatetargetAudienceInput | $Enums.TargetAudience[]
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
@@ -68996,6 +69448,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAudience?: CategoryUpdatetargetAudienceInput | $Enums.TargetAudience[]
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69080,7 +69533,7 @@ export namespace Prisma {
     length?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     width?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     height?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    unit?: NullableStringFieldUpdateOperationsInput | string | null
+    unit?: NullableEnumProductDimensionUnitFieldUpdateOperationsInput | $Enums.ProductDimensionUnit | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -69090,7 +69543,7 @@ export namespace Prisma {
     length?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     width?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     height?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    unit?: NullableStringFieldUpdateOperationsInput | string | null
+    unit?: NullableEnumProductDimensionUnitFieldUpdateOperationsInput | $Enums.ProductDimensionUnit | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -69277,6 +69730,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -69320,6 +69774,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -69373,6 +69828,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69416,6 +69872,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69453,6 +69910,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -69496,6 +69954,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -69538,6 +69997,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -69581,6 +70041,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -69634,6 +70095,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69677,6 +70139,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69725,6 +70188,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69768,6 +70232,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70140,6 +70605,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -70183,6 +70649,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -70317,6 +70784,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70360,6 +70828,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70413,6 +70882,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -70456,6 +70926,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -70509,6 +70980,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70552,6 +71024,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70589,6 +71062,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -70632,6 +71106,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -70685,6 +71160,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70728,6 +71204,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70765,6 +71242,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -70808,6 +71286,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -70861,6 +71340,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70904,6 +71384,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70941,6 +71422,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -70984,6 +71466,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -71025,7 +71508,7 @@ export namespace Prisma {
     loyaltyPoints?: number
     totalSpent?: Decimal | DecimalJsLike | number | string
     preferredLanguage?: string | null
-    preferredCurrency?: string | null
+    preferredCurrency?: $Enums.Currency | null
     marketingOptIn?: boolean
     referralCode?: string | null
     vatNumber?: string | null
@@ -71050,7 +71533,7 @@ export namespace Prisma {
     loyaltyPoints?: number
     totalSpent?: Decimal | DecimalJsLike | number | string
     preferredLanguage?: string | null
-    preferredCurrency?: string | null
+    preferredCurrency?: $Enums.Currency | null
     marketingOptIn?: boolean
     referralCode?: string | null
     referredBy?: string | null
@@ -71090,6 +71573,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71133,6 +71617,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71180,7 +71665,7 @@ export namespace Prisma {
     loyaltyPoints?: IntFieldUpdateOperationsInput | number
     totalSpent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     preferredLanguage?: NullableStringFieldUpdateOperationsInput | string | null
-    preferredCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredCurrency?: NullableEnumCurrencyFieldUpdateOperationsInput | $Enums.Currency | null
     marketingOptIn?: BoolFieldUpdateOperationsInput | boolean
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     vatNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71205,7 +71690,7 @@ export namespace Prisma {
     loyaltyPoints?: IntFieldUpdateOperationsInput | number
     totalSpent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     preferredLanguage?: NullableStringFieldUpdateOperationsInput | string | null
-    preferredCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredCurrency?: NullableEnumCurrencyFieldUpdateOperationsInput | $Enums.Currency | null
     marketingOptIn?: BoolFieldUpdateOperationsInput | boolean
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71229,6 +71714,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -71272,6 +71758,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -71380,6 +71867,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71423,6 +71911,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71961,6 +72450,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -72003,6 +72493,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -72048,6 +72539,7 @@ export namespace Prisma {
     slug: string
     description?: string | null
     imageUrl?: string | null
+    targetAudience?: CategoryCreatetargetAudienceInput | $Enums.TargetAudience[]
     isActive?: boolean
     sortOrder?: number
     seoTitle?: string | null
@@ -72067,6 +72559,7 @@ export namespace Prisma {
     description?: string | null
     parentId?: string | null
     imageUrl?: string | null
+    targetAudience?: CategoryCreatetargetAudienceInput | $Enums.TargetAudience[]
     isActive?: boolean
     sortOrder?: number
     seoTitle?: string | null
@@ -72137,7 +72630,7 @@ export namespace Prisma {
     shippingCost?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
-    currency?: string
+    currency?: $Enums.Currency
     notes?: string | null
     internalNotes?: string | null
     couponCode?: string | null
@@ -72168,7 +72661,7 @@ export namespace Prisma {
     shippingCost?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
-    currency?: string
+    currency?: $Enums.Currency
     notes?: string | null
     internalNotes?: string | null
     couponCode?: string | null
@@ -72855,6 +73348,7 @@ export namespace Prisma {
     id?: string
     street: string
     postalCode?: string | null
+    addressType?: $Enums.AddressType | null
     createdAt?: Date | string
     updatedAt?: Date | string
     thana: ThanaCreateNestedOneWithoutAddressesInput
@@ -72866,6 +73360,7 @@ export namespace Prisma {
     thanaId: string
     street: string
     postalCode?: string | null
+    addressType?: $Enums.AddressType | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutAddressInput
@@ -72969,7 +73464,7 @@ export namespace Prisma {
     loyaltyPoints?: number
     totalSpent?: Decimal | DecimalJsLike | number | string
     preferredLanguage?: string | null
-    preferredCurrency?: string | null
+    preferredCurrency?: $Enums.Currency | null
     marketingOptIn?: boolean
     referralCode?: string | null
     vatNumber?: string | null
@@ -72993,7 +73488,7 @@ export namespace Prisma {
     loyaltyPoints?: number
     totalSpent?: Decimal | DecimalJsLike | number | string
     preferredLanguage?: string | null
-    preferredCurrency?: string | null
+    preferredCurrency?: $Enums.Currency | null
     marketingOptIn?: boolean
     referralCode?: string | null
     referredBy?: string | null
@@ -73297,7 +73792,7 @@ export namespace Prisma {
     loyaltyPoints?: IntFieldUpdateOperationsInput | number
     totalSpent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     preferredLanguage?: NullableStringFieldUpdateOperationsInput | string | null
-    preferredCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredCurrency?: NullableEnumCurrencyFieldUpdateOperationsInput | $Enums.Currency | null
     marketingOptIn?: BoolFieldUpdateOperationsInput | boolean
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     vatNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -73321,7 +73816,7 @@ export namespace Prisma {
     loyaltyPoints?: IntFieldUpdateOperationsInput | number
     totalSpent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     preferredLanguage?: NullableStringFieldUpdateOperationsInput | string | null
-    preferredCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredCurrency?: NullableEnumCurrencyFieldUpdateOperationsInput | $Enums.Currency | null
     marketingOptIn?: BoolFieldUpdateOperationsInput | boolean
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -73828,7 +74323,7 @@ export namespace Prisma {
     shippingCost?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
-    currency?: string
+    currency?: $Enums.Currency
     notes?: string | null
     internalNotes?: string | null
     couponCode?: string | null
@@ -73859,7 +74354,7 @@ export namespace Prisma {
     shippingCost?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
-    currency?: string
+    currency?: $Enums.Currency
     notes?: string | null
     internalNotes?: string | null
     couponCode?: string | null
@@ -73921,7 +74416,7 @@ export namespace Prisma {
     loyaltyPoints?: number
     totalSpent?: Decimal | DecimalJsLike | number | string
     preferredLanguage?: string | null
-    preferredCurrency?: string | null
+    preferredCurrency?: $Enums.Currency | null
     marketingOptIn?: boolean
     referralCode?: string | null
     vatNumber?: string | null
@@ -73946,7 +74441,7 @@ export namespace Prisma {
     loyaltyPoints?: number
     totalSpent?: Decimal | DecimalJsLike | number | string
     preferredLanguage?: string | null
-    preferredCurrency?: string | null
+    preferredCurrency?: $Enums.Currency | null
     marketingOptIn?: boolean
     referralCode?: string | null
     vatNumber?: string | null
@@ -73979,7 +74474,7 @@ export namespace Prisma {
     loyaltyPoints?: number
     totalSpent?: Decimal | DecimalJsLike | number | string
     preferredLanguage?: string | null
-    preferredCurrency?: string | null
+    preferredCurrency?: $Enums.Currency | null
     marketingOptIn?: boolean
     referralCode?: string | null
     vatNumber?: string | null
@@ -74004,7 +74499,7 @@ export namespace Prisma {
     loyaltyPoints?: number
     totalSpent?: Decimal | DecimalJsLike | number | string
     preferredLanguage?: string | null
-    preferredCurrency?: string | null
+    preferredCurrency?: $Enums.Currency | null
     marketingOptIn?: boolean
     referralCode?: string | null
     referredBy?: string | null
@@ -74170,7 +74665,7 @@ export namespace Prisma {
     loyaltyPoints?: IntFilter<"Customer"> | number
     totalSpent?: DecimalFilter<"Customer"> | Decimal | DecimalJsLike | number | string
     preferredLanguage?: StringNullableFilter<"Customer"> | string | null
-    preferredCurrency?: StringNullableFilter<"Customer"> | string | null
+    preferredCurrency?: EnumCurrencyNullableFilter<"Customer"> | $Enums.Currency | null
     marketingOptIn?: BoolFilter<"Customer"> | boolean
     referralCode?: StringNullableFilter<"Customer"> | string | null
     referredBy?: StringNullableFilter<"Customer"> | string | null
@@ -74201,7 +74696,7 @@ export namespace Prisma {
     loyaltyPoints?: IntFieldUpdateOperationsInput | number
     totalSpent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     preferredLanguage?: NullableStringFieldUpdateOperationsInput | string | null
-    preferredCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredCurrency?: NullableEnumCurrencyFieldUpdateOperationsInput | $Enums.Currency | null
     marketingOptIn?: BoolFieldUpdateOperationsInput | boolean
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     vatNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74226,7 +74721,7 @@ export namespace Prisma {
     loyaltyPoints?: IntFieldUpdateOperationsInput | number
     totalSpent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     preferredLanguage?: NullableStringFieldUpdateOperationsInput | string | null
-    preferredCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredCurrency?: NullableEnumCurrencyFieldUpdateOperationsInput | $Enums.Currency | null
     marketingOptIn?: BoolFieldUpdateOperationsInput | boolean
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74348,6 +74843,7 @@ export namespace Prisma {
     userId?: string | null
     street: string
     postalCode?: string | null
+    addressType?: $Enums.AddressType | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -74356,6 +74852,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     street?: StringFieldUpdateOperationsInput | string
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    addressType?: NullableEnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     User?: UserUpdateOneWithoutAddressesNestedInput
@@ -74367,6 +74864,7 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     street?: StringFieldUpdateOperationsInput | string
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    addressType?: NullableEnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutAddressNestedInput
@@ -74377,6 +74875,7 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     street?: StringFieldUpdateOperationsInput | string
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    addressType?: NullableEnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -74394,7 +74893,7 @@ export namespace Prisma {
     shippingCost?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
-    currency?: string
+    currency?: $Enums.Currency
     notes?: string | null
     internalNotes?: string | null
     couponCode?: string | null
@@ -74417,7 +74916,7 @@ export namespace Prisma {
     shippingCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     couponCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74448,7 +74947,7 @@ export namespace Prisma {
     shippingCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     couponCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74477,7 +74976,7 @@ export namespace Prisma {
     shippingCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     couponCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74504,7 +75003,7 @@ export namespace Prisma {
     provider: string
     providerTransactionId?: string | null
     amount: Decimal | DecimalJsLike | number | string
-    currency?: string
+    currency?: $Enums.Currency
     status?: $Enums.PaymentStatus
     failureReason?: string | null
     metadata?: JsonNullValueInput | InputJsonValue
@@ -74575,7 +75074,7 @@ export namespace Prisma {
     provider?: StringFieldUpdateOperationsInput | string
     providerTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     failureReason?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: JsonNullValueInput | InputJsonValue
@@ -74589,7 +75088,7 @@ export namespace Prisma {
     provider?: StringFieldUpdateOperationsInput | string
     providerTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     failureReason?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: JsonNullValueInput | InputJsonValue
@@ -74603,7 +75102,7 @@ export namespace Prisma {
     provider?: StringFieldUpdateOperationsInput | string
     providerTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     status?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     failureReason?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: JsonNullValueInput | InputJsonValue
@@ -74770,6 +75269,7 @@ export namespace Prisma {
     slug: string
     description?: string | null
     imageUrl?: string | null
+    targetAudience?: CategoryCreatetargetAudienceInput | $Enums.TargetAudience[]
     isActive?: boolean
     sortOrder?: number
     seoTitle?: string | null
@@ -74790,6 +75290,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -74815,6 +75316,7 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAudience?: CategoryUpdatetargetAudienceInput | $Enums.TargetAudience[]
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74834,6 +75336,7 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAudience?: CategoryUpdatetargetAudienceInput | $Enums.TargetAudience[]
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74852,6 +75355,7 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAudience?: CategoryUpdatetargetAudienceInput | $Enums.TargetAudience[]
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74870,6 +75374,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74912,6 +75417,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74952,6 +75458,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74982,6 +75489,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -75010,6 +75518,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -75052,6 +75561,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -75092,6 +75602,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -75622,6 +76133,7 @@ export namespace Prisma {
     status?: $Enums.ProductStatus
     featured?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
+    weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
     seoTitle?: string | null
     seoDescription?: string | null
@@ -75648,6 +76160,7 @@ export namespace Prisma {
     description?: string | null
     parentId?: string | null
     imageUrl?: string | null
+    targetAudience?: CategoryCreatetargetAudienceInput | $Enums.TargetAudience[]
     isActive?: boolean
     sortOrder?: number
     seoTitle?: string | null
@@ -75683,7 +76196,7 @@ export namespace Prisma {
     shippingCost?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
-    currency?: string
+    currency?: $Enums.Currency
     notes?: string | null
     internalNotes?: string | null
     couponCode?: string | null
@@ -75819,6 +76332,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -75861,6 +76375,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -75901,6 +76416,7 @@ export namespace Prisma {
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
     seoDescription?: NullableStringFieldUpdateOperationsInput | string | null
@@ -75926,6 +76442,7 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAudience?: CategoryUpdatetargetAudienceInput | $Enums.TargetAudience[]
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
@@ -75945,6 +76462,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAudience?: CategoryUpdatetargetAudienceInput | $Enums.TargetAudience[]
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
@@ -75963,6 +76481,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAudience?: CategoryUpdatetargetAudienceInput | $Enums.TargetAudience[]
     isActive?: BoolFieldUpdateOperationsInput | boolean
     sortOrder?: IntFieldUpdateOperationsInput | number
     seoTitle?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76024,7 +76543,7 @@ export namespace Prisma {
     shippingCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     couponCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76055,7 +76574,7 @@ export namespace Prisma {
     shippingCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     couponCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76084,7 +76603,7 @@ export namespace Prisma {
     shippingCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     couponCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76271,6 +76790,7 @@ export namespace Prisma {
     thanaId: string
     street: string
     postalCode?: string | null
+    addressType?: $Enums.AddressType | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -76366,6 +76886,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     street?: StringFieldUpdateOperationsInput | string
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    addressType?: NullableEnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     thana?: ThanaUpdateOneRequiredWithoutAddressesNestedInput
@@ -76377,6 +76898,7 @@ export namespace Prisma {
     thanaId?: StringFieldUpdateOperationsInput | string
     street?: StringFieldUpdateOperationsInput | string
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    addressType?: NullableEnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutAddressNestedInput
@@ -76387,6 +76909,7 @@ export namespace Prisma {
     thanaId?: StringFieldUpdateOperationsInput | string
     street?: StringFieldUpdateOperationsInput | string
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    addressType?: NullableEnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -76479,7 +77002,7 @@ export namespace Prisma {
     shippingCost?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total: Decimal | DecimalJsLike | number | string
-    currency?: string
+    currency?: $Enums.Currency
     notes?: string | null
     internalNotes?: string | null
     couponCode?: string | null
@@ -76509,7 +77032,7 @@ export namespace Prisma {
     loyaltyPoints?: number
     totalSpent?: Decimal | DecimalJsLike | number | string
     preferredLanguage?: string | null
-    preferredCurrency?: string | null
+    preferredCurrency?: $Enums.Currency | null
     marketingOptIn?: boolean
     referralCode?: string | null
     vatNumber?: string | null
@@ -76548,7 +77071,7 @@ export namespace Prisma {
     shippingCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     couponCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76579,7 +77102,7 @@ export namespace Prisma {
     shippingCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     couponCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76608,7 +77131,7 @@ export namespace Prisma {
     shippingCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: StringFieldUpdateOperationsInput | string
+    currency?: EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     internalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     couponCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76655,7 +77178,7 @@ export namespace Prisma {
     loyaltyPoints?: IntFieldUpdateOperationsInput | number
     totalSpent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     preferredLanguage?: NullableStringFieldUpdateOperationsInput | string | null
-    preferredCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredCurrency?: NullableEnumCurrencyFieldUpdateOperationsInput | $Enums.Currency | null
     marketingOptIn?: BoolFieldUpdateOperationsInput | boolean
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     vatNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76680,7 +77203,7 @@ export namespace Prisma {
     loyaltyPoints?: IntFieldUpdateOperationsInput | number
     totalSpent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     preferredLanguage?: NullableStringFieldUpdateOperationsInput | string | null
-    preferredCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredCurrency?: NullableEnumCurrencyFieldUpdateOperationsInput | $Enums.Currency | null
     marketingOptIn?: BoolFieldUpdateOperationsInput | boolean
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     vatNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76704,7 +77227,7 @@ export namespace Prisma {
     loyaltyPoints?: IntFieldUpdateOperationsInput | number
     totalSpent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     preferredLanguage?: NullableStringFieldUpdateOperationsInput | string | null
-    preferredCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredCurrency?: NullableEnumCurrencyFieldUpdateOperationsInput | $Enums.Currency | null
     marketingOptIn?: BoolFieldUpdateOperationsInput | boolean
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     vatNumber?: NullableStringFieldUpdateOperationsInput | string | null

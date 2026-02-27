@@ -16,7 +16,7 @@ model Order {
   shippingCost      Decimal       @default(0)
   discount          Decimal       @default(0)
   total             Decimal
-  currency          String        @default("USD")
+  currency          Currency        @default(USD)
   notes             String?
   internalNotes     String?
   couponCode        String?
@@ -59,7 +59,7 @@ model Payment {
   provider              String // stripe, paypal, square, etc.
   providerTransactionId String?
   amount                Decimal
-  currency              String        @default("USD")
+  currency              Currency        @default(USD)
   status                PaymentStatus @default(PENDING)
   failureReason         String?
   metadata              Json          @default("{}")

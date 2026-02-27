@@ -54,6 +54,12 @@ enum CustomerType {
   WHOLESALE
 }
 
+enum AddressType {
+  HOME
+  OFFICE
+  OTHER
+}
+
 // Product Enums
 enum ProductStatus {
   ACTIVE
@@ -67,6 +73,33 @@ enum ProductRelationType {
   RELATED
   CROSS_SELL
   UP_SELL
+}
+
+enum ProductDimensionUnit {
+  CM
+  INCH
+  METER
+  FOOT
+  YARD
+}
+
+enum ProductWeightUnit {
+  KG
+  G
+  LB
+  OZ
+}
+
+enum TargetAudience {
+  MEN
+  WOMEN
+  KIDS
+}
+
+enum Currency {
+  USD
+  EUR
+  BDT
 }
 
 // Order Enums
@@ -265,13 +298,14 @@ model Thana {
 }
 
 model Address {
-  id         String   @id @default(uuid())
-  userId     String?
-  thanaId    String
-  street     String
-  postalCode String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id          String       @id @default(uuid())
+  userId      String?
+  thanaId     String
+  street      String
+  postalCode  String?
+  addressType AddressType? // ----------------- NEW -----------------
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 
   // Relationships
   thana  Thana   @relation(fields: [thanaId], references: [id])
@@ -330,7 +364,7 @@ model Order {
   shippingCost      Decimal       @default(0)
   discount          Decimal       @default(0)
   total             Decimal
-  currency          String        @default("USD")
+  currency          Currency      @default(USD)
   notes             String?
   internalNotes     String?
   couponCode        String?
@@ -373,7 +407,7 @@ model Payment {
   provider              String // stripe, paypal, square, etc.
   providerTransactionId String?
   amount                Decimal
-  currency              String        @default("USD")
+  currency              Currency      @default(USD)
   status                PaymentStatus @default(PENDING)
   failureReason         String?
   metadata              Json          @default("{}")
@@ -462,20 +496,21 @@ model CartItem {
 // ========================================
 
 model Category {
-  id             String   @id @default(uuid())
+  id             String           @id @default(uuid())
   tenantId       String?
   name           String
   slug           String
   description    String?
   parentId       String?
   imageUrl       String?
-  isActive       Boolean  @default(true)
-  sortOrder      Int      @default(0)
+  targetAudience TargetAudience[] // ----------------- NEW -----------------
+  isActive       Boolean          @default(true)
+  sortOrder      Int              @default(0)
   seoTitle       String?
   seoDescription String?
-  metadata       Json     @default("{}")
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  metadata       Json             @default("{}")
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
 
   tenant   Tenant?    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   parent   Category?  @relation("CategoryParent", fields: [parentId], references: [id], onDelete: Cascade)
@@ -507,7 +542,7 @@ model Brand {
 }
 
 model Product {
-  id               String        @id @default(uuid())
+  id               String             @id @default(uuid())
   tenantId         String?
   name             String
   slug             String
@@ -515,26 +550,27 @@ model Product {
   fullDescription  String?
   brandId          String?
   categoryId       String?
-  status           ProductStatus @default(DRAFT)
-  featured         Boolean       @default(false)
+  status           ProductStatus      @default(DRAFT)
+  featured         Boolean            @default(false)
   weight           Decimal?
+  weightUnit       ProductWeightUnit? @default(G) // ----------------- NEW -----------------
   tags             String[] // Might be better as a separate table for complex queries. To be thought later.
   seoTitle         String?
   seoDescription   String?
   metaKeywords     String[]
   warranty         String?
-  specifications   Json          @default("{}")
+  specifications   Json               @default("{}")
   videoUrl         String?
   manualUrl        String?
-  minOrderQty      Int           @default(1)
+  minOrderQty      Int                @default(1)
   maxOrderQty      Int?
-  isBundle         Boolean       @default(false)
-  totalSales       Int           @default(0)
-  viewCount        Int           @default(0)
+  isBundle         Boolean            @default(false)
+  totalSales       Int                @default(0)
+  viewCount        Int                @default(0)
   avgRating        Decimal?
-  reviewCount      Int           @default(0)
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
+  reviewCount      Int                @default(0)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
 
   tenant      Tenant?           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   brand       Brand?            @relation(fields: [brandId], references: [id])
@@ -638,15 +674,15 @@ model ProductImage {
 }
 
 model ProductDimension {
-  id        String   @id @default(uuid())
-  productId String   @unique
+  id        String                @id @default(uuid())
+  productId String                @unique
   length    Decimal?
   width     Decimal?
   height    Decimal?
-  unit      String?  @default("cm") // cm, inch, m, etc.
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  unit      ProductDimensionUnit? @default(CM) // ----------------- NEW -----------------
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @updatedAt
+  product   Product               @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@map("product_dimensions")
 }
@@ -899,7 +935,7 @@ model Customer {
   loyaltyPoints     Int          @default(0)
   totalSpent        Decimal      @default(0)
   preferredLanguage String?      @default("en")
-  preferredCurrency String?      @default("USD")
+  preferredCurrency Currency?    @default(USD)
   marketingOptIn    Boolean      @default(false)
   referralCode      String?      @unique
   referredBy        String? // Customer ID who referred this customer

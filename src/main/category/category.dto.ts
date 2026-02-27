@@ -1,4 +1,5 @@
-import { IsString, IsOptional, IsInt, IsUUID, Length } from 'class-validator';
+import { IsString, IsOptional, IsInt, IsUUID, Length, IsArray, IsEnum } from 'class-validator';
+import { TargetAudience } from 'src/generated/prisma';
 
 export class CreateCategoryDto {
   @IsString()
@@ -35,6 +36,11 @@ export class CreateCategoryDto {
   @IsOptional()
   @IsString()
   imageUrl?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsEnum(TargetAudience, { each: true })
+  targetAudience?: TargetAudience[];
 }
 
 export class UpdateCategoryDto {

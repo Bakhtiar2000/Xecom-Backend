@@ -12,7 +12,7 @@ import {
   IsNotEmpty,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ProductStatus } from 'src/generated/prisma';
+import { ProductStatus, ProductWeightUnit, ProductDimensionUnit } from 'src/generated/prisma';
 
 // ========================================
 // NESTED DTOs for Images and Variants
@@ -45,8 +45,8 @@ export class CreateProductDimensionDto {
   height?: number;
 
   @IsOptional()
-  @IsString()
-  unit?: string; // cm, inch, m, etc.
+  @IsEnum(ProductDimensionUnit)
+  unit?: ProductDimensionUnit;
 }
 
 export class CreateProductFaqDto {
@@ -132,6 +132,10 @@ export class CreateProductDto {
   @IsOptional()
   @IsNumber()
   weight?: number;
+
+  @IsOptional()
+  @IsEnum(ProductWeightUnit)
+  weightUnit?: ProductWeightUnit;
 
   @IsOptional()
   @ValidateNested()
@@ -240,6 +244,10 @@ export class UpdateProductDto {
   @IsOptional()
   @IsNumber()
   weight?: number;
+
+  @IsOptional()
+  @IsEnum(ProductWeightUnit)
+  weightUnit?: ProductWeightUnit;
 
   @IsOptional()
   @ValidateNested()

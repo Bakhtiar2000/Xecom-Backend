@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Prisma, ProductStatus } from 'src/generated/prisma';
+import { Prisma, ProductDimensionUnit, ProductStatus } from 'src/generated/prisma';
 
 @Injectable()
 export class ProductRepository {
@@ -402,7 +402,7 @@ export class ProductRepository {
       length?: number;
       width?: number;
       height?: number;
-      unit?: string;
+      unit?: ProductDimensionUnit;
     },
   ) {
     return this.prisma.productDimension.create({
@@ -411,7 +411,7 @@ export class ProductRepository {
         length: dimension.length,
         width: dimension.width,
         height: dimension.height,
-        unit: dimension.unit || 'cm',
+        unit: dimension.unit || ProductDimensionUnit.CM,
       },
     });
   }

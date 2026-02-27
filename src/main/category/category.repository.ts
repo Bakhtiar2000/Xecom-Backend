@@ -14,6 +14,7 @@ export class CategoryRepository {
     fields?: string[],
     isActive?: string,
     searchTerm?: string,
+    targetAudience?: string,
   ) {
     // Build where clause
     const where: Prisma.CategoryWhereInput = {};
@@ -26,6 +27,12 @@ export class CategoryRepository {
 
     if (searchTerm) {
       where.name = { contains: searchTerm, mode: 'insensitive' };
+    }
+
+    if (targetAudience) {
+      where.targetAudience = {
+        has: targetAudience as any,
+      };
     }
 
     // Build orderBy object
@@ -62,7 +69,7 @@ export class CategoryRepository {
     return this.prisma.category.findMany(query);
   }
 
-  async count(isActive?: string, searchTerm?: string) {
+  async count(isActive?: string, searchTerm?: string, targetAudience?: string) {
     // Build where clause (same as findAll)
     const where: Prisma.CategoryWhereInput = {};
 
@@ -74,6 +81,12 @@ export class CategoryRepository {
 
     if (searchTerm) {
       where.name = { contains: searchTerm, mode: 'insensitive' };
+    }
+
+    if (targetAudience) {
+      where.targetAudience = {
+        has: targetAudience as any,
+      };
     }
 
     return this.prisma.category.count({ where });

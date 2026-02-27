@@ -4,6 +4,7 @@ import { CreateProductDto, UpdateProductDto } from './product.dto';
 import calculatePagination from 'src/utils/calculatePagination';
 import { BrandRepository } from '../brand/brand.repository';
 import { CategoryRepository } from '../category/category.repository';
+import { ProductDimensionUnit } from 'src/generated/prisma';
 
 @Injectable()
 export class ProductService {
@@ -216,7 +217,7 @@ export class ProductService {
             length: dimension.length,
             width: dimension.width,
             height: dimension.height,
-            unit: dimension.unit || 'cm',
+            unit: dimension.unit ||  ProductDimensionUnit.CM,
           },
         }
         : undefined,
@@ -374,7 +375,7 @@ export class ProductService {
           length: dimension.length,
           width: dimension.width,
           height: dimension.height,
-          unit: dimension.unit || 'cm',
+          unit: dimension.unit || ProductDimensionUnit.CM,
         });
       }
     }

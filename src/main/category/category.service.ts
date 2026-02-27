@@ -16,6 +16,7 @@ export class CategoryService {
     fields?: string,
     isActive?: string,
     searchTerm?: string,
+    targetAudience?: string,
   ) {
     const { skip, take } = calculatePagination({
       page: pageNumber,
@@ -36,8 +37,9 @@ export class CategoryService {
         selectedFields,
         isActive,
         searchTerm,
+        targetAudience,
       ),
-      this.categoryRepository.count(isActive, searchTerm),
+      this.categoryRepository.count(isActive, searchTerm, targetAudience),
     ]);
 
     return {

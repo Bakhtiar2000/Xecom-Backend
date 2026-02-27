@@ -42,6 +42,7 @@ export class CategoryController {
     @Query('fields') fields: string,
     @Query('isActive') isActive: string,
     @Query('searchTerm') searchTerm: string,
+    @Query('targetAudience') targetAudience: string,
     @Res() res: Response,
   ) {
     const page = parseInt(pageNumber) || 1;
@@ -55,6 +56,7 @@ export class CategoryController {
       fields,
       isActive,
       searchTerm,
+      targetAudience,
     );
     sendResponse(res, {
       statusCode: HttpStatus.OK,

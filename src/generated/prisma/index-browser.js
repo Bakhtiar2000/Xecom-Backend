@@ -172,6 +172,7 @@ exports.Prisma.AddressScalarFieldEnum = {
   thanaId: 'thanaId',
   street: 'street',
   postalCode: 'postalCode',
+  addressType: 'addressType',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -312,6 +313,7 @@ exports.Prisma.CategoryScalarFieldEnum = {
   description: 'description',
   parentId: 'parentId',
   imageUrl: 'imageUrl',
+  targetAudience: 'targetAudience',
   isActive: 'isActive',
   sortOrder: 'sortOrder',
   seoTitle: 'seoTitle',
@@ -347,6 +349,7 @@ exports.Prisma.ProductScalarFieldEnum = {
   status: 'status',
   featured: 'featured',
   weight: 'weight',
+  weightUnit: 'weightUnit',
   tags: 'tags',
   seoTitle: 'seoTitle',
   seoDescription: 'seoDescription',
@@ -657,6 +660,12 @@ exports.InventoryReason = exports.$Enums.InventoryReason = {
   EXPIRED: 'EXPIRED'
 };
 
+exports.AddressType = exports.$Enums.AddressType = {
+  HOME: 'HOME',
+  OFFICE: 'OFFICE',
+  OTHER: 'OTHER'
+};
+
 exports.CouponType = exports.$Enums.CouponType = {
   PERCENTAGE: 'PERCENTAGE',
   FIXED_AMOUNT: 'FIXED_AMOUNT',
@@ -682,6 +691,12 @@ exports.PaymentStatus = exports.$Enums.PaymentStatus = {
   CANCELLED: 'CANCELLED',
   REFUNDED: 'REFUNDED',
   PARTIALLY_REFUNDED: 'PARTIALLY_REFUNDED'
+};
+
+exports.Currency = exports.$Enums.Currency = {
+  USD: 'USD',
+  EUR: 'EUR',
+  BDT: 'BDT'
 };
 
 exports.PaymentMethod = exports.$Enums.PaymentMethod = {
@@ -722,6 +737,12 @@ exports.ItemCondition = exports.$Enums.ItemCondition = {
   DEFECTIVE: 'DEFECTIVE'
 };
 
+exports.TargetAudience = exports.$Enums.TargetAudience = {
+  MEN: 'MEN',
+  WOMEN: 'WOMEN',
+  KIDS: 'KIDS'
+};
+
 exports.ProductStatus = exports.$Enums.ProductStatus = {
   ACTIVE: 'ACTIVE',
   INACTIVE: 'INACTIVE',
@@ -730,10 +751,25 @@ exports.ProductStatus = exports.$Enums.ProductStatus = {
   DISCONTINUED: 'DISCONTINUED'
 };
 
+exports.ProductWeightUnit = exports.$Enums.ProductWeightUnit = {
+  KG: 'KG',
+  G: 'G',
+  LB: 'LB',
+  OZ: 'OZ'
+};
+
 exports.ProductRelationType = exports.$Enums.ProductRelationType = {
   RELATED: 'RELATED',
   CROSS_SELL: 'CROSS_SELL',
   UP_SELL: 'UP_SELL'
+};
+
+exports.ProductDimensionUnit = exports.$Enums.ProductDimensionUnit = {
+  CM: 'CM',
+  INCH: 'INCH',
+  METER: 'METER',
+  FOOT: 'FOOT',
+  YARD: 'YARD'
 };
 
 exports.NotificationType = exports.$Enums.NotificationType = {
