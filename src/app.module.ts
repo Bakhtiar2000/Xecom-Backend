@@ -21,6 +21,7 @@ import { AttributeModule } from './main/attribute/attribute.module';
 import { ProductVariantModule } from './main/product-variant/product-variant.module';
 import { WishlistModule } from './main/wishlist/wishlist.module';
 import { ReviewModule } from './main/review/review.module';
+import { CartModule } from './main/cart/cart.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { ReviewModule } from './main/review/review.module';
     ProductVariantModule,
     WishlistModule,
     ReviewModule,
+    CartModule,
   ],
   controllers: [AppController],
   providers: [AppService],
