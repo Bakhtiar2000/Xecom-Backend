@@ -268,4 +268,45 @@ export class ReviewRepository {
             },
         });
     }
+
+    async approve(id: string, isApproved: boolean) {
+        return this.prisma.review.update({
+            where: { id },
+            data: { isApproved },
+        });
+    }
+
+    async getProductReviewStats(productId: string) {
+        const stats = await this.prisma.review.aggregate({
+            where: {
+                productId,
+                isApproved: true,
+            },
+            _avg: {
+                rating: true,
+            },
+            _count: {
+                id: true,
+            },
+        });
+
+        return {
+            avgRating: stats._avg.rating,
+            reviewCount: stats._count.id,
+        };
+    }
+
+    async updateProductReviewStats(
+        productId: string,
+        avgRating: number | null,
+        reviewCount: number,
+    ) {
+        return this.prisma.product.update({
+            where: { id: productId },
+            data: {
+                avgRating,
+                reviewCount,
+            },
+        });
+    }
 }

@@ -5,6 +5,7 @@ import {
     HttpStatus,
     Post,
     Put,
+    Patch,
     Delete,
     Param,
     Query,
@@ -16,7 +17,7 @@ import { ReviewService } from './review.service';
 import { AuthGuard } from 'src/guard/auth.guard';
 import sendResponse from 'src/utils/sendResponse';
 import type { Request, Response } from 'express';
-import { CreateReviewDto, UpdateReviewDto } from './review.dto';
+import { CreateReviewDto, UpdateReviewDto, ApproveReviewDto } from './review.dto';
 import { IdDto } from 'src/common/id.dto';
 
 @Controller('review')
@@ -153,6 +154,26 @@ export class ReviewController {
     ) {
         const customerId = req.user.id;
         const result = await this.reviewService.deleteReview(customerId, params.id);
+
+        sendResponse(res, {
+            statusCode: HttpStatus.OK,
+            success: true,
+            message: result.message,
+            data: null,
+        });
+    }
+
+    // Approve/Unapprove review
+    @Patch(':id/approve')
+    async approveReview(
+        @Param() params: IdDto,
+        @Body() approveReviewDto: ApproveReviewDto,
+        @Res() res: Response,
+    ) {
+        const result = await this.reviewService.approveReview(
+            params.id,
+            approveReviewDto.isApproved,
+        );
 
         sendResponse(res, {
             statusCode: HttpStatus.OK,

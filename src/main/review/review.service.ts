@@ -178,4 +178,32 @@ export class ReviewService {
         await this.reviewRepository.delete(reviewId);
         return { message: 'Review deleted successfully' };
     }
+
+    // ------------------------------- Approve/Unapprove Review -------------------------------
+    public async approveReview(reviewId: string, isApproved: boolean) {
+        // Check if review exists
+        const review = await this.reviewRepository.findById(reviewId);
+
+        if (!review) {
+            throw new HttpException('Review not found', HttpStatus.NOT_FOUND);
+        }
+
+        // Update review approval status
+        await this.reviewRepository.approve(reviewId, isApproved);
+
+        // Recalculate and update product review stats
+        const stats = await this.reviewRepository.getProductReviewStats(
+            review.productId,
+        );
+
+        await this.reviewRepository.updateProductReviewStats(
+            review.productId,
+            stats.avgRating,
+            stats.reviewCount,
+        );
+
+        return {
+            message: `Review ${isApproved ? 'approved' : 'unapproved'} successfully`,
+        };
+    }
 }

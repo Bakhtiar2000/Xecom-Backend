@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsUUID, IsInt, Min, Max } from 'class-validator';
+import { IsString, IsOptional, IsUUID, IsInt, Min, Max, IsBoolean } from 'class-validator';
 
 export class CreateReviewDto {
     @IsUUID()
@@ -27,4 +27,9 @@ export class UpdateReviewDto {
     @IsOptional()
     @IsString()
     comment?: string;
+}
+
+export class ApproveReviewDto {
+    @IsBoolean()
+    isApproved: boolean;
 }
