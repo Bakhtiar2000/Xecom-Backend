@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Put,
+  Delete,
   Body,
   Param,
   Query,
@@ -98,6 +99,19 @@ export class DistrictController {
       statusCode: HttpStatus.OK,
       success: true,
       message: 'District updated successfully',
+      data: result,
+    });
+  }
+
+  // Delete District
+  @Delete(':id')
+  @UseGuards(AuthGuard, RoleGuardWith([UserRole.ADMIN, UserRole.SUPER_ADMIN]))
+  async deleteDistrict(@Param() param: IdDto, @Res() res: Response) {
+    const result = await this.districtService.deleteDistrict(param.id);
+    sendResponse(res, {
+      statusCode: HttpStatus.OK,
+      success: true,
+      message: 'District deleted successfully',
       data: result,
     });
   }

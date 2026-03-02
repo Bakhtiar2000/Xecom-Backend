@@ -119,4 +119,11 @@ export class DistrictRepository {
       data,
     });
   }
+
+  async delete(id: string) {
+    return this.prisma.district.update({
+      where: { id },
+      data: { isActive: false },
+    });
+  }
 }

@@ -135,4 +135,11 @@ export class ThanaRepository {
       data,
     });
   }
+
+  async delete(id: string) {
+    return this.prisma.thana.update({
+      where: { id },
+      data: { isActive: false },
+    });
+  }
 }

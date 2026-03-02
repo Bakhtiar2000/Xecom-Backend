@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Put,
+  Delete,
   Body,
   Param,
   Query,
@@ -94,6 +95,19 @@ export class CountryController {
       statusCode: HttpStatus.OK,
       success: true,
       message: 'Country updated successfully',
+      data: result,
+    });
+  }
+
+  // Delete Country
+  @Delete(':id')
+  @UseGuards(AuthGuard, RoleGuardWith([UserRole.ADMIN, UserRole.SUPER_ADMIN]))
+  async deleteCountry(@Param() param: IdDto, @Res() res: Response) {
+    const result = await this.countryService.deleteCountry(param.id);
+    sendResponse(res, {
+      statusCode: HttpStatus.OK,
+      success: true,
+      message: 'Country deleted successfully',
       data: result,
     });
   }

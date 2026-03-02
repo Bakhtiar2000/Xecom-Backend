@@ -140,4 +140,19 @@ export class DivisionService {
 
     return division;
   }
+
+  // ------------------------------- Delete Division -------------------------------
+  public async deleteDivision(id: string) {
+    // Check if division exists
+    const existingDivision = await this.divisionRepository.findById(id);
+
+    if (!existingDivision) {
+      throw new HttpException('Division not found', HttpStatus.NOT_FOUND);
+    }
+
+    // Soft delete the division
+    const division = await this.divisionRepository.delete(id);
+
+    return division;
+  }
 }

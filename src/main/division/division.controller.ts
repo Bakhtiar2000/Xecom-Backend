@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Put,
+  Delete,
   Body,
   Param,
   Query,
@@ -93,6 +94,19 @@ export class DivisionController {
       statusCode: HttpStatus.OK,
       success: true,
       message: 'Division updated successfully',
+      data: result,
+    });
+  }
+
+  // Delete Division
+  @Delete(':id')
+  @UseGuards(AuthGuard, RoleGuardWith([UserRole.ADMIN, UserRole.SUPER_ADMIN]))
+  async deleteDivision(@Param() param: IdDto, @Res() res: Response) {
+    const result = await this.divisionService.deleteDivision(param.id);
+    sendResponse(res, {
+      statusCode: HttpStatus.OK,
+      success: true,
+      message: 'Division deleted successfully',
       data: result,
     });
   }

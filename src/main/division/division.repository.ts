@@ -156,4 +156,14 @@ export class DivisionRepository {
       },
     });
   }
+
+  async delete(id: string) {
+    return this.prisma.division.update({
+      where: { id },
+      data: { isActive: false },
+      include: {
+        country: true,
+      },
+    });
+  }
 }

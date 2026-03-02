@@ -169,4 +169,11 @@ export class CountryRepository {
       data,
     });
   }
+
+  async delete(id: string) {
+    return this.prisma.country.update({
+      where: { id },
+      data: { isActive: false },
+    });
+  }
 }

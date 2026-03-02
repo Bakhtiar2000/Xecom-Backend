@@ -132,4 +132,19 @@ export class ThanaService {
 
     return thana;
   }
+
+  // ------------------------------- Delete Thana -------------------------------
+  public async deleteThana(id: string) {
+    // Check if thana exists
+    const existingThana = await this.thanaRepository.findById(id);
+
+    if (!existingThana) {
+      throw new HttpException('Thana not found', HttpStatus.NOT_FOUND);
+    }
+
+    // Soft delete the thana
+    const thana = await this.thanaRepository.delete(id);
+
+    return thana;
+  }
 }

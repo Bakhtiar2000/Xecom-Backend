@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Put,
+  Delete,
   Body,
   Param,
   Query,
@@ -85,6 +86,19 @@ export class ThanaController {
       statusCode: HttpStatus.OK,
       success: true,
       message: 'Thana updated successfully',
+      data: result,
+    });
+  }
+
+  // Delete Thana
+  @Delete(':id')
+  @UseGuards(AuthGuard, RoleGuardWith([UserRole.ADMIN, UserRole.SUPER_ADMIN]))
+  async deleteThana(@Param() param: IdDto, @Res() res: Response) {
+    const result = await this.thanaService.deleteThana(param.id);
+    sendResponse(res, {
+      statusCode: HttpStatus.OK,
+      success: true,
+      message: 'Thana deleted successfully',
       data: result,
     });
   }

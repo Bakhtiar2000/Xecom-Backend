@@ -111,4 +111,19 @@ export class CountryService {
 
     return country;
   }
+
+  // ------------------------------- Delete Country -------------------------------
+  public async deleteCountry(id: string) {
+    // Check if country exists
+    const existingCountry = await this.countryRepository.findById(id);
+
+    if (!existingCountry) {
+      throw new HttpException('Country not found', HttpStatus.NOT_FOUND);
+    }
+
+    // Soft delete the country
+    const country = await this.countryRepository.delete(id);
+
+    return country;
+  }
 }

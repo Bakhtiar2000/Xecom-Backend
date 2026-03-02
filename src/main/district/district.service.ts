@@ -140,4 +140,19 @@ export class DistrictService {
 
     return district;
   }
+
+  // ------------------------------- Delete District -------------------------------
+  public async deleteDistrict(id: string) {
+    // Check if district exists
+    const existingDistrict = await this.districtRepository.findById(id);
+
+    if (!existingDistrict) {
+      throw new HttpException('District not found', HttpStatus.NOT_FOUND);
+    }
+
+    // Soft delete the district
+    const district = await this.districtRepository.delete(id);
+
+    return district;
+  }
 }
