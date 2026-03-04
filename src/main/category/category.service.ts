@@ -66,7 +66,7 @@ export class CategoryService {
 
   // ------------------------------- Add Category -------------------------------
   public async addCategory(createCategoryDto: CreateCategoryDto) {
-    const { name, slug, parentId } = createCategoryDto;
+    const { name, slug, parentId, targetAudience, isActive } = createCategoryDto;
 
     // Check if slug already exists
     const existingCategory = await this.categoryRepository.findBySlug(slug);
@@ -100,6 +100,8 @@ export class CategoryService {
       seoDescription: createCategoryDto.seoDescription,
       metadata: createCategoryDto.metadata || {},
       imageUrl: createCategoryDto.imageUrl,
+      targetAudience: targetAudience ? { set: targetAudience } : undefined,
+      isActive: isActive !== undefined ? isActive : true,
     });
 
     return category;
@@ -107,7 +109,7 @@ export class CategoryService {
 
   // ------------------------------- Update Category -------------------------------
   public async updateCategory(updateCategoryDto: UpdateCategoryDto) {
-    const { id, slug, parentId } = updateCategoryDto;
+    const { id, slug, parentId, targetAudience, isActive } = updateCategoryDto;
 
     // Check if category exists
     const existingCategory = await this.categoryRepository.findById(id);
@@ -162,6 +164,8 @@ export class CategoryService {
       seoDescription: updateCategoryDto.seoDescription,
       metadata: updateCategoryDto.metadata,
       imageUrl: updateCategoryDto.imageUrl,
+      targetAudience: targetAudience !== undefined ? { set: targetAudience } : undefined,
+      isActive: isActive,
     });
 
     return category;

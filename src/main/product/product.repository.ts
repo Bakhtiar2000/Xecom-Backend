@@ -14,8 +14,8 @@ export class ProductRepository {
     fields?: string[],
     isActive?: string,
     searchTerm?: string,
-    brandId?: string,
-    categoryId?: string,
+    brandIds?: string,
+    categoryIds?: string,
     tag?: string,
     ratingCount?: number,
     reviewCount?: number,
@@ -33,12 +33,18 @@ export class ProductRepository {
       where.status = ProductStatus.ACTIVE;
     }
 
-    if (brandId) {
-      where.brandId = brandId;
+    if (brandIds) {
+      const brandIdArray = brandIds.split(',').map(id => id.trim()).filter(id => id);
+      if (brandIdArray.length > 0) {
+        where.brandId = { in: brandIdArray };
+      }
     }
 
-    if (categoryId) {
-      where.categoryId = categoryId;
+    if (categoryIds) {
+      const categoryIdArray = categoryIds.split(',').map(id => id.trim()).filter(id => id);
+      if (categoryIdArray.length > 0) {
+        where.categoryId = { in: categoryIdArray };
+      }
     }
 
     if (searchTerm) {
@@ -139,8 +145,8 @@ export class ProductRepository {
   async count(
     isActive?: string,
     searchTerm?: string,
-    brandId?: string,
-    categoryId?: string,
+    brandIds?: string,
+    categoryIds?: string,
     tag?: string,
     ratingCount?: number,
     reviewCount?: number,
@@ -155,12 +161,18 @@ export class ProductRepository {
       where.status = ProductStatus.ACTIVE;
     }
 
-    if (brandId) {
-      where.brandId = brandId;
+    if (brandIds) {
+      const brandIdArray = brandIds.split(',').map(id => id.trim()).filter(id => id);
+      if (brandIdArray.length > 0) {
+        where.brandId = { in: brandIdArray };
+      }
     }
 
-    if (categoryId) {
-      where.categoryId = categoryId;
+    if (categoryIds) {
+      const categoryIdArray = categoryIds.split(',').map(id => id.trim()).filter(id => id);
+      if (categoryIdArray.length > 0) {
+        where.categoryId = { in: categoryIdArray };
+      }
     }
 
     if (searchTerm) {
