@@ -56,7 +56,7 @@ export class CategoryRepository {
     if (select) {
       query.select = {
         ...select,
-        _count: { select: { products: true } },
+        // _count: { select: { products: true } },
       };
     } else {
       query.include = {

@@ -131,11 +131,13 @@ export class ProductRepository {
     if (select) {
       query.select = {
         ...select,
-        _count: { select: { images: true, variants: true } },
+        // _count: { select: { images: true, variants: true } },
+        images: { where: { isFeatured: true }, take: 1, select: { imageUrl: true, isFeatured: true } },
       };
     } else {
       query.include = {
         _count: { select: { images: true, variants: true } },
+        images: { where: { isFeatured: true }, take: 1, select: { imageUrl: true, isFeatured: true } },
       };
     }
 
