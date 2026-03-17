@@ -4,7 +4,7 @@ import { Prisma } from 'src/generated/prisma';
 
 @Injectable()
 export class AdminRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async findAll() {
     return this.prisma.admin.findMany();
@@ -47,6 +47,12 @@ export class AdminRepository {
 
   async createUser(data: Prisma.UserCreateInput) {
     return this.prisma.user.create({
+      data,
+    });
+  }
+
+  async createAddress(data: Prisma.AddressCreateInput) {
+    return this.prisma.address.create({
       data,
     });
   }

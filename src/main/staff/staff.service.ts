@@ -53,6 +53,19 @@ export class StaffService {
             hireDate: dto.hireDate,
             notes: dto.notes,
         });
+
+        // Create address for the staff
+        await this.staffRepository.createAddress({
+            User: {
+                connect: { id: newUser.id },
+            },
+            thana: {
+                connect: { id: dto.thanaId },
+            },
+            street: dto.street,
+            postalCode: dto.postalCode,
+        });
+
         return newStaff;
     }
 }

@@ -31,4 +31,14 @@ export class CreateStaffDto {
   @IsOptional()
   @IsString()
   profilePicture: string;
+
+  @IsString()
+  thanaId: string;
+
+  @IsString()
+  street: string;
+
+  @IsOptional()
+  @IsString()
+  postalCode?: string;
 }
