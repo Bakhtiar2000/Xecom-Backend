@@ -4,309 +4,333 @@ import { Prisma } from 'src/generated/prisma';
 
 @Injectable()
 export class ReviewRepository {
-    constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
-    async create(
-        customerId: string,
-        productId: string,
-        rating: number,
-        comment?: string,
-    ) {
-        return this.prisma.review.create({
-            data: {
-                customerId,
-                productId,
-                rating,
-                comment,
+  async getCustomerByUserId(userId: string) {
+    const customer = await this.prisma.customer.findUnique({
+      where: { userId },
+    });
+
+    if (!customer) {
+      throw new Error('Customer not found. Please complete your profile.');
+    }
+
+    return customer;
+  }
+
+  async create(
+    customerId: string,
+    productId: string,
+    rating: number,
+    comment?: string,
+  ) {
+    return this.prisma.review.create({
+      data: {
+        customerId,
+        productId,
+        rating,
+        comment,
+      },
+      include: {
+        product: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        customer: {
+          select: {
+            id: true,
+            user: {
+              select: {
+                name: true,
+                email: true,
+              },
             },
-            include: {
-                product: {
-                    select: {
-                        id: true,
-                        name: true,
-                        slug: true,
-                    },
-                },
-                customer: {
-                    select: {
-                        id: true,
-                        user: {
-                            select: {
-                                name: true,
-                                email: true,
-                            },
-                        },
-                    },
-                },
+          },
+        },
+      },
+    });
+  }
+
+  async findMyReviews(
+    customerId: string,
+    skip: number,
+    take: number,
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc',
+    fields?: string[],
+    searchTerm?: string,
+    ratingValue?: string,
+  ) {
+    // Build where clause
+    const where: Prisma.ReviewWhereInput = {
+      customerId,
+    };
+
+    if (searchTerm) {
+      where.OR = [
+        { comment: { contains: searchTerm, mode: 'insensitive' } },
+        { product: { name: { contains: searchTerm, mode: 'insensitive' } } },
+      ];
+    }
+
+    if (ratingValue) {
+      where.rating = parseInt(ratingValue);
+    }
+
+    // Build orderBy object
+    const orderBy: Prisma.ReviewOrderByWithRelationInput = sortBy
+      ? ({
+          [sortBy]: sortOrder || 'desc',
+        } as Prisma.ReviewOrderByWithRelationInput)
+      : { createdAt: 'desc' as Prisma.SortOrder };
+
+    // Build select object if fields are specified
+    const select =
+      fields && fields.length > 0
+        ? (fields.reduce(
+            (acc, field) => ({ ...acc, [field]: true }),
+            {},
+          ) as Prisma.ReviewSelect)
+        : undefined;
+
+    const query: any = {
+      where,
+      skip,
+      take,
+      orderBy,
+    };
+
+    if (select) {
+      query.select = select;
+    } else {
+      query.include = {
+        product: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            images: {
+              where: { isFeatured: true },
+              take: 1,
             },
-        });
+          },
+        },
+      };
     }
 
-    async findMyReviews(
-        customerId: string,
-        skip: number,
-        take: number,
-        sortBy?: string,
-        sortOrder?: 'asc' | 'desc',
-        fields?: string[],
-        searchTerm?: string,
-        ratingValue?: string,
-    ) {
-        // Build where clause
-        const where: Prisma.ReviewWhereInput = {
-            customerId,
-        };
+    return this.prisma.review.findMany(query);
+  }
 
-        if (searchTerm) {
-            where.OR = [
-                { comment: { contains: searchTerm, mode: 'insensitive' } },
-                { product: { name: { contains: searchTerm, mode: 'insensitive' } } },
-            ];
-        }
+  async countMyReviews(
+    customerId: string,
+    searchTerm?: string,
+    ratingValue?: string,
+  ) {
+    const where: Prisma.ReviewWhereInput = {
+      customerId,
+    };
 
-        if (ratingValue) {
-            where.rating = parseInt(ratingValue);
-        }
-
-        // Build orderBy object
-        const orderBy: Prisma.ReviewOrderByWithRelationInput = sortBy
-            ? ({ [sortBy]: sortOrder || 'desc' } as Prisma.ReviewOrderByWithRelationInput)
-            : { createdAt: 'desc' as Prisma.SortOrder };
-
-        // Build select object if fields are specified
-        const select = fields && fields.length > 0
-            ? (fields.reduce((acc, field) => ({ ...acc, [field]: true }), {}) as Prisma.ReviewSelect)
-            : undefined;
-
-        const query: any = {
-            where,
-            skip,
-            take,
-            orderBy,
-        };
-
-        if (select) {
-            query.select = select;
-        } else {
-            query.include = {
-                product: {
-                    select: {
-                        id: true,
-                        name: true,
-                        slug: true,
-                        images: {
-                            where: { isFeatured: true },
-                            take: 1,
-                        },
-                    },
-                },
-            };
-        }
-
-        return this.prisma.review.findMany(query);
+    if (searchTerm) {
+      where.OR = [
+        { comment: { contains: searchTerm, mode: 'insensitive' } },
+        { product: { name: { contains: searchTerm, mode: 'insensitive' } } },
+      ];
     }
 
-    async countMyReviews(
-        customerId: string,
-        searchTerm?: string,
-        ratingValue?: string,
-    ) {
-        const where: Prisma.ReviewWhereInput = {
-            customerId,
-        };
-
-        if (searchTerm) {
-            where.OR = [
-                { comment: { contains: searchTerm, mode: 'insensitive' } },
-                { product: { name: { contains: searchTerm, mode: 'insensitive' } } },
-            ];
-        }
-
-        if (ratingValue) {
-            where.rating = parseInt(ratingValue);
-        }
-
-        return this.prisma.review.count({ where });
+    if (ratingValue) {
+      where.rating = parseInt(ratingValue);
     }
 
-    async findProductReviews(
-        productId: string,
-        skip: number,
-        take: number,
-        sortBy?: string,
-        sortOrder?: 'asc' | 'desc',
-        fields?: string[],
-        searchTerm?: string,
-        ratingValue?: string,
-    ) {
-        // Build where clause
-        const where: Prisma.ReviewWhereInput = {
-            productId,
-            isApproved: true, // Only show approved reviews
-        };
+    return this.prisma.review.count({ where });
+  }
 
-        if (searchTerm) {
-            where.comment = { contains: searchTerm, mode: 'insensitive' };
-        }
+  async findProductReviews(
+    productId: string,
+    skip: number,
+    take: number,
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc',
+    fields?: string[],
+    searchTerm?: string,
+    ratingValue?: string,
+  ) {
+    // Build where clause
+    const where: Prisma.ReviewWhereInput = {
+      productId,
+      isApproved: true, // Only show approved reviews
+    };
 
-        if (ratingValue) {
-            where.rating = parseInt(ratingValue);
-        }
-
-        // Build orderBy object
-        const orderBy: Prisma.ReviewOrderByWithRelationInput = sortBy
-            ? ({ [sortBy]: sortOrder || 'desc' } as Prisma.ReviewOrderByWithRelationInput)
-            : { createdAt: 'desc' as Prisma.SortOrder };
-
-        // Build select object if fields are specified
-        const select = fields && fields.length > 0
-            ? (fields.reduce((acc, field) => ({ ...acc, [field]: true }), {}) as Prisma.ReviewSelect)
-            : undefined;
-
-        const query: any = {
-            where,
-            skip,
-            take,
-            orderBy,
-        };
-
-        if (select) {
-            query.select = select;
-        } else {
-            query.include = {
-                customer: {
-                    select: {
-                        id: true,
-                        user: {
-                            select: {
-                                name: true,
-                            },
-                        },
-                    },
-                },
-            };
-        }
-
-        return this.prisma.review.findMany(query);
+    if (searchTerm) {
+      where.comment = { contains: searchTerm, mode: 'insensitive' };
     }
 
-    async countProductReviews(
-        productId: string,
-        searchTerm?: string,
-        ratingValue?: string,
-    ) {
-        const where: Prisma.ReviewWhereInput = {
-            productId,
-            isApproved: true,
-        };
-
-        if (searchTerm) {
-            where.comment = { contains: searchTerm, mode: 'insensitive' };
-        }
-
-        if (ratingValue) {
-            where.rating = parseInt(ratingValue);
-        }
-
-        return this.prisma.review.count({ where });
+    if (ratingValue) {
+      where.rating = parseInt(ratingValue);
     }
 
-    async findById(id: string) {
-        return this.prisma.review.findUnique({
-            where: { id },
-        });
-    }
+    // Build orderBy object
+    const orderBy: Prisma.ReviewOrderByWithRelationInput = sortBy
+      ? ({
+          [sortBy]: sortOrder || 'desc',
+        } as Prisma.ReviewOrderByWithRelationInput)
+      : { createdAt: 'desc' as Prisma.SortOrder };
 
-    async update(id: string, rating?: number, comment?: string) {
-        const data: Prisma.ReviewUpdateInput = {};
+    // Build select object if fields are specified
+    const select =
+      fields && fields.length > 0
+        ? (fields.reduce(
+            (acc, field) => ({ ...acc, [field]: true }),
+            {},
+          ) as Prisma.ReviewSelect)
+        : undefined;
 
-        if (rating !== undefined) {
-            data.rating = rating;
-        }
+    const query: any = {
+      where,
+      skip,
+      take,
+      orderBy,
+    };
 
-        if (comment !== undefined) {
-            data.comment = comment;
-        }
-
-        return this.prisma.review.update({
-            where: { id },
-            data,
-            include: {
-                product: {
-                    select: {
-                        id: true,
-                        name: true,
-                        slug: true,
-                    },
-                },
-                customer: {
-                    select: {
-                        id: true,
-                        user: {
-                            select: {
-                                name: true,
-                                email: true,
-                            },
-                        },
-                    },
-                },
+    if (select) {
+      query.select = select;
+    } else {
+      query.include = {
+        customer: {
+          select: {
+            user: {
+              select: {
+                profilePicture: true,
+                name: true,
+              },
             },
-        });
+          },
+        },
+      };
     }
 
-    async delete(id: string) {
-        return this.prisma.review.delete({
-            where: { id },
-        });
+    return this.prisma.review.findMany(query);
+  }
+
+  async countProductReviews(
+    productId: string,
+    searchTerm?: string,
+    ratingValue?: string,
+  ) {
+    const where: Prisma.ReviewWhereInput = {
+      productId,
+      isApproved: true,
+    };
+
+    if (searchTerm) {
+      where.comment = { contains: searchTerm, mode: 'insensitive' };
     }
 
-    async findByCustomerAndProduct(customerId: string, productId: string) {
-        return this.prisma.review.findFirst({
-            where: {
-                customerId,
-                productId,
+    if (ratingValue) {
+      where.rating = parseInt(ratingValue);
+    }
+
+    return this.prisma.review.count({ where });
+  }
+
+  async findById(id: string) {
+    return this.prisma.review.findUnique({
+      where: { id },
+    });
+  }
+
+  async update(id: string, rating?: number, comment?: string) {
+    const data: Prisma.ReviewUpdateInput = {};
+
+    if (rating !== undefined) {
+      data.rating = rating;
+    }
+
+    if (comment !== undefined) {
+      data.comment = comment;
+    }
+
+    return this.prisma.review.update({
+      where: { id },
+      data,
+      include: {
+        product: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        customer: {
+          select: {
+            id: true,
+            user: {
+              select: {
+                name: true,
+                email: true,
+              },
             },
-        });
-    }
+          },
+        },
+      },
+    });
+  }
 
-    async approve(id: string, isApproved: boolean) {
-        return this.prisma.review.update({
-            where: { id },
-            data: { isApproved },
-        });
-    }
+  async delete(id: string) {
+    return this.prisma.review.delete({
+      where: { id },
+    });
+  }
 
-    async getProductReviewStats(productId: string) {
-        const stats = await this.prisma.review.aggregate({
-            where: {
-                productId,
-                isApproved: true,
-            },
-            _avg: {
-                rating: true,
-            },
-            _count: {
-                id: true,
-            },
-        });
+  async findByCustomerAndProduct(customerId: string, productId: string) {
+    return this.prisma.review.findFirst({
+      where: {
+        customerId,
+        productId,
+      },
+    });
+  }
 
-        return {
-            avgRating: stats._avg.rating,
-            reviewCount: stats._count.id,
-        };
-    }
+  async approve(id: string, isApproved: boolean) {
+    return this.prisma.review.update({
+      where: { id },
+      data: { isApproved },
+    });
+  }
 
-    async updateProductReviewStats(
-        productId: string,
-        avgRating: number | null,
-        reviewCount: number,
-    ) {
-        return this.prisma.product.update({
-            where: { id: productId },
-            data: {
-                avgRating,
-                reviewCount,
-            },
-        });
-    }
+  async getProductReviewStats(productId: string) {
+    const stats = await this.prisma.review.aggregate({
+      where: {
+        productId,
+        isApproved: true,
+      },
+      _avg: {
+        rating: true,
+      },
+      _count: {
+        id: true,
+      },
+    });
+
+    return {
+      avgRating: stats._avg.rating,
+      reviewCount: stats._count.id,
+    };
+  }
+
+  async updateProductReviewStats(
+    productId: string,
+    avgRating: number | null,
+    reviewCount: number,
+  ) {
+    return this.prisma.product.update({
+      where: { id: productId },
+      data: {
+        avgRating,
+        reviewCount,
+      },
+    });
+  }
 }
