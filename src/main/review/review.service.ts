@@ -5,7 +5,56 @@ import calculatePagination from 'src/utils/calculatePagination';
 
 @Injectable()
 export class ReviewService {
-  constructor(private readonly reviewRepository: ReviewRepository) {}
+  constructor(private readonly reviewRepository: ReviewRepository) { }
+
+  // ------------------------------- Get All Reviews (Admin/Super Admin) -------------------------------
+  public async getAllReviews(
+    pageNumber: number,
+    pageSize: number,
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc',
+    fields?: string,
+    searchTerm?: string,
+    ratingValue?: string,
+    isApproved?: string,
+  ) {
+    const { skip, take } = calculatePagination({
+      page: pageNumber,
+      take: pageSize,
+    });
+
+    const selectedFields = fields
+      ? fields.split(',').map((field) => field.trim())
+      : undefined;
+
+    const [reviews, total] = await Promise.all([
+      this.reviewRepository.findAllReviews(
+        skip,
+        take,
+        sortBy,
+        sortOrder,
+        selectedFields,
+        searchTerm,
+        ratingValue,
+        isApproved,
+      ),
+      this.reviewRepository.countAllReviews(
+        searchTerm,
+        ratingValue,
+        isApproved,
+      ),
+    ]);
+
+    return {
+      data: reviews,
+      meta: {
+        pageNumber,
+        pageSize,
+        totalPages: Math.ceil(total / pageSize),
+        totalCount: total,
+      },
+    };
+  }
 
   // ------------------------------- Get My Reviews -------------------------------
   public async getMyReviews(
@@ -120,12 +169,12 @@ export class ReviewService {
       productId,
     );
 
-    if (existingReview) {
-      throw new HttpException(
-        'You have already reviewed this product',
-        HttpStatus.CONFLICT,
-      );
-    }
+    // if (existingReview) {
+    //   throw new HttpException(
+    //     'You have already reviewed this product',
+    //     HttpStatus.CONFLICT,
+    //   );
+    // }
 
     const review = await this.reviewRepository.create(
       customerId,

@@ -23,10 +23,49 @@ import {
   ApproveReviewDto,
 } from './review.dto';
 import { IdDto } from 'src/common/id.dto';
+import { RoleGuardWith } from 'src/utils/RoleGuardWith';
+import { UserRole } from 'src/generated/prisma';
 
 @Controller('review')
 export class ReviewController {
-  constructor(private readonly reviewService: ReviewService) {}
+  constructor(private readonly reviewService: ReviewService) { }
+
+  // Get all reviews (admin/super admin)
+  @Get()
+  @UseGuards(AuthGuard, RoleGuardWith([UserRole.ADMIN, UserRole.SUPER_ADMIN]))
+  async getAllReviews(
+    @Query('pageNumber') pageNumber: string,
+    @Query('pageSize') pageSize: string,
+    @Query('sortBy') sortBy: string,
+    @Query('sortOrder') sortOrder: string,
+    @Query('fields') fields: string,
+    @Query('searchTerm') searchTerm: string,
+    @Query('ratingValue') ratingValue: string,
+    @Query('isApproved') isApproved: string,
+    @Res() res: Response,
+  ) {
+    const page = parseInt(pageNumber) || 1;
+    const size = parseInt(pageSize) || 20;
+
+    const result = await this.reviewService.getAllReviews(
+      page,
+      size,
+      sortBy,
+      sortOrder as 'asc' | 'desc',
+      fields,
+      searchTerm,
+      ratingValue,
+      isApproved,
+    );
+
+    sendResponse(res, {
+      statusCode: HttpStatus.OK,
+      success: true,
+      message: 'All reviews fetched successfully',
+      meta: result.meta,
+      data: result.data,
+    });
+  }
 
   // Get my reviews
   @Get('my-reviews')

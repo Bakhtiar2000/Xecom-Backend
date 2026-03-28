@@ -93,7 +93,8 @@ export class ProductService {
     // Increment view count
     await this.productRepository.incrementViewCount(id);
 
-    return product;
+    // Return fresh data so response includes the incremented viewCount.
+    return this.productRepository.findByIdActive(id);
   }
 
   // ------------------------------- Add Product -------------------------------

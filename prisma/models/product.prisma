@@ -213,7 +213,7 @@ model Review {
   customerId String
   rating     Int
   comment    String?
-  isApproved Boolean  @default(false)
+  isApproved Boolean  @default(true)
   createdAt  DateTime @default(now())
   product    Product  @relation(fields: [productId], references: [id])
   customer   Customer @relation(fields: [customerId], references: [id])

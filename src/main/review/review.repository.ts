@@ -4,7 +4,123 @@ import { Prisma } from 'src/generated/prisma';
 
 @Injectable()
 export class ReviewRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
+
+  async findAllReviews(
+    skip: number,
+    take: number,
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc',
+    fields?: string[],
+    searchTerm?: string,
+    ratingValue?: string,
+    isApproved?: string,
+  ) {
+    const where: Prisma.ReviewWhereInput = {};
+
+    if (searchTerm) {
+      where.OR = [
+        { comment: { contains: searchTerm, mode: 'insensitive' } },
+        { product: { name: { contains: searchTerm, mode: 'insensitive' } } },
+        {
+          customer: {
+            user: {
+              name: { contains: searchTerm, mode: 'insensitive' },
+            },
+          },
+        },
+      ];
+    }
+
+    if (ratingValue) {
+      where.rating = parseInt(ratingValue);
+    }
+
+    if (isApproved === 'true' || isApproved === 'false') {
+      where.isApproved = isApproved === 'true';
+    }
+
+    const orderBy: Prisma.ReviewOrderByWithRelationInput = sortBy
+      ? ({
+        [sortBy]: sortOrder || 'desc',
+      } as Prisma.ReviewOrderByWithRelationInput)
+      : { createdAt: 'desc' as Prisma.SortOrder };
+
+    const select =
+      fields && fields.length > 0
+        ? (fields.reduce(
+          (acc, field) => ({ ...acc, [field]: true }),
+          {},
+        ) as Prisma.ReviewSelect)
+        : undefined;
+
+    const query: any = {
+      where,
+      skip,
+      take,
+      orderBy,
+    };
+
+    if (select) {
+      query.select = select;
+    } else {
+      query.include = {
+        product: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        customer: {
+          select: {
+            id: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
+      };
+    }
+
+    return this.prisma.review.findMany(query);
+  }
+
+  async countAllReviews(
+    searchTerm?: string,
+    ratingValue?: string,
+    isApproved?: string,
+  ) {
+    const where: Prisma.ReviewWhereInput = {};
+
+    if (searchTerm) {
+      where.OR = [
+        { comment: { contains: searchTerm, mode: 'insensitive' } },
+        { product: { name: { contains: searchTerm, mode: 'insensitive' } } },
+        {
+          customer: {
+            user: {
+              name: { contains: searchTerm, mode: 'insensitive' },
+            },
+          },
+        },
+      ];
+    }
+
+    if (ratingValue) {
+      where.rating = parseInt(ratingValue);
+    }
+
+    if (isApproved === 'true' || isApproved === 'false') {
+      where.isApproved = isApproved === 'true';
+    }
+
+    return this.prisma.review.count({ where });
+  }
 
   async getCustomerByUserId(userId: string) {
     const customer = await this.prisma.customer.findUnique({
@@ -83,17 +199,17 @@ export class ReviewRepository {
     // Build orderBy object
     const orderBy: Prisma.ReviewOrderByWithRelationInput = sortBy
       ? ({
-          [sortBy]: sortOrder || 'desc',
-        } as Prisma.ReviewOrderByWithRelationInput)
+        [sortBy]: sortOrder || 'desc',
+      } as Prisma.ReviewOrderByWithRelationInput)
       : { createdAt: 'desc' as Prisma.SortOrder };
 
     // Build select object if fields are specified
     const select =
       fields && fields.length > 0
         ? (fields.reduce(
-            (acc, field) => ({ ...acc, [field]: true }),
-            {},
-          ) as Prisma.ReviewSelect)
+          (acc, field) => ({ ...acc, [field]: true }),
+          {},
+        ) as Prisma.ReviewSelect)
         : undefined;
 
     const query: any = {
@@ -174,17 +290,17 @@ export class ReviewRepository {
     // Build orderBy object
     const orderBy: Prisma.ReviewOrderByWithRelationInput = sortBy
       ? ({
-          [sortBy]: sortOrder || 'desc',
-        } as Prisma.ReviewOrderByWithRelationInput)
+        [sortBy]: sortOrder || 'desc',
+      } as Prisma.ReviewOrderByWithRelationInput)
       : { createdAt: 'desc' as Prisma.SortOrder };
 
     // Build select object if fields are specified
     const select =
       fields && fields.length > 0
         ? (fields.reduce(
-            (acc, field) => ({ ...acc, [field]: true }),
-            {},
-          ) as Prisma.ReviewSelect)
+          (acc, field) => ({ ...acc, [field]: true }),
+          {},
+        ) as Prisma.ReviewSelect)
         : undefined;
 
     const query: any = {
