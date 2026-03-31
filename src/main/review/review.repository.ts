@@ -318,6 +318,7 @@ export class ReviewRepository {
           select: {
             user: {
               select: {
+                id: true,
                 profilePicture: true,
                 name: true,
               },
