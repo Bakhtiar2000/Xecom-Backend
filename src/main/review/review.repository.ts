@@ -70,6 +70,10 @@ export class ReviewRepository {
             id: true,
             name: true,
             slug: true,
+            images: {
+              where: { isFeatured: true },
+              take: 1,
+            }
           },
         },
         customer: {
