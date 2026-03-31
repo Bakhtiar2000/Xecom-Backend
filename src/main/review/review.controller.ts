@@ -67,6 +67,19 @@ export class ReviewController {
     });
   }
 
+  // Get reviews metadata
+  @Get('metadata')
+  @UseGuards(AuthGuard, RoleGuardWith([UserRole.ADMIN, UserRole.SUPER_ADMIN]))
+  async getReviewsMetadata(@Res() res: Response) {
+    const result = await this.reviewService.getReviewsMetadata();
+    sendResponse(res, {
+      statusCode: HttpStatus.OK,
+      success: true,
+      message: 'Reviews metadata fetched successfully',
+      data: result,
+    });
+  }
+
   // Get my reviews
   @Get('my-reviews')
   @UseGuards(AuthGuard)

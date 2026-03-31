@@ -454,4 +454,32 @@ export class ReviewRepository {
       },
     });
   }
+
+  async countTotal() {
+    return this.prisma.review.count();
+  }
+
+  async countByIsApproved(isApproved: boolean) {
+    return this.prisma.review.count({
+      where: { isApproved },
+    });
+  }
+
+  async countTotalProductsWithReviews() {
+    const groupedProducts = await this.prisma.review.groupBy({
+      by: ['productId'],
+    });
+
+    return groupedProducts.length;
+  }
+
+  async getAverageRating() {
+    const stats = await this.prisma.review.aggregate({
+      _avg: {
+        rating: true,
+      },
+    });
+
+    return stats._avg.rating;
+  }
 }

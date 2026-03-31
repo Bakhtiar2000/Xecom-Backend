@@ -265,4 +265,22 @@ export class ReviewService {
       message: `Review ${isApproved ? 'approved' : 'unapproved'} successfully`,
     };
   }
+
+  // ------------------------------- Get Reviews Metadata -------------------------------
+  public async getReviewsMetadata() {
+    const [totalReviews, totalProductWithReview, totalApproved, averageRating] =
+      await Promise.all([
+        this.reviewRepository.countTotal(),
+        this.reviewRepository.countTotalProductsWithReviews(),
+        this.reviewRepository.countByIsApproved(true),
+        this.reviewRepository.getAverageRating(),
+      ]);
+
+    return {
+      totalReviews,
+      totalProductWithReview,
+      totalApproved,
+      averageRating: averageRating ? parseFloat(averageRating.toFixed(2)) : 0,
+    };
+  }
 }
