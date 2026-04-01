@@ -13,8 +13,7 @@ export class PlaceOrderDto {
     street?: string;
 
     @IsOptional()
-    @IsString()
-    postalCode?: string;
+    postalCode?: number;
 
     @IsOptional()
     @IsUUID()

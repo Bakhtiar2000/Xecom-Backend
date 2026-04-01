@@ -537,7 +537,7 @@ export class OrderRepository {
 
   async createAddress(data: {
     street: string;
-    postalCode?: string;
+    postalCode?: number;
     thanaId: string;
     addressType?: any;
     userId: string | null;

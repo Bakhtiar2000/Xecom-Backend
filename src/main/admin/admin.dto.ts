@@ -39,6 +39,5 @@ export class CreateAdminDto {
   street: string;
 
   @IsOptional()
-  @IsString()
-  postalCode?: string;
+  postalCode?: number;
 }

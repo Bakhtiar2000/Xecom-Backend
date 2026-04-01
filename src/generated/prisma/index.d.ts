@@ -10933,8 +10933,18 @@ export namespace Prisma {
 
   export type AggregateAddress = {
     _count: AddressCountAggregateOutputType | null
+    _avg: AddressAvgAggregateOutputType | null
+    _sum: AddressSumAggregateOutputType | null
     _min: AddressMinAggregateOutputType | null
     _max: AddressMaxAggregateOutputType | null
+  }
+
+  export type AddressAvgAggregateOutputType = {
+    postalCode: number | null
+  }
+
+  export type AddressSumAggregateOutputType = {
+    postalCode: number | null
   }
 
   export type AddressMinAggregateOutputType = {
@@ -10942,7 +10952,7 @@ export namespace Prisma {
     userId: string | null
     thanaId: string | null
     street: string | null
-    postalCode: string | null
+    postalCode: number | null
     addressType: $Enums.AddressType | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -10953,7 +10963,7 @@ export namespace Prisma {
     userId: string | null
     thanaId: string | null
     street: string | null
-    postalCode: string | null
+    postalCode: number | null
     addressType: $Enums.AddressType | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -10971,6 +10981,14 @@ export namespace Prisma {
     _all: number
   }
 
+
+  export type AddressAvgAggregateInputType = {
+    postalCode?: true
+  }
+
+  export type AddressSumAggregateInputType = {
+    postalCode?: true
+  }
 
   export type AddressMinAggregateInputType = {
     id?: true
@@ -11044,6 +11062,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: AddressAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AddressSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: AddressMinAggregateInputType
@@ -11074,6 +11104,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: AddressCountAggregateInputType | true
+    _avg?: AddressAvgAggregateInputType
+    _sum?: AddressSumAggregateInputType
     _min?: AddressMinAggregateInputType
     _max?: AddressMaxAggregateInputType
   }
@@ -11083,11 +11115,13 @@ export namespace Prisma {
     userId: string | null
     thanaId: string
     street: string
-    postalCode: string | null
+    postalCode: number | null
     addressType: $Enums.AddressType | null
     createdAt: Date
     updatedAt: Date
     _count: AddressCountAggregateOutputType | null
+    _avg: AddressAvgAggregateOutputType | null
+    _sum: AddressSumAggregateOutputType | null
     _min: AddressMinAggregateOutputType | null
     _max: AddressMaxAggregateOutputType | null
   }
@@ -11186,7 +11220,7 @@ export namespace Prisma {
       userId: string | null
       thanaId: string
       street: string
-      postalCode: string | null
+      postalCode: number | null
       addressType: $Enums.AddressType | null
       createdAt: Date
       updatedAt: Date
@@ -11620,7 +11654,7 @@ export namespace Prisma {
     readonly userId: FieldRef<"Address", 'String'>
     readonly thanaId: FieldRef<"Address", 'String'>
     readonly street: FieldRef<"Address", 'String'>
-    readonly postalCode: FieldRef<"Address", 'String'>
+    readonly postalCode: FieldRef<"Address", 'Int'>
     readonly addressType: FieldRef<"Address", 'AddressType'>
     readonly createdAt: FieldRef<"Address", 'DateTime'>
     readonly updatedAt: FieldRef<"Address", 'DateTime'>
@@ -52147,7 +52181,7 @@ export namespace Prisma {
     userId?: StringNullableFilter<"Address"> | string | null
     thanaId?: StringFilter<"Address"> | string
     street?: StringFilter<"Address"> | string
-    postalCode?: StringNullableFilter<"Address"> | string | null
+    postalCode?: IntNullableFilter<"Address"> | number | null
     addressType?: EnumAddressTypeNullableFilter<"Address"> | $Enums.AddressType | null
     createdAt?: DateTimeFilter<"Address"> | Date | string
     updatedAt?: DateTimeFilter<"Address"> | Date | string
@@ -52178,7 +52212,7 @@ export namespace Prisma {
     userId?: StringNullableFilter<"Address"> | string | null
     thanaId?: StringFilter<"Address"> | string
     street?: StringFilter<"Address"> | string
-    postalCode?: StringNullableFilter<"Address"> | string | null
+    postalCode?: IntNullableFilter<"Address"> | number | null
     addressType?: EnumAddressTypeNullableFilter<"Address"> | $Enums.AddressType | null
     createdAt?: DateTimeFilter<"Address"> | Date | string
     updatedAt?: DateTimeFilter<"Address"> | Date | string
@@ -52197,8 +52231,10 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: AddressCountOrderByAggregateInput
+    _avg?: AddressAvgOrderByAggregateInput
     _max?: AddressMaxOrderByAggregateInput
     _min?: AddressMinOrderByAggregateInput
+    _sum?: AddressSumOrderByAggregateInput
   }
 
   export type AddressScalarWhereWithAggregatesInput = {
@@ -52209,7 +52245,7 @@ export namespace Prisma {
     userId?: StringNullableWithAggregatesFilter<"Address"> | string | null
     thanaId?: StringWithAggregatesFilter<"Address"> | string
     street?: StringWithAggregatesFilter<"Address"> | string
-    postalCode?: StringNullableWithAggregatesFilter<"Address"> | string | null
+    postalCode?: IntNullableWithAggregatesFilter<"Address"> | number | null
     addressType?: EnumAddressTypeNullableWithAggregatesFilter<"Address"> | $Enums.AddressType | null
     createdAt?: DateTimeWithAggregatesFilter<"Address"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Address"> | Date | string
@@ -55467,7 +55503,7 @@ export namespace Prisma {
   export type AddressCreateInput = {
     id?: string
     street: string
-    postalCode?: string | null
+    postalCode?: number | null
     addressType?: $Enums.AddressType | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -55481,7 +55517,7 @@ export namespace Prisma {
     userId?: string | null
     thanaId: string
     street: string
-    postalCode?: string | null
+    postalCode?: number | null
     addressType?: $Enums.AddressType | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -55491,7 +55527,7 @@ export namespace Prisma {
   export type AddressUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     street?: StringFieldUpdateOperationsInput | string
-    postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCode?: NullableIntFieldUpdateOperationsInput | number | null
     addressType?: NullableEnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -55505,7 +55541,7 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     thanaId?: StringFieldUpdateOperationsInput | string
     street?: StringFieldUpdateOperationsInput | string
-    postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCode?: NullableIntFieldUpdateOperationsInput | number | null
     addressType?: NullableEnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -55517,7 +55553,7 @@ export namespace Prisma {
     userId?: string | null
     thanaId: string
     street: string
-    postalCode?: string | null
+    postalCode?: number | null
     addressType?: $Enums.AddressType | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -55526,7 +55562,7 @@ export namespace Prisma {
   export type AddressUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     street?: StringFieldUpdateOperationsInput | string
-    postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCode?: NullableIntFieldUpdateOperationsInput | number | null
     addressType?: NullableEnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -55537,7 +55573,7 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     thanaId?: StringFieldUpdateOperationsInput | string
     street?: StringFieldUpdateOperationsInput | string
-    postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCode?: NullableIntFieldUpdateOperationsInput | number | null
     addressType?: NullableEnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -59154,6 +59190,17 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type EnumAddressTypeNullableFilter<$PrismaModel = never> = {
     equals?: $Enums.AddressType | EnumAddressTypeFieldRefInput<$PrismaModel> | null
     in?: $Enums.AddressType[] | ListEnumAddressTypeFieldRefInput<$PrismaModel> | null
@@ -59192,6 +59239,10 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type AddressAvgOrderByAggregateInput = {
+    postalCode?: SortOrder
+  }
+
   export type AddressMaxOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -59212,6 +59263,26 @@ export namespace Prisma {
     addressType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type AddressSumOrderByAggregateInput = {
+    postalCode?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type EnumAddressTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -59251,17 +59322,6 @@ export namespace Prisma {
     gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-  }
-
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
   export type DateTimeNullableFilter<$PrismaModel = never> = {
@@ -59413,22 +59473,6 @@ export namespace Prisma {
     _sum?: NestedDecimalNullableFilter<$PrismaModel>
     _min?: NestedDecimalNullableFilter<$PrismaModel>
     _max?: NestedDecimalNullableFilter<$PrismaModel>
-  }
-
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -62024,6 +62068,14 @@ export namespace Prisma {
     connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
   }
 
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type NullableEnumAddressTypeFieldUpdateOperationsInput = {
     set?: $Enums.AddressType | null
   }
@@ -62106,14 +62158,6 @@ export namespace Prisma {
     decrement?: Decimal | DecimalJsLike | number | string
     multiply?: Decimal | DecimalJsLike | number | string
     divide?: Decimal | DecimalJsLike | number | string
-  }
-
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -64904,6 +64948,33 @@ export namespace Prisma {
     not?: NestedEnumAddressTypeNullableFilter<$PrismaModel> | $Enums.AddressType | null
   }
 
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedEnumAddressTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.AddressType | EnumAddressTypeFieldRefInput<$PrismaModel> | null
     in?: $Enums.AddressType[] | ListEnumAddressTypeFieldRefInput<$PrismaModel> | null
@@ -64994,33 +65065,6 @@ export namespace Prisma {
     _sum?: NestedDecimalNullableFilter<$PrismaModel>
     _min?: NestedDecimalNullableFilter<$PrismaModel>
     _max?: NestedDecimalNullableFilter<$PrismaModel>
-  }
-
-  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -65831,7 +65875,7 @@ export namespace Prisma {
   export type AddressCreateWithoutThanaInput = {
     id?: string
     street: string
-    postalCode?: string | null
+    postalCode?: number | null
     addressType?: $Enums.AddressType | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -65843,7 +65887,7 @@ export namespace Prisma {
     id?: string
     userId?: string | null
     street: string
-    postalCode?: string | null
+    postalCode?: number | null
     addressType?: $Enums.AddressType | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -65913,7 +65957,7 @@ export namespace Prisma {
     userId?: StringNullableFilter<"Address"> | string | null
     thanaId?: StringFilter<"Address"> | string
     street?: StringFilter<"Address"> | string
-    postalCode?: StringNullableFilter<"Address"> | string | null
+    postalCode?: IntNullableFilter<"Address"> | number | null
     addressType?: EnumAddressTypeNullableFilter<"Address"> | $Enums.AddressType | null
     createdAt?: DateTimeFilter<"Address"> | Date | string
     updatedAt?: DateTimeFilter<"Address"> | Date | string
@@ -66475,7 +66519,7 @@ export namespace Prisma {
   export type AddressCreateWithoutOrdersInput = {
     id?: string
     street: string
-    postalCode?: string | null
+    postalCode?: number | null
     addressType?: $Enums.AddressType | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -66488,7 +66532,7 @@ export namespace Prisma {
     userId?: string | null
     thanaId: string
     street: string
-    postalCode?: string | null
+    postalCode?: number | null
     addressType?: $Enums.AddressType | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -66797,7 +66841,7 @@ export namespace Prisma {
   export type AddressUpdateWithoutOrdersInput = {
     id?: StringFieldUpdateOperationsInput | string
     street?: StringFieldUpdateOperationsInput | string
-    postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCode?: NullableIntFieldUpdateOperationsInput | number | null
     addressType?: NullableEnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -66810,7 +66854,7 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     thanaId?: StringFieldUpdateOperationsInput | string
     street?: StringFieldUpdateOperationsInput | string
-    postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCode?: NullableIntFieldUpdateOperationsInput | number | null
     addressType?: NullableEnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -73347,7 +73391,7 @@ export namespace Prisma {
   export type AddressCreateWithoutUserInput = {
     id?: string
     street: string
-    postalCode?: string | null
+    postalCode?: number | null
     addressType?: $Enums.AddressType | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -73359,7 +73403,7 @@ export namespace Prisma {
     id?: string
     thanaId: string
     street: string
-    postalCode?: string | null
+    postalCode?: number | null
     addressType?: $Enums.AddressType | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -74842,7 +74886,7 @@ export namespace Prisma {
     id?: string
     userId?: string | null
     street: string
-    postalCode?: string | null
+    postalCode?: number | null
     addressType?: $Enums.AddressType | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -74851,7 +74895,7 @@ export namespace Prisma {
   export type AddressUpdateWithoutThanaInput = {
     id?: StringFieldUpdateOperationsInput | string
     street?: StringFieldUpdateOperationsInput | string
-    postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCode?: NullableIntFieldUpdateOperationsInput | number | null
     addressType?: NullableEnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -74863,7 +74907,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     street?: StringFieldUpdateOperationsInput | string
-    postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCode?: NullableIntFieldUpdateOperationsInput | number | null
     addressType?: NullableEnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -74874,7 +74918,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     street?: StringFieldUpdateOperationsInput | string
-    postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCode?: NullableIntFieldUpdateOperationsInput | number | null
     addressType?: NullableEnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -76789,7 +76833,7 @@ export namespace Prisma {
     id?: string
     thanaId: string
     street: string
-    postalCode?: string | null
+    postalCode?: number | null
     addressType?: $Enums.AddressType | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -76885,7 +76929,7 @@ export namespace Prisma {
   export type AddressUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     street?: StringFieldUpdateOperationsInput | string
-    postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCode?: NullableIntFieldUpdateOperationsInput | number | null
     addressType?: NullableEnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -76897,7 +76941,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     thanaId?: StringFieldUpdateOperationsInput | string
     street?: StringFieldUpdateOperationsInput | string
-    postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCode?: NullableIntFieldUpdateOperationsInput | number | null
     addressType?: NullableEnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -76908,7 +76952,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     thanaId?: StringFieldUpdateOperationsInput | string
     street?: StringFieldUpdateOperationsInput | string
-    postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCode?: NullableIntFieldUpdateOperationsInput | number | null
     addressType?: NullableEnumAddressTypeFieldUpdateOperationsInput | $Enums.AddressType | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

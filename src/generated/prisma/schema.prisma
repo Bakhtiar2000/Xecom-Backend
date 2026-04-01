@@ -302,7 +302,7 @@ model Address {
   userId      String?
   thanaId     String
   street      String
-  postalCode  String?
+  postalCode  Int?
   addressType AddressType? // ----------------- NEW -----------------
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt

@@ -39,6 +39,5 @@ export class CreateStaffDto {
   street: string;
 
   @IsOptional()
-  @IsString()
-  postalCode?: string;
+  postalCode?: number;
 }
