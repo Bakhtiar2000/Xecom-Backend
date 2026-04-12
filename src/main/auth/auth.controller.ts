@@ -12,6 +12,7 @@ import { AuthService } from './auth.service';
 import type { Response, Request } from 'express';
 import {
   LoginDto,
+  GoogleLoginDto,
   ForgotPasswordDto,
   ChangePasswordDto,
   ResetPasswordDto,
@@ -41,6 +42,26 @@ export class AuthController {
       statusCode: HttpStatus.OK,
       success: true,
       message: 'Logged in successfully',
+      data: { accessToken },
+    });
+  }
+
+  @Post('google-login')
+  async googleLogin(@Body() googleLoginDto: GoogleLoginDto, @Res() res: Response) {
+    const result = await this.authService.googleLogin(googleLoginDto);
+    const { refreshToken, accessToken } = result;
+
+    res.cookie('refreshToken', refreshToken, {
+      secure: this.configService.get('NODE_ENV') === 'production',
+      httpOnly: true,
+      sameSite: 'none',
+      maxAge: 1000 * 60 * 60 * 24 * 365,
+    });
+
+    sendResponse(res, {
+      statusCode: HttpStatus.OK,
+      success: true,
+      message: 'Logged in with Google successfully',
       data: { accessToken },
     });
   }

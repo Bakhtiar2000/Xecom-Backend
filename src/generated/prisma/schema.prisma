@@ -17,6 +17,11 @@ enum TenantStatus {
   TRIAL
 }
 
+enum AuthProvider {
+  EMAIL_PASSWORD
+  GOOGLE
+}
+
 enum SubscriptionStatus {
   ACTIVE
   PAST_DUE
@@ -842,22 +847,28 @@ model Subscription {
 // ========================================
 
 model User {
-  id             String     @id @default(uuid())
+  id             String  @id @default(uuid())
   tenantId       String? // Multi-tenant support
   name           String
-  email          String     @unique
-  password       String
+  email          String  @unique
+  password       String?
   phoneNumber    String?
   profilePicture String?
   gender         Gender?
-  role           UserRole   @default(CUSTOMER)
-  status         UserStatus @default(ACTIVE)
-  emailVerified  Boolean    @default(false)
-  lastLoginAt    DateTime?
-  preferences    Json       @default("{}")
-  metadata       Json       @default("{}")
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
+
+  //
+  provider AuthProvider? @default(EMAIL_PASSWORD)
+
+  //
+
+  role          UserRole   @default(CUSTOMER)
+  status        UserStatus @default(ACTIVE)
+  emailVerified Boolean    @default(false)
+  lastLoginAt   DateTime?
+  preferences   Json       @default("{}")
+  metadata      Json       @default("{}")
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
 
   // Relationships (Common)
   tenant        Tenant?        @relation(fields: [tenantId], references: [id], onDelete: Cascade)

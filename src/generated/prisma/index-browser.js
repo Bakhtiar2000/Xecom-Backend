@@ -24,12 +24,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 7.2.0
- * Query Engine version: 0c8ef2ce45c83248ab3df073180d5eda9e8be7a3
+ * Prisma Client JS version: 7.3.0
+ * Query Engine version: 9d6ad21cbbceab97458517b147a6a09ff43aa735
  */
 Prisma.prismaVersion = {
-  client: "7.2.0",
-  engine: "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3"
+  client: "7.3.0",
+  engine: "9d6ad21cbbceab97458517b147a6a09ff43aa735"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -553,6 +553,7 @@ exports.Prisma.UserScalarFieldEnum = {
   phoneNumber: 'phoneNumber',
   profilePicture: 'profilePicture',
   gender: 'gender',
+  provider: 'provider',
   role: 'role',
   status: 'status',
   emailVerified: 'emailVerified',
@@ -830,6 +831,11 @@ exports.Gender = exports.$Enums.Gender = {
   MALE: 'MALE',
   FEMALE: 'FEMALE',
   OTHER: 'OTHER'
+};
+
+exports.AuthProvider = exports.$Enums.AuthProvider = {
+  EMAIL_PASSWORD: 'EMAIL_PASSWORD',
+  GOOGLE: 'GOOGLE'
 };
 
 exports.UserRole = exports.$Enums.UserRole = {

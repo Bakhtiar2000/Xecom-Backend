@@ -9,6 +9,17 @@ export class LoginDto {
   password: string;
 }
 
+export class GoogleLoginDto {
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  name: string;
+
+  @IsString()
+  profilePicture: string;
+}
+
 export class RefreshTokenDto {
   @IsString()
   refreshToken: string;

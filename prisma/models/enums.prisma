@@ -17,6 +17,11 @@ enum TenantStatus {
   TRIAL
 }
 
+enum AuthProvider {
+  EMAIL_PASSWORD
+  GOOGLE
+}
+
 enum SubscriptionStatus {
   ACTIVE
   PAST_DUE

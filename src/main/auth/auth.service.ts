@@ -1,8 +1,7 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { UserStatus } from 'src/generated/prisma';
+import { AuthProvider, UserStatus } from 'src/generated/prisma';
 import { ChangePasswordDto } from './auth.dto';
 import { MailerService } from 'src/utils/sendMail';
 import { TUser } from 'src/interface/token.type';
@@ -22,16 +21,62 @@ export class AuthService {
   // Login
   public async loginUser(data: { email: string; password: string }) {
     const { email, password } = data;
-    const user = await this.authRepository.findActiveUserByEmail(email);
+    const user = await this.authRepository.findUserByEmail(email);
 
     if (!user) throw new HttpException('User not found', 401);
+    if (user.provider === AuthProvider.GOOGLE) {
+      throw new HttpException(
+        'This account is registered with Google. Please try to login with Google.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    if (user.status === UserStatus.BLOCKED) {
+      throw new HttpException('This user is blocked!', HttpStatus.FORBIDDEN);
+    }
 
+    if (!user.password) {
+      throw new HttpException('Password not set for this user. Please use Google login.', HttpStatus.BAD_REQUEST);
+    }
     const isCorrectPassword = await this.lib.comparePassword({
       password,
       hashedPassword: user.password,
     });
-    console.log(password, user.password);
+
     if (!isCorrectPassword) throw new HttpException('Invalid credentials', 401);
+
+    return this.generateTokens(user);
+  }
+
+  public async googleLogin(data: {
+    email: string;
+    name: string;
+    profilePicture: string;
+  }) {
+    let user = await this.authRepository.findUserByEmail(data.email);
+
+    if (user) {
+      if (user.provider === AuthProvider.EMAIL_PASSWORD) {
+        throw new HttpException(
+          'This account is registered with email and password. Please try email/password login.',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      if (user.status === UserStatus.BLOCKED) {
+        throw new HttpException('This user is blocked!', HttpStatus.FORBIDDEN);
+      }
+    } else {
+      user = await this.authRepository.createGoogleUser(data);
+    }
+
+    return this.generateTokens(user);
+  }
+
+  private generateTokens(user: {
+    email: string;
+    role: string;
+    id: string;
+  }) {
 
     const payload = { email: user.email, role: user.role, id: user.id };
     const accessToken = this.jwtService.sign(payload, {
@@ -141,7 +186,6 @@ export class AuthService {
   }
 
   public async resetPassword(payload: { newPassword: string }, token: string) {
-    console.log(payload, token);
     // 1. Decode token
     const decoded: any = this.jwtService.verify(token, {
       secret: this.configService.get('ACCESS_SECRET'),

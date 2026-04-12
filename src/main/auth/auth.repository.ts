@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Prisma, UserStatus } from 'src/generated/prisma';
+import { AuthProvider, Prisma, UserRole, UserStatus } from 'src/generated/prisma';
 
 @Injectable()
 export class AuthRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async findUserByEmail(email: string) {
     return this.prisma.user.findUnique({
@@ -41,6 +41,37 @@ export class AuthRepository {
   async findActiveUserByEmailOrThrow(email: string) {
     return this.prisma.user.findUniqueOrThrow({
       where: { email, status: UserStatus.ACTIVE },
+    });
+  }
+
+  async createGoogleUser(payload: {
+    email: string;
+    name: string;
+    profilePicture: string;
+  }) {
+    return this.prisma.$transaction(async (tx) => {
+      const user = await tx.user.create({
+        data: {
+          email: payload.email,
+          name: payload.name,
+          profilePicture: payload.profilePicture,
+          provider: AuthProvider.GOOGLE,
+          role: UserRole.CUSTOMER,
+          emailVerified: true,
+        },
+      });
+
+      await tx.customer.create({
+        data: {
+          user: {
+            connect: {
+              id: user.id,
+            },
+          },
+        },
+      });
+
+      return user;
     });
   }
 }
