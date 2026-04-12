@@ -189,6 +189,11 @@ export class CreateProductDto {
   @Min(1)
   maxOrderQty?: number;
 
+  @IsOptional()
+  @IsArray()
+  @IsUUID('4', { each: true })
+  relatedProductIds?: string[];
+
   // Images and Variants
   @IsOptional()
   @IsArray()
@@ -300,6 +305,11 @@ export class UpdateProductDto {
   @IsNumber()
   @Min(1)
   maxOrderQty?: number;
+
+  @IsOptional()
+  @IsArray()
+  @IsUUID('4', { each: true })
+  relatedProductIds?: string[];
 
   // Images and Variants
   @IsOptional()

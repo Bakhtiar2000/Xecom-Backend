@@ -1,6 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Prisma, ProductDimensionUnit, ProductStatus } from 'src/generated/prisma';
+import {
+  Prisma,
+  ProductDimensionUnit,
+  ProductRelationType,
+  ProductStatus,
+} from 'src/generated/prisma';
 
 @Injectable()
 export class ProductRepository {
@@ -239,14 +244,15 @@ export class ProductRepository {
         relations: {
           include: {
             relatedTo: {
-              include: {
+              select: {
+                id: true,
+                name: true,
                 images: {
                   where: { isFeatured: true },
                   take: 1,
-                },
-                variants: {
-                  take: 1,
-                  orderBy: { isDefault: 'desc' },
+                  select: {
+                    imageUrl: true,
+                  },
                 },
               },
             },
@@ -291,14 +297,15 @@ export class ProductRepository {
         relations: {
           include: {
             relatedTo: {
-              include: {
+              select: {
+                id: true,
+                name: true,
                 images: {
                   where: { isFeatured: true },
                   take: 1,
-                },
-                variants: {
-                  take: 1,
-                  orderBy: { isDefault: 'desc' },
+                  select: {
+                    imageUrl: true,
+                  },
                 },
               },
             },
@@ -319,6 +326,15 @@ export class ProductRepository {
     return this.prisma.product.findFirst({
       where: { slug, id: { not: excludeId } },
     });
+  }
+
+  async findExistingProductIds(ids: string[]) {
+    const products = await this.prisma.product.findMany({
+      where: { id: { in: ids } },
+      select: { id: true },
+    });
+
+    return products.map((product) => product.id);
   }
 
   async create(data: Prisma.ProductCreateInput) {
@@ -397,6 +413,59 @@ export class ProductRepository {
         imageUrl: img.imageUrl,
         isFeatured: img.isFeatured,
       })),
+    });
+  }
+
+  async findProductImageByIdAndProduct(productId: string, imageId: string) {
+    return this.prisma.productImage.findFirst({
+      where: {
+        id: imageId,
+        productId,
+      },
+    });
+  }
+
+  async setFeaturedImage(productId: string, imageId: string) {
+    return this.prisma.$transaction(async (tx) => {
+      await tx.productImage.updateMany({
+        where: { productId, isFeatured: true },
+        data: { isFeatured: false },
+      });
+
+      return tx.productImage.update({
+        where: { id: imageId },
+        data: { isFeatured: true },
+      });
+    });
+  }
+
+  async replaceRelatedProducts(
+    productId: string,
+    relatedProductIds: string[],
+    tenantId?: string | null,
+  ) {
+    return this.prisma.$transaction(async (tx) => {
+      await tx.productRelation.deleteMany({
+        where: {
+          productId,
+          type: ProductRelationType.RELATED,
+        },
+      });
+
+      if (relatedProductIds.length === 0) {
+        return { count: 0 };
+      }
+
+      return tx.productRelation.createMany({
+        data: relatedProductIds.map((relatedToId) => ({
+          productId,
+          relatedToId,
+          type: ProductRelationType.RELATED,
+          priority: 0,
+          tenantId: tenantId ?? null,
+        })),
+        skipDuplicates: true,
+      });
     });
   }
 

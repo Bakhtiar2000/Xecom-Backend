@@ -5,6 +5,7 @@ import {
   HttpStatus,
   Post,
   Put,
+  Patch,
   Delete,
   Param,
   Query,
@@ -313,7 +314,7 @@ export class ProductController {
 
     // Handle product image uploads to Cloudinary
     if (files?.images && files.images.length > 0) {
-      const uploadedImages: Array<{ imageUrl: string; isFeatured: boolean }> = [];
+      const uploadedImages: Array<{ imageUrl: string; }> = [];
       for (let i = 0; i < files.images.length; i++) {
         const imageFile = files.images[i];
         try {
@@ -324,7 +325,6 @@ export class ProductController {
           if (uploaded?.secure_url) {
             uploadedImages.push({
               imageUrl: uploaded.secure_url,
-              isFeatured: i === 0, // First image is featured
             });
           }
         } catch (error) {
@@ -426,6 +426,23 @@ export class ProductController {
       statusCode: HttpStatus.OK,
       success: true,
       message: 'Product deleted successfully',
+      data: result,
+    });
+  }
+
+  // Set featured image of a product
+  @Patch(':id/featured-image/:imageId')
+  @UseGuards(AuthGuard, RoleGuardWith([UserRole.ADMIN, UserRole.SUPER_ADMIN]))
+  async setFeaturedProductImage(
+    @Param('id') id: string,
+    @Param('imageId') imageId: string,
+    @Res() res: Response,
+  ) {
+    const result = await this.productService.setFeaturedProductImage(id, imageId);
+    sendResponse(res, {
+      statusCode: HttpStatus.OK,
+      success: true,
+      message: 'Featured image updated successfully',
       data: result,
     });
   }

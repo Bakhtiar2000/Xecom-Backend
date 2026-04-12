@@ -94,12 +94,38 @@ export class ProductService {
     await this.productRepository.incrementViewCount(id);
 
     // Return fresh data so response includes the incremented viewCount.
-    return this.productRepository.findByIdActive(id);
+    const freshProduct = await this.productRepository.findByIdActive(id);
+
+    if (!freshProduct) {
+      throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
+    }
+
+    const relatedProducts = (freshProduct.relations || []).map((relation) => ({
+      productId: relation.relatedTo.id,
+      name: relation.relatedTo.name,
+      featuredImage: relation.relatedTo.images?.[0]?.imageUrl || null,
+    }));
+
+    const { relations, ...productWithoutRelations } = freshProduct;
+
+    return {
+      ...productWithoutRelations,
+      relatedProducts,
+    };
   }
 
   // ------------------------------- Add Product -------------------------------
   public async addProduct(createProductDto: CreateProductDto) {
-    const { slug, images, variants, dimension, faqs, brandId, categoryId } = createProductDto;
+    const {
+      slug,
+      images,
+      variants,
+      dimension,
+      faqs,
+      brandId,
+      categoryId,
+      relatedProductIds,
+    } = createProductDto;
 
     console.log("Creating product with DTO:", createProductDto)
 
@@ -170,6 +196,20 @@ export class ProductService {
         'Product with this slug already exists',
         HttpStatus.CONFLICT,
       );
+    }
+
+    if (relatedProductIds && relatedProductIds.length > 0) {
+      const uniqueRelatedIds = [...new Set(relatedProductIds)];
+      const existingRelatedIds = await this.productRepository.findExistingProductIds(
+        uniqueRelatedIds,
+      );
+
+      if (existingRelatedIds.length !== uniqueRelatedIds.length) {
+        throw new HttpException(
+          'One or more related product IDs are invalid',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
     }
 
     const product = await this.productRepository.create({
@@ -247,12 +287,34 @@ export class ProductService {
       }
     }
 
+    if (relatedProductIds !== undefined) {
+      const uniqueRelatedIds = [...new Set(relatedProductIds || [])].filter(
+        (relatedId) => relatedId !== product.id,
+      );
+
+      await this.productRepository.replaceRelatedProducts(
+        product.id,
+        uniqueRelatedIds,
+        product.tenantId,
+      );
+    }
+
     return product;
   }
 
   // ------------------------------- Update Product -------------------------------
   public async updateProduct(updateProductDto: UpdateProductDto) {
-    const { id, slug, images, variants, dimension, faqs, brandId, categoryId } = updateProductDto;
+    const {
+      id,
+      slug,
+      images,
+      variants,
+      dimension,
+      faqs,
+      brandId,
+      categoryId,
+      relatedProductIds,
+    } = updateProductDto;
 
     // Check if product exists
     const existingProduct = await this.productRepository.findById(id);
@@ -337,6 +399,30 @@ export class ProductService {
           'Product with this slug already exists',
           HttpStatus.CONFLICT,
         );
+      }
+    }
+
+    if (relatedProductIds !== undefined) {
+      const uniqueRelatedIds = [...new Set(relatedProductIds || [])];
+
+      if (uniqueRelatedIds.some((relatedId) => relatedId === id)) {
+        throw new HttpException(
+          'Product cannot be related to itself',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      if (uniqueRelatedIds.length > 0) {
+        const existingRelatedIds = await this.productRepository.findExistingProductIds(
+          uniqueRelatedIds,
+        );
+
+        if (existingRelatedIds.length !== uniqueRelatedIds.length) {
+          throw new HttpException(
+            'One or more related product IDs are invalid',
+            HttpStatus.BAD_REQUEST,
+          );
+        }
       }
     }
 
@@ -449,6 +535,18 @@ export class ProductService {
       }
     }
 
+    if (relatedProductIds !== undefined) {
+      const uniqueRelatedIds = [...new Set(relatedProductIds || [])].filter(
+        (relatedId) => relatedId !== id,
+      );
+
+      await this.productRepository.replaceRelatedProducts(
+        id,
+        uniqueRelatedIds,
+        existingProduct.tenantId,
+      );
+    }
+
     return product;
   }
 
@@ -465,6 +563,26 @@ export class ProductService {
     const deletedProduct = await this.productRepository.softDelete(id);
 
     return deletedProduct;
+  }
+
+  // ------------------------------- Set Featured Product Image -------------------------------
+  public async setFeaturedProductImage(productId: string, imageId: string) {
+    const product = await this.productRepository.findById(productId);
+
+    if (!product) {
+      throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
+    }
+
+    const image = await this.productRepository.findProductImageByIdAndProduct(
+      productId,
+      imageId,
+    );
+
+    if (!image) {
+      throw new HttpException('Product image not found', HttpStatus.NOT_FOUND);
+    }
+
+    return this.productRepository.setFeaturedImage(productId, imageId);
   }
 
   // ------------------------------- Get Products Metadata -------------------------------
