@@ -96,6 +96,46 @@ export class CreateProductVariantInProductDto {
   attributeValueIds?: string[];
 }
 
+export class UpdateProductVariantInProductDto {
+  @IsOptional()
+  @IsUUID()
+  id?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  sku?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  price?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  cost?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  stockQuantity?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  stockAlertThreshold?: number;
+
+  @IsOptional()
+  @IsBoolean()
+  isDefault?: boolean;
+
+  @IsOptional()
+  @IsArray()
+  @IsUUID('4', { each: true })
+  attributeValueIds?: string[];
+}
+
 export class CreateProductDto {
   @IsString()
   @Length(2, 200)
@@ -321,6 +361,6 @@ export class UpdateProductDto {
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => CreateProductVariantInProductDto)
-  variants?: CreateProductVariantInProductDto[];
+  @Type(() => UpdateProductVariantInProductDto)
+  variants?: UpdateProductVariantInProductDto[];
 }

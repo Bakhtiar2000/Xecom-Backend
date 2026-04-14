@@ -44,7 +44,6 @@ export class ProductController {
     @Query('sortBy') sortBy: string,
     @Query('sortOrder') sortOrder: string,
     @Query('fields') fields: string,
-    @Query('isActive') isActive: string,
     @Query('searchTerm') searchTerm: string,
     @Query('brandIds') brandIds: string,
     @Query('categoryIds') categoryIds: string,
@@ -54,6 +53,7 @@ export class ProductController {
     @Query('attributeValueIds') attributeValueIds: string,
     @Query('priceStarts') priceStarts: string,
     @Query('priceEnds') priceEnds: string,
+    @Query('statuses') statuses: string,
     @Res() res: Response,
   ) {
     const page = parseInt(pageNumber) || 1;
@@ -65,7 +65,6 @@ export class ProductController {
       sortBy,
       sortOrder as 'asc' | 'desc',
       fields,
-      isActive,
       searchTerm,
       brandIds,
       categoryIds,
@@ -75,6 +74,7 @@ export class ProductController {
       attributeValueIds,
       priceStarts ? parseFloat(priceStarts) : undefined,
       priceEnds ? parseFloat(priceEnds) : undefined,
+      statuses,
     );
     sendResponse(res, {
       statusCode: HttpStatus.OK,
@@ -170,7 +170,7 @@ export class ProductController {
             statusCode: HttpStatus.REQUEST_TIMEOUT,
             message:
               'Image upload failed. Please try again with a smaller file or check your connection.',
-            error: error.message || 'Upload timeout',
+            error: error instanceof Error ? error.message : 'Upload timeout',
           });
         }
       }
@@ -202,7 +202,7 @@ export class ProductController {
           statusCode: HttpStatus.REQUEST_TIMEOUT,
           message:
             'Video upload failed. Please try again with a smaller file or check your connection.',
-          error: error.message || 'Upload timeout',
+          error: error instanceof Error ? error.message : 'Upload timeout',
         });
       }
     }
@@ -224,7 +224,7 @@ export class ProductController {
           statusCode: HttpStatus.REQUEST_TIMEOUT,
           message:
             'Manual upload failed. Please try again with a smaller file or check your connection.',
-          error: error.message || 'Upload timeout',
+          error: error instanceof Error ? error.message : 'Upload timeout',
         });
       }
     }
@@ -292,16 +292,8 @@ export class ProductController {
     // Parse text and transform to DTO instance
     const parsed = JSON.parse(text);
 
-    if (!parsed.id) {
-      return res.status(HttpStatus.BAD_REQUEST).json({
-        success: false,
-        statusCode: HttpStatus.BAD_REQUEST,
-        message: 'ID is required in request body',
-      });
-    }
-
     // Validate that ID in body matches ID in URL if provided
-    if (parsed.id && parsed.id !== params.id) {
+    if (parsed?.id && parsed.id !== params.id) {
       return res.status(HttpStatus.BAD_REQUEST).json({
         success: false,
         statusCode: HttpStatus.BAD_REQUEST,
@@ -334,7 +326,7 @@ export class ProductController {
             statusCode: HttpStatus.REQUEST_TIMEOUT,
             message:
               'Image upload failed. Please try again with a smaller file or check your connection.',
-            error: error.message || 'Upload timeout',
+            error: error instanceof Error ? error.message : 'Upload timeout',
           });
         }
       }
@@ -366,7 +358,7 @@ export class ProductController {
           statusCode: HttpStatus.REQUEST_TIMEOUT,
           message:
             'Video upload failed. Please try again with a smaller file or check your connection.',
-          error: error.message || 'Upload timeout',
+          error: error instanceof Error ? error.message : 'Upload timeout',
         });
       }
     }
@@ -388,7 +380,7 @@ export class ProductController {
           statusCode: HttpStatus.REQUEST_TIMEOUT,
           message:
             'Manual upload failed. Please try again with a smaller file or check your connection.',
-          error: error.message || 'Upload timeout',
+          error: error instanceof Error ? error.message : 'Upload timeout',
         });
       }
     }

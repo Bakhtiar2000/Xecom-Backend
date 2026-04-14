@@ -17,7 +17,6 @@ export class ProductRepository {
     sortBy?: string,
     sortOrder?: 'asc' | 'desc',
     fields?: string[],
-    isActive?: string,
     searchTerm?: string,
     brandIds?: string,
     categoryIds?: string,
@@ -27,13 +26,14 @@ export class ProductRepository {
     attributeValueIds?: string,
     priceStarts?: number,
     priceEnds?: number,
+    statuses?: ProductStatus[],
   ) {
     // Build where clause
     const where: Prisma.ProductWhereInput = {};
 
-    // Handle isActive filter
-    if (isActive !== undefined && isActive !== '') {
-      where.status = isActive === 'true' ? ProductStatus.ACTIVE : { not: ProductStatus.ACTIVE };
+    // Handle statuses filter; default to ACTIVE when not provided.
+    if (statuses && statuses.length > 0) {
+      where.status = { in: statuses };
     } else {
       where.status = ProductStatus.ACTIVE;
     }
@@ -150,22 +150,20 @@ export class ProductRepository {
   }
 
   async count(
-    isActive?: string,
     searchTerm?: string,
     brandIds?: string,
     categoryIds?: string,
     tag?: string,
     ratingCount?: number,
     reviewCount?: number,
+    statuses?: ProductStatus[],
   ) {
     // Build where clause (same as findAll)
     const where: Prisma.ProductWhereInput = {};
 
-    // Handle isActive filter
-    if (isActive !== undefined && isActive !== '') {
-      where.status = isActive === 'true' ? ProductStatus.ACTIVE : { not: ProductStatus.ACTIVE };
-    } else {
-      where.status = ProductStatus.ACTIVE;
+    // Handle statuses filter; default to ACTIVE when not provided.
+    if (statuses && statuses.length > 0) {
+      where.status = { in: statuses };
     }
 
     if (brandIds) {
@@ -393,6 +391,15 @@ export class ProductRepository {
     });
   }
 
+  async findProductVariantByIdAndProduct(productId: string, variantId: string) {
+    return this.prisma.productVariant.findFirst({
+      where: {
+        id: variantId,
+        productId,
+      },
+    });
+  }
+
   // ========================================
   // PRODUCT IMAGE METHODS
   // ========================================
@@ -580,6 +587,16 @@ export class ProductRepository {
       createdVariants.push(created);
     }
     return createdVariants;
+  }
+
+  async updateProductVariant(
+    variantId: string,
+    data: Prisma.ProductVariantUpdateInput,
+  ) {
+    return this.prisma.productVariant.update({
+      where: { id: variantId },
+      data,
+    });
   }
 
   async deleteVariantAttributes(variantId: string) {

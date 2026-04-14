@@ -4,7 +4,7 @@ import { CreateProductDto, UpdateProductDto } from './product.dto';
 import calculatePagination from 'src/utils/calculatePagination';
 import { BrandRepository } from '../brand/brand.repository';
 import { CategoryRepository } from '../category/category.repository';
-import { ProductDimensionUnit } from 'src/generated/prisma';
+import { ProductDimensionUnit, ProductStatus } from 'src/generated/prisma';
 
 @Injectable()
 export class ProductService {
@@ -21,7 +21,6 @@ export class ProductService {
     sortBy?: string,
     sortOrder?: 'asc' | 'desc',
     fields?: string,
-    isActive?: string,
     searchTerm?: string,
     brandIds?: string,
     categoryIds?: string,
@@ -31,6 +30,7 @@ export class ProductService {
     attributeValueIds?: string,
     priceStarts?: number,
     priceEnds?: number,
+    statuses?: string,
   ) {
     const { skip, take } = calculatePagination({
       page: pageNumber,
@@ -42,6 +42,22 @@ export class ProductService {
       ? fields.split(',').map((field) => field.trim())
       : undefined;
 
+    const parsedStatuses = statuses
+      ? statuses
+        .split(',')
+        .map((status) => status.trim().toUpperCase())
+        .filter((status): status is ProductStatus =>
+          Object.values(ProductStatus).includes(status as ProductStatus),
+        )
+      : undefined;
+
+    if (statuses && (!parsedStatuses || parsedStatuses.length === 0)) {
+      throw new HttpException(
+        'Invalid statuses query param. Provide one or more valid product statuses.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const [products, total] = await Promise.all([
       this.productRepository.findAll(
         skip,
@@ -49,7 +65,6 @@ export class ProductService {
         sortBy,
         sortOrder,
         selectedFields,
-        isActive,
         searchTerm,
         brandIds,
         categoryIds,
@@ -59,15 +74,16 @@ export class ProductService {
         attributeValueIds,
         priceStarts,
         priceEnds,
+        parsedStatuses,
       ),
       this.productRepository.count(
-        isActive,
         searchTerm,
         brandIds,
         categoryIds,
         tag,
         ratingCount,
         reviewCount,
+        parsedStatuses,
       ),
     ]);
 
@@ -179,7 +195,7 @@ export class ProductService {
 
     // Check if SKUs already exist in database
     for (const variant of variants) {
-      const existingSku = await this.productRepository.findBySku(variant.sku);
+      const existingSku = await this.productRepository.findBySku(variant.sku!);
       if (existingSku) {
         throw new HttpException(
           `SKU '${variant.sku}' already exists`,
@@ -244,10 +260,10 @@ export class ProductService {
       },
       variants: {
         create: variants.map((variant) => ({
-          sku: variant.sku,
-          price: parseFloat(variant.price.toFixed(2)),
+          sku: variant.sku!,
+          price: parseFloat(variant.price!.toFixed(2)),
           cost: variant.cost ? parseFloat(variant.cost.toFixed(2)) : undefined,
-          stockQuantity: parseFloat(variant.stockQuantity.toFixed(2)),
+          stockQuantity: parseFloat(variant.stockQuantity!.toFixed(2)),
           stockAlertThreshold: variant.stockAlertThreshold ? parseFloat(variant.stockAlertThreshold.toFixed(2)) : 5,
           isDefault: variant.isDefault || false,
         })),
@@ -361,29 +377,17 @@ export class ProductService {
       );
     }
 
-    // Validate unique SKUs in variants if provided
+    // Validate unique SKUs in request payload if provided
     if (variants && variants.length > 0) {
-      const skus = variants.map((v) => v.sku);
+      const skus = variants
+        .map((v) => v.sku)
+        .filter((sku): sku is string => Boolean(sku));
       const uniqueSkus = new Set(skus);
       if (skus.length !== uniqueSkus.size) {
         throw new HttpException(
           'Duplicate SKUs found in variants',
           HttpStatus.BAD_REQUEST,
         );
-      }
-
-      // Check if SKUs already exist in database (excluding current product's variants)
-      for (const variant of variants) {
-        const existingSku = await this.productRepository.findBySkuExcludingProduct(
-          variant.sku,
-          id,
-        );
-        if (existingSku) {
-          throw new HttpException(
-            `SKU '${variant.sku}' already exists`,
-            HttpStatus.CONFLICT,
-          );
-        }
       }
     }
 
@@ -426,17 +430,11 @@ export class ProductService {
       }
     }
 
-    const product = await this.productRepository.update(id, {
+    const productUpdateData: any = {
       name: updateProductDto.name,
       slug: updateProductDto.slug,
       shortDescription: updateProductDto.shortDescription,
       fullDescription: updateProductDto.fullDescription,
-      brand: updateProductDto.brandId
-        ? { connect: { id: updateProductDto.brandId } }
-        : undefined,
-      category: updateProductDto.categoryId
-        ? { connect: { id: updateProductDto.categoryId } }
-        : undefined,
       status: updateProductDto.status,
       featured: updateProductDto.featured,
       weight: updateProductDto.weight,
@@ -450,7 +448,19 @@ export class ProductService {
       manualUrl: updateProductDto.manualUrl,
       minOrderQty: updateProductDto.minOrderQty,
       maxOrderQty: updateProductDto.maxOrderQty,
-    });
+    };
+
+    if (updateProductDto.brandId !== undefined) {
+      productUpdateData.brand = { connect: { id: updateProductDto.brandId } };
+    }
+
+    if (updateProductDto.categoryId !== undefined) {
+      productUpdateData.category = {
+        connect: { id: updateProductDto.categoryId },
+      };
+    }
+
+    const product = await this.productRepository.update(id, productUpdateData);
 
     // Handle dimension replacement if provided
     if (dimension !== undefined) {
@@ -498,39 +508,130 @@ export class ProductService {
       );
     }
 
-    // Handle variants replacement if provided
+    // Handle variants partial update if provided
     if (variants && variants.length > 0) {
-      // Get existing variants to delete their attributes first
-      const existingVariants = await this.productRepository.getProductVariants(id);
-
-      // Delete variant attributes and variants
-      for (const variant of existingVariants) {
-        await this.productRepository.deleteVariantAttributes(variant.id);
-      }
-      await this.productRepository.deleteProductVariants(id);
-
-      // Create new variants
-      const createdVariants = await this.productRepository.createProductVariants(
-        id,
-        variants.map((v) => ({
-          sku: v.sku,
-          price: v.price,
-          cost: v.cost,
-          stockQuantity: v.stockQuantity,
-          stockAlertThreshold: v.stockAlertThreshold || 5,
-          isDefault: v.isDefault || false,
-        })),
+      const isFullReplaceMode = variants.every(
+        (v) => !v.id && v.sku !== undefined && v.price !== undefined && v.stockQuantity !== undefined,
       );
 
-      // Create variant attributes
-      for (let i = 0; i < variants.length; i++) {
-        const variantData = variants[i];
-        if (variantData.attributeValueIds && variantData.attributeValueIds.length > 0) {
-          const createdVariant = createdVariants[i];
-          await this.productRepository.createVariantAttributes(
-            createdVariant.id,
-            variantData.attributeValueIds,
+      if (isFullReplaceMode) {
+        // Keep previous behavior for full payload updates.
+        for (const variant of variants) {
+          const existingSku = await this.productRepository.findBySkuExcludingProduct(
+            variant.sku!,
+            id,
           );
+
+          if (existingSku) {
+            throw new HttpException(
+              `SKU '${variant.sku}' already exists`,
+              HttpStatus.CONFLICT,
+            );
+          }
+        }
+
+        const existingVariants = await this.productRepository.getProductVariants(id);
+
+        for (const variant of existingVariants) {
+          await this.productRepository.deleteVariantAttributes(variant.id);
+        }
+        await this.productRepository.deleteProductVariants(id);
+
+        const createdVariants = await this.productRepository.createProductVariants(
+          id,
+          variants.map((v) => ({
+            sku: v.sku!,
+            price: v.price!,
+            cost: v.cost,
+            stockQuantity: v.stockQuantity!,
+            stockAlertThreshold: v.stockAlertThreshold || 5,
+            isDefault: v.isDefault || false,
+          })),
+        );
+
+        for (let i = 0; i < variants.length; i++) {
+          const variantData = variants[i];
+          if (variantData.attributeValueIds && variantData.attributeValueIds.length > 0) {
+            const createdVariant = createdVariants[i];
+            await this.productRepository.createVariantAttributes(
+              createdVariant.id,
+              variantData.attributeValueIds,
+            );
+          }
+        }
+
+        return product;
+      }
+
+      const existingVariants = await this.productRepository.getProductVariants(id);
+
+      for (const variantData of variants as Array<{
+        id?: string;
+        sku?: string;
+        price?: number;
+        cost?: number;
+        stockQuantity?: number;
+        stockAlertThreshold?: number;
+        isDefault?: boolean;
+        attributeValueIds?: string[];
+      }>) {
+        let targetVariantId = variantData.id;
+
+        if (!targetVariantId) {
+          if (existingVariants.length === 1) {
+            targetVariantId = existingVariants[0].id;
+          } else {
+            throw new HttpException(
+              'variant id is required when product has multiple variants',
+              HttpStatus.BAD_REQUEST,
+            );
+          }
+        }
+
+        const existingVariant = await this.productRepository.findProductVariantByIdAndProduct(
+          id,
+          targetVariantId,
+        );
+
+        if (!existingVariant) {
+          throw new HttpException(
+            `Variant '${targetVariantId}' not found for this product`,
+            HttpStatus.NOT_FOUND,
+          );
+        }
+
+        if (variantData.sku && variantData.sku !== existingVariant.sku) {
+          const skuExists = await this.productRepository.findBySku(variantData.sku);
+          if (skuExists && skuExists.id !== existingVariant.id) {
+            throw new HttpException(
+              `SKU '${variantData.sku}' already exists`,
+              HttpStatus.CONFLICT,
+            );
+          }
+        }
+
+        const variantUpdateData: any = {
+          sku: variantData.sku,
+          price: variantData.price,
+          cost: variantData.cost,
+          stockQuantity: variantData.stockQuantity,
+          stockAlertThreshold: variantData.stockAlertThreshold,
+          isDefault: variantData.isDefault,
+        };
+
+        await this.productRepository.updateProductVariant(
+          existingVariant.id,
+          variantUpdateData,
+        );
+
+        if (variantData.attributeValueIds !== undefined) {
+          await this.productRepository.deleteVariantAttributes(existingVariant.id);
+          if (variantData.attributeValueIds.length > 0) {
+            await this.productRepository.createVariantAttributes(
+              existingVariant.id,
+              variantData.attributeValueIds,
+            );
+          }
         }
       }
     }
