@@ -10,14 +10,14 @@ import {
 
 export class CreateProductVariantDto {
   @IsUUID()
-  productId: string;
+  productId!: string;
 
   @IsString()
-  sku: string;
+  sku!: string;
 
   @IsNumber()
   @Min(0)
-  price: number;
+  price!: number;
 
   @IsOptional()
   @IsNumber()
@@ -26,7 +26,7 @@ export class CreateProductVariantDto {
 
   @IsNumber()
   @Min(0)
-  stockQuantity: number;
+  stockQuantity!: number;
 
   @IsOptional()
   @IsNumber()
@@ -44,7 +44,7 @@ export class CreateProductVariantDto {
 
 export class UpdateProductVariantDto {
   @IsUUID()
-  id: string;
+  id!: string;
 
   @IsOptional()
   @IsString()

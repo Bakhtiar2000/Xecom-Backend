@@ -27,6 +27,7 @@ export class ProductRepository {
     priceStarts?: number,
     priceEnds?: number,
     statuses?: ProductStatus[],
+    isBestCollection?: boolean,
   ) {
     // Build where clause
     const where: Prisma.ProductWhereInput = {};
@@ -75,6 +76,10 @@ export class ProductRepository {
 
     if (reviewCount) {
       where.reviewCount = { gte: reviewCount };
+    }
+
+    if (isBestCollection !== undefined) {
+      where.isBestCollection = isBestCollection;
     }
 
     // Filter by attribute value IDs
@@ -157,6 +162,7 @@ export class ProductRepository {
     ratingCount?: number,
     reviewCount?: number,
     statuses?: ProductStatus[],
+    isBestCollection?: boolean,
   ) {
     // Build where clause (same as findAll)
     const where: Prisma.ProductWhereInput = {};
@@ -203,6 +209,10 @@ export class ProductRepository {
 
     if (reviewCount) {
       where.reviewCount = { gte: reviewCount };
+    }
+
+    if (isBestCollection !== undefined) {
+      where.isBestCollection = isBestCollection;
     }
 
     return this.prisma.product.count({ where });

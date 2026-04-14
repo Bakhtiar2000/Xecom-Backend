@@ -3,16 +3,16 @@ import { IsString, Length, IsUUID, IsOptional } from 'class-validator';
 export class CreateDistrictDto {
     @IsString()
     @Length(2, 100)
-    name: string;
+    name!: string;
 
     @IsString()
     @IsUUID()
-    divisionId: string;
+    divisionId!: string;
 }
 
 export class UpdateDistrictDto {
     @IsUUID()
-    id: string;
+    id!: string;
 
     @IsString()
     @IsOptional()

@@ -348,6 +348,7 @@ exports.Prisma.ProductScalarFieldEnum = {
   categoryId: 'categoryId',
   status: 'status',
   featured: 'featured',
+  isBestCollection: 'isBestCollection',
   weight: 'weight',
   weightUnit: 'weightUnit',
   tags: 'tags',

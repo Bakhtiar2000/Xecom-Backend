@@ -21,7 +21,7 @@ import { ProductStatus, ProductWeightUnit, ProductDimensionUnit } from 'src/gene
 export class CreateProductImageDto {
   @IsString()
   @IsNotEmpty()
-  imageUrl: string;
+  imageUrl!: string;
 
   @IsOptional()
   @IsBoolean()
@@ -52,11 +52,11 @@ export class CreateProductDimensionDto {
 export class CreateProductFaqDto {
   @IsString()
   @IsNotEmpty()
-  question: string;
+  question!: string;
 
   @IsString()
   @IsNotEmpty()
-  answer: string;
+  answer!: string;
 
   @IsOptional()
   @IsNumber()
@@ -66,11 +66,11 @@ export class CreateProductFaqDto {
 export class CreateProductVariantInProductDto {
   @IsString()
   @IsNotEmpty()
-  sku: string;
+  sku!: string;
 
   @IsNumber()
   @Min(0)
-  price: number;
+  price!: number;
 
   @IsOptional()
   @IsNumber()
@@ -79,7 +79,7 @@ export class CreateProductVariantInProductDto {
 
   @IsNumber()
   @Min(0)
-  stockQuantity: number;
+  stockQuantity!: number;
 
   @IsOptional()
   @IsNumber()
@@ -139,11 +139,11 @@ export class UpdateProductVariantInProductDto {
 export class CreateProductDto {
   @IsString()
   @Length(2, 200)
-  name: string;
+  name!: string;
 
   @IsString()
   @Length(2, 250)
-  slug: string;
+  slug!: string;
 
   @IsOptional()
   @IsString()
@@ -168,6 +168,10 @@ export class CreateProductDto {
   @IsOptional()
   @IsBoolean()
   featured?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  isBestCollection?: boolean;
 
   @IsOptional()
   @IsNumber()
@@ -250,7 +254,7 @@ export class CreateProductDto {
 
 export class UpdateProductDto {
   @IsUUID()
-  id: string;
+  id!: string;
 
   @IsOptional()
   @IsString()
@@ -285,6 +289,10 @@ export class UpdateProductDto {
   @IsOptional()
   @IsBoolean()
   featured?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  isBestCollection?: boolean;
 
   @IsOptional()
   @IsNumber()

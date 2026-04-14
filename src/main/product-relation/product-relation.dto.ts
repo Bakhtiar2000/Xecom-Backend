@@ -14,13 +14,13 @@ import { ProductRelationType } from 'src/generated/prisma';
 
 export class CreateProductRelationDto {
   @IsUUID()
-  productId: string;
+  productId!: string;
 
   @IsUUID()
-  relatedToId: string;
+  relatedToId!: string;
 
   @IsEnum(ProductRelationType)
-  type: ProductRelationType;
+  type!: ProductRelationType;
 
   @IsOptional()
   @IsNumber()
@@ -30,15 +30,15 @@ export class CreateProductRelationDto {
 
 export class CreateBulkProductRelationsDto {
   @IsUUID()
-  productId: string;
+  productId!: string;
 
   @IsEnum(ProductRelationType)
-  type: ProductRelationType;
+  type!: ProductRelationType;
 
   @IsArray()
   @ArrayMinSize(1)
   @IsUUID('4', { each: true })
-  relatedProductIds: string[];
+  relatedProductIds!: string[];
 
   @IsOptional()
   @IsNumber()
@@ -48,7 +48,7 @@ export class CreateBulkProductRelationsDto {
 
 export class UpdateProductRelationDto {
   @IsUUID()
-  id: string;
+  id!: string;
 
   @IsOptional()
   @IsNumber()

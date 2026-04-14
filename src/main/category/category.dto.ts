@@ -4,11 +4,11 @@ import { TargetAudience } from 'src/generated/prisma';
 export class CreateCategoryDto {
   @IsString()
   @Length(2, 100)
-  name: string;
+  name!: string;
 
   @IsString()
   @Length(2, 150)
-  slug: string;
+  slug!: string;
 
   @IsOptional()
   @IsString()
@@ -49,7 +49,7 @@ export class CreateCategoryDto {
 
 export class UpdateCategoryDto {
   @IsUUID()
-  id: string;
+  id!: string;
 
   @IsOptional()
   @IsString()

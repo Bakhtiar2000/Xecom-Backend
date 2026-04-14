@@ -10,25 +10,25 @@ import { Gender, UserStatus } from 'src/generated/prisma';
 
 export class CreateUserDto {
   @IsEmail()
-  email: string;
+  email!: string;
 
   @IsString()
   @Length(2, 50)
-  name: string;
+  name!: string;
 
   @IsEnum(Gender)
-  gender: Gender;
+  gender!: Gender;
 
   @IsString()
   @IsOptional()
-  phone: string;
+  phone?: string;
 
   @IsString()
   @IsOptional()
-  role: string;
+  role?: string;
 
   @IsString()
-  password: string;
+  password!: string;
 }
 
 export class UpdateUserDto {
@@ -47,30 +47,30 @@ export class UpdateUserDto {
 
   @IsOptional()
   @IsInt()
-  streetNumber: number;
+  streetNumber?: number;
 
   @IsOptional()
   @IsString()
-  street: string;
+  street?: string;
 
   @IsOptional()
   @IsInt()
-  postalCode: number;
+  postalCode?: number;
 
   @IsOptional()
   @IsString()
-  city: string;
+  city?: string;
 
   @IsOptional()
   @IsString()
-  countryId: string;
+  countryId?: string;
 
   @IsOptional()
   @IsString()
-  stateId: string;
+  stateId?: string;
 }
 
 export class ChangeUserStatusDto {
   @IsEnum(UserStatus)
-  status: UserStatus;
+  status!: UserStatus;
 }

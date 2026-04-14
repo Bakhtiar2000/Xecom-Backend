@@ -3,36 +3,36 @@ import { IsEmail, IsString, Matches, MinLength } from 'class-validator';
 // login
 export class LoginDto {
   @IsEmail()
-  email: string;
+  email!: string;
 
   @IsString()
-  password: string;
+  password!: string;
 }
 
 export class GoogleLoginDto {
   @IsEmail()
-  email: string;
+  email!: string;
 
   @IsString()
-  name: string;
+  name!: string;
 
   @IsString()
-  profilePicture: string;
+  profilePicture!: string;
 }
 
 export class RefreshTokenDto {
   @IsString()
-  refreshToken: string;
+  refreshToken!: string;
 }
 
 export class ForgotPasswordDto {
   @IsEmail()
-  email: string;
+  email!: string;
 }
 
 export class ChangePasswordDto {
   @IsString()
-  password: string;
+  password!: string;
 
   @IsString()
   @MinLength(6, {
@@ -41,12 +41,12 @@ export class ChangePasswordDto {
   @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/, {
     message: 'Password must contain at least one lowercase letter, one uppercase letter, and one number.',
   })
-  newPassword: string;
+  newPassword!: string;
 }
 
 export class ResetPasswordDto {
   @IsString()
-  token: string;
+  token!: string;
 
   @IsString()
   @MinLength(6, {
@@ -55,5 +55,5 @@ export class ResetPasswordDto {
   @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/, {
     message: 'Password must contain at least one lowercase letter, one uppercase letter, and one number.',
   })
-  newPassword: string;
+  newPassword!: string;
 }

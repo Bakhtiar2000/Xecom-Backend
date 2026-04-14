@@ -2,12 +2,12 @@ import { IsString, IsOptional, IsUUID, IsInt, Min, Max, IsBoolean } from 'class-
 
 export class CreateReviewDto {
     @IsUUID()
-    productId: string;
+    productId!: string;
 
     @IsInt()
     @Min(1)
     @Max(5)
-    rating: number;
+    rating!: number;
 
     @IsOptional()
     @IsString()
@@ -16,7 +16,7 @@ export class CreateReviewDto {
 
 export class UpdateReviewDto {
     @IsUUID()
-    id: string;
+    id!: string;
 
     @IsOptional()
     @IsInt()
@@ -31,5 +31,5 @@ export class UpdateReviewDto {
 
 export class ApproveReviewDto {
     @IsBoolean()
-    isApproved: boolean;
+    isApproved!: boolean;
 }

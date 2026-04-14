@@ -2,15 +2,15 @@ import { IsString, IsUUID, IsInt, Min } from 'class-validator';
 
 export class AddToCartDto {
     @IsUUID()
-    variantId: string;
+    variantId!: string;
 
     @IsInt()
     @Min(1)
-    quantity: number;
+    quantity!: number;
 }
 
 export class UpdateCartItemDto {
     @IsInt()
     @Min(1)
-    quantity: number;
+    quantity!: number;
 }

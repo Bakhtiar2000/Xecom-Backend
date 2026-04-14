@@ -54,6 +54,7 @@ export class ProductController {
     @Query('priceStarts') priceStarts: string,
     @Query('priceEnds') priceEnds: string,
     @Query('statuses') statuses: string,
+    @Query('isBestCollection') isBestCollection: string,
     @Res() res: Response,
   ) {
     const page = parseInt(pageNumber) || 1;
@@ -75,6 +76,9 @@ export class ProductController {
       priceStarts ? parseFloat(priceStarts) : undefined,
       priceEnds ? parseFloat(priceEnds) : undefined,
       statuses,
+      isBestCollection === undefined
+        ? undefined
+        : isBestCollection.toLowerCase() === 'true',
     );
     sendResponse(res, {
       statusCode: HttpStatus.OK,

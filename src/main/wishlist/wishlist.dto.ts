@@ -2,5 +2,5 @@ import { IsString, IsUUID } from 'class-validator';
 
 export class AddToWishlistDto {
     @IsUUID()
-    productId: string;
+    productId!: string;
 }

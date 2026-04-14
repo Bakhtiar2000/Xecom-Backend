@@ -25475,6 +25475,7 @@ export namespace Prisma {
     categoryId: string | null
     status: $Enums.ProductStatus | null
     featured: boolean | null
+    isBestCollection: boolean | null
     weight: Decimal | null
     weightUnit: $Enums.ProductWeightUnit | null
     seoTitle: string | null
@@ -25504,6 +25505,7 @@ export namespace Prisma {
     categoryId: string | null
     status: $Enums.ProductStatus | null
     featured: boolean | null
+    isBestCollection: boolean | null
     weight: Decimal | null
     weightUnit: $Enums.ProductWeightUnit | null
     seoTitle: string | null
@@ -25533,6 +25535,7 @@ export namespace Prisma {
     categoryId: number
     status: number
     featured: number
+    isBestCollection: number
     weight: number
     weightUnit: number
     tags: number
@@ -25587,6 +25590,7 @@ export namespace Prisma {
     categoryId?: true
     status?: true
     featured?: true
+    isBestCollection?: true
     weight?: true
     weightUnit?: true
     seoTitle?: true
@@ -25616,6 +25620,7 @@ export namespace Prisma {
     categoryId?: true
     status?: true
     featured?: true
+    isBestCollection?: true
     weight?: true
     weightUnit?: true
     seoTitle?: true
@@ -25645,6 +25650,7 @@ export namespace Prisma {
     categoryId?: true
     status?: true
     featured?: true
+    isBestCollection?: true
     weight?: true
     weightUnit?: true
     tags?: true
@@ -25764,6 +25770,7 @@ export namespace Prisma {
     categoryId: string | null
     status: $Enums.ProductStatus
     featured: boolean
+    isBestCollection: boolean
     weight: Decimal | null
     weightUnit: $Enums.ProductWeightUnit | null
     tags: string[]
@@ -25815,6 +25822,7 @@ export namespace Prisma {
     categoryId?: boolean
     status?: boolean
     featured?: boolean
+    isBestCollection?: boolean
     weight?: boolean
     weightUnit?: boolean
     tags?: boolean
@@ -25861,6 +25869,7 @@ export namespace Prisma {
     categoryId?: boolean
     status?: boolean
     featured?: boolean
+    isBestCollection?: boolean
     weight?: boolean
     weightUnit?: boolean
     tags?: boolean
@@ -25896,6 +25905,7 @@ export namespace Prisma {
     categoryId?: boolean
     status?: boolean
     featured?: boolean
+    isBestCollection?: boolean
     weight?: boolean
     weightUnit?: boolean
     tags?: boolean
@@ -25931,6 +25941,7 @@ export namespace Prisma {
     categoryId?: boolean
     status?: boolean
     featured?: boolean
+    isBestCollection?: boolean
     weight?: boolean
     weightUnit?: boolean
     tags?: boolean
@@ -25952,7 +25963,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "name" | "slug" | "shortDescription" | "fullDescription" | "brandId" | "categoryId" | "status" | "featured" | "weight" | "weightUnit" | "tags" | "seoTitle" | "seoDescription" | "metaKeywords" | "warranty" | "specifications" | "videoUrl" | "manualUrl" | "minOrderQty" | "maxOrderQty" | "isBundle" | "totalSales" | "viewCount" | "avgRating" | "reviewCount" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "name" | "slug" | "shortDescription" | "fullDescription" | "brandId" | "categoryId" | "status" | "featured" | "isBestCollection" | "weight" | "weightUnit" | "tags" | "seoTitle" | "seoDescription" | "metaKeywords" | "warranty" | "specifications" | "videoUrl" | "manualUrl" | "minOrderQty" | "maxOrderQty" | "isBundle" | "totalSales" | "viewCount" | "avgRating" | "reviewCount" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tenant?: boolean | Product$tenantArgs<ExtArgs>
     brand?: boolean | Product$brandArgs<ExtArgs>
@@ -26008,6 +26019,7 @@ export namespace Prisma {
       categoryId: string | null
       status: $Enums.ProductStatus
       featured: boolean
+      isBestCollection: boolean
       weight: Prisma.Decimal | null
       weightUnit: $Enums.ProductWeightUnit | null
       tags: string[]
@@ -26473,6 +26485,7 @@ export namespace Prisma {
     readonly categoryId: FieldRef<"Product", 'String'>
     readonly status: FieldRef<"Product", 'ProductStatus'>
     readonly featured: FieldRef<"Product", 'Boolean'>
+    readonly isBestCollection: FieldRef<"Product", 'Boolean'>
     readonly weight: FieldRef<"Product", 'Decimal'>
     readonly weightUnit: FieldRef<"Product", 'ProductWeightUnit'>
     readonly tags: FieldRef<"Product", 'String[]'>
@@ -51047,6 +51060,7 @@ export namespace Prisma {
     categoryId: 'categoryId',
     status: 'status',
     featured: 'featured',
+    isBestCollection: 'isBestCollection',
     weight: 'weight',
     weightUnit: 'weightUnit',
     tags: 'tags',
@@ -53337,6 +53351,7 @@ export namespace Prisma {
     categoryId?: StringNullableFilter<"Product"> | string | null
     status?: EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
     featured?: BoolFilter<"Product"> | boolean
+    isBestCollection?: BoolFilter<"Product"> | boolean
     weight?: DecimalNullableFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
     weightUnit?: EnumProductWeightUnitNullableFilter<"Product"> | $Enums.ProductWeightUnit | null
     tags?: StringNullableListFilter<"Product">
@@ -53382,6 +53397,7 @@ export namespace Prisma {
     categoryId?: SortOrderInput | SortOrder
     status?: SortOrder
     featured?: SortOrder
+    isBestCollection?: SortOrder
     weight?: SortOrderInput | SortOrder
     weightUnit?: SortOrderInput | SortOrder
     tags?: SortOrder
@@ -53431,6 +53447,7 @@ export namespace Prisma {
     categoryId?: StringNullableFilter<"Product"> | string | null
     status?: EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
     featured?: BoolFilter<"Product"> | boolean
+    isBestCollection?: BoolFilter<"Product"> | boolean
     weight?: DecimalNullableFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
     weightUnit?: EnumProductWeightUnitNullableFilter<"Product"> | $Enums.ProductWeightUnit | null
     tags?: StringNullableListFilter<"Product">
@@ -53476,6 +53493,7 @@ export namespace Prisma {
     categoryId?: SortOrderInput | SortOrder
     status?: SortOrder
     featured?: SortOrder
+    isBestCollection?: SortOrder
     weight?: SortOrderInput | SortOrder
     weightUnit?: SortOrderInput | SortOrder
     tags?: SortOrder
@@ -53516,6 +53534,7 @@ export namespace Prisma {
     categoryId?: StringNullableWithAggregatesFilter<"Product"> | string | null
     status?: EnumProductStatusWithAggregatesFilter<"Product"> | $Enums.ProductStatus
     featured?: BoolWithAggregatesFilter<"Product"> | boolean
+    isBestCollection?: BoolWithAggregatesFilter<"Product"> | boolean
     weight?: DecimalNullableWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
     weightUnit?: EnumProductWeightUnitNullableWithAggregatesFilter<"Product"> | $Enums.ProductWeightUnit | null
     tags?: StringNullableListFilter<"Product">
@@ -56771,6 +56790,7 @@ export namespace Prisma {
     fullDescription?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -56816,6 +56836,7 @@ export namespace Prisma {
     categoryId?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -56855,6 +56876,7 @@ export namespace Prisma {
     fullDescription?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -56900,6 +56922,7 @@ export namespace Prisma {
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -56942,6 +56965,7 @@ export namespace Prisma {
     categoryId?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -56971,6 +56995,7 @@ export namespace Prisma {
     fullDescription?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -57003,6 +57028,7 @@ export namespace Prisma {
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -60439,6 +60465,7 @@ export namespace Prisma {
     categoryId?: SortOrder
     status?: SortOrder
     featured?: SortOrder
+    isBestCollection?: SortOrder
     weight?: SortOrder
     weightUnit?: SortOrder
     tags?: SortOrder
@@ -60481,6 +60508,7 @@ export namespace Prisma {
     categoryId?: SortOrder
     status?: SortOrder
     featured?: SortOrder
+    isBestCollection?: SortOrder
     weight?: SortOrder
     weightUnit?: SortOrder
     seoTitle?: SortOrder
@@ -60510,6 +60538,7 @@ export namespace Prisma {
     categoryId?: SortOrder
     status?: SortOrder
     featured?: SortOrder
+    isBestCollection?: SortOrder
     weight?: SortOrder
     weightUnit?: SortOrder
     seoTitle?: SortOrder
@@ -67161,6 +67190,7 @@ export namespace Prisma {
     fullDescription?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -67205,6 +67235,7 @@ export namespace Prisma {
     categoryId?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -67363,6 +67394,7 @@ export namespace Prisma {
     fullDescription?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -67407,6 +67439,7 @@ export namespace Prisma {
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -68457,6 +68490,7 @@ export namespace Prisma {
     fullDescription?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -68500,6 +68534,7 @@ export namespace Prisma {
     brandId?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -68734,6 +68769,7 @@ export namespace Prisma {
     categoryId?: StringNullableFilter<"Product"> | string | null
     status?: EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
     featured?: BoolFilter<"Product"> | boolean
+    isBestCollection?: BoolFilter<"Product"> | boolean
     weight?: DecimalNullableFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
     weightUnit?: EnumProductWeightUnitNullableFilter<"Product"> | $Enums.ProductWeightUnit | null
     tags?: StringNullableListFilter<"Product">
@@ -68834,6 +68870,7 @@ export namespace Prisma {
     fullDescription?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -68877,6 +68914,7 @@ export namespace Prisma {
     categoryId?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -69870,6 +69908,7 @@ export namespace Prisma {
     fullDescription?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -69914,6 +69953,7 @@ export namespace Prisma {
     categoryId?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -69968,6 +70008,7 @@ export namespace Prisma {
     fullDescription?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -70012,6 +70053,7 @@ export namespace Prisma {
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -70050,6 +70092,7 @@ export namespace Prisma {
     fullDescription?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -70094,6 +70137,7 @@ export namespace Prisma {
     categoryId?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -70137,6 +70181,7 @@ export namespace Prisma {
     fullDescription?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -70181,6 +70226,7 @@ export namespace Prisma {
     categoryId?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -70235,6 +70281,7 @@ export namespace Prisma {
     fullDescription?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -70279,6 +70326,7 @@ export namespace Prisma {
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -70328,6 +70376,7 @@ export namespace Prisma {
     fullDescription?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -70372,6 +70421,7 @@ export namespace Prisma {
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -70745,6 +70795,7 @@ export namespace Prisma {
     fullDescription?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -70789,6 +70840,7 @@ export namespace Prisma {
     categoryId?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -70924,6 +70976,7 @@ export namespace Prisma {
     fullDescription?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -70968,6 +71021,7 @@ export namespace Prisma {
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -71022,6 +71076,7 @@ export namespace Prisma {
     fullDescription?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -71066,6 +71121,7 @@ export namespace Prisma {
     categoryId?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -71120,6 +71176,7 @@ export namespace Prisma {
     fullDescription?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -71164,6 +71221,7 @@ export namespace Prisma {
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -71202,6 +71260,7 @@ export namespace Prisma {
     fullDescription?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -71246,6 +71305,7 @@ export namespace Prisma {
     categoryId?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -71300,6 +71360,7 @@ export namespace Prisma {
     fullDescription?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -71344,6 +71405,7 @@ export namespace Prisma {
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -71382,6 +71444,7 @@ export namespace Prisma {
     fullDescription?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -71426,6 +71489,7 @@ export namespace Prisma {
     categoryId?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -71480,6 +71544,7 @@ export namespace Prisma {
     fullDescription?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -71524,6 +71589,7 @@ export namespace Prisma {
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -71562,6 +71628,7 @@ export namespace Prisma {
     fullDescription?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -71606,6 +71673,7 @@ export namespace Prisma {
     categoryId?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -71713,6 +71781,7 @@ export namespace Prisma {
     fullDescription?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -71757,6 +71826,7 @@ export namespace Prisma {
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -71854,6 +71924,7 @@ export namespace Prisma {
     fullDescription?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -71898,6 +71969,7 @@ export namespace Prisma {
     categoryId?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -72009,6 +72081,7 @@ export namespace Prisma {
     fullDescription?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -72053,6 +72126,7 @@ export namespace Prisma {
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -72604,6 +72678,7 @@ export namespace Prisma {
     fullDescription?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -72647,6 +72722,7 @@ export namespace Prisma {
     categoryId?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -75457,6 +75533,7 @@ export namespace Prisma {
     brandId?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -75541,6 +75618,7 @@ export namespace Prisma {
     fullDescription?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -75584,6 +75662,7 @@ export namespace Prisma {
     brandId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -75625,6 +75704,7 @@ export namespace Prisma {
     brandId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -75656,6 +75736,7 @@ export namespace Prisma {
     categoryId?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -75685,6 +75766,7 @@ export namespace Prisma {
     fullDescription?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -75728,6 +75810,7 @@ export namespace Prisma {
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -75769,6 +75852,7 @@ export namespace Prisma {
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -76301,6 +76385,7 @@ export namespace Prisma {
     categoryId?: string | null
     status?: $Enums.ProductStatus
     featured?: boolean
+    isBestCollection?: boolean
     weight?: Decimal | DecimalJsLike | number | string | null
     weightUnit?: $Enums.ProductWeightUnit | null
     tags?: ProductCreatetagsInput | string[]
@@ -76503,6 +76588,7 @@ export namespace Prisma {
     fullDescription?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -76546,6 +76632,7 @@ export namespace Prisma {
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]
@@ -76587,6 +76674,7 @@ export namespace Prisma {
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     featured?: BoolFieldUpdateOperationsInput | boolean
+    isBestCollection?: BoolFieldUpdateOperationsInput | boolean
     weight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     weightUnit?: NullableEnumProductWeightUnitFieldUpdateOperationsInput | $Enums.ProductWeightUnit | null
     tags?: ProductUpdatetagsInput | string[]

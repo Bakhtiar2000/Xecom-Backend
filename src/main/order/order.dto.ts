@@ -38,7 +38,7 @@ export class PlaceOrderDto {
 
 export class UpdateOrderStatusDto {
     @IsEnum(OrderStatus)
-    status: OrderStatus;
+    status!: OrderStatus;
 
     @IsOptional()
     @IsString()

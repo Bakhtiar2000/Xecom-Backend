@@ -31,6 +31,7 @@ export class ProductService {
     priceStarts?: number,
     priceEnds?: number,
     statuses?: string,
+    isBestCollection?: boolean,
   ) {
     const { skip, take } = calculatePagination({
       page: pageNumber,
@@ -75,6 +76,7 @@ export class ProductService {
         priceStarts,
         priceEnds,
         parsedStatuses,
+        isBestCollection,
       ),
       this.productRepository.count(
         searchTerm,
@@ -84,6 +86,7 @@ export class ProductService {
         ratingCount,
         reviewCount,
         parsedStatuses,
+        isBestCollection,
       ),
     ]);
 
@@ -241,6 +244,7 @@ export class ProductService {
         : undefined,
       status: createProductDto.status || 'DRAFT',
       featured: createProductDto.featured || false,
+      isBestCollection: createProductDto.isBestCollection ?? false,
       weight: createProductDto.weight,
       tags: createProductDto.tags || [],
       seoTitle: createProductDto.seoTitle,
@@ -437,6 +441,7 @@ export class ProductService {
       fullDescription: updateProductDto.fullDescription,
       status: updateProductDto.status,
       featured: updateProductDto.featured,
+      isBestCollection: updateProductDto.isBestCollection,
       weight: updateProductDto.weight,
       tags: updateProductDto.tags,
       seoTitle: updateProductDto.seoTitle,

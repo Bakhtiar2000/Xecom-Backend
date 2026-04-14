@@ -557,6 +557,7 @@ model Product {
   categoryId       String?
   status           ProductStatus      @default(DRAFT)
   featured         Boolean            @default(false)
+  isBestCollection Boolean            @default(false)
   weight           Decimal?
   weightUnit       ProductWeightUnit? @default(G) // ----------------- NEW -----------------
   tags             String[] // Might be better as a separate table for complex queries. To be thought later.

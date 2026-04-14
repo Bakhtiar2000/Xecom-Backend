@@ -3,16 +3,16 @@ import { IsString, Length, IsUUID, IsOptional } from 'class-validator';
 export class CreateDivisionDto {
     @IsString()
     @Length(2, 100)
-    name: string;
+    name!: string;
 
     @IsString()
     @IsUUID()
-    countryId: string;
+    countryId!: string;
 }
 
 export class UpdateDivisionDto {
     @IsUUID()
-    id: string;
+    id!: string;
 
     @IsString()
     @IsOptional()

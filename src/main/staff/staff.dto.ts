@@ -3,40 +3,40 @@ import { Gender } from 'src/generated/prisma';
 
 export class CreateStaffDto {
   @IsString()
-  name: string;
+  name!: string;
 
   @IsEmail()
-  email: string;
+  email!: string;
 
   @IsString()
-  password: string;
+  password!: string;
 
   @IsString()
-  phoneNumber: string;
+  phoneNumber!: string;
 
   @IsOptional()
   @IsEnum(Gender)
-  gender: Gender;
+  gender!: Gender;
 
   @IsOptional()
   @IsString()
   employeeId?: string;
 
   @IsString()
-  hireDate: string;
+  hireDate!: string;
 
   @IsString()
-  notes: string;
+  notes!: string;
 
   @IsOptional()
   @IsString()
-  profilePicture: string;
+  profilePicture?: string;
 
   @IsString()
-  thanaId: string;
+  thanaId!: string;
 
   @IsString()
-  street: string;
+  street!: string;
 
   @IsOptional()
   postalCode?: number;

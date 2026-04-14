@@ -3,7 +3,7 @@ import { IsString, IsOptional, Length, IsUUID } from 'class-validator';
 export class CreateCountryDto {
     @IsString()
     @Length(2, 100)
-    name: string;
+    name!: string;
 
     @IsString()
     @IsOptional()
@@ -13,7 +13,7 @@ export class CreateCountryDto {
 
 export class UpdateCountryDto {
     @IsUUID()
-    id: string;
+    id!: string;
 
     @IsString()
     @IsOptional()

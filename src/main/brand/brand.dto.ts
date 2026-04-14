@@ -3,11 +3,11 @@ import { IsString, IsOptional, IsUUID, Length, IsUrl } from 'class-validator';
 export class CreateBrandDto {
   @IsString()
   @Length(2, 100)
-  name: string;
+  name!: string;
 
   @IsString()
   @Length(2, 150)
-  slug: string;
+  slug!: string;
 
   @IsOptional()
   @IsString()
@@ -27,7 +27,7 @@ export class CreateBrandDto {
 
 export class UpdateBrandDto {
   @IsUUID()
-  id: string;
+  id!: string;
 
   @IsOptional()
   @IsString()

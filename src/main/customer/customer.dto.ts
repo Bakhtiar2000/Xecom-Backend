@@ -3,19 +3,19 @@ import { IsString, IsEmail, IsOptional, IsEnum } from 'class-validator';
 
 export class CreateCustomerDto {
   @IsString()
-  name: string;
+  name!: string;
 
   @IsEmail()
-  email: string;
+  email!: string;
 
   @IsString()
-  password: string;
+  password!: string;
 
   @IsOptional()
   @IsString()
-  phoneNumber: string;
+  phoneNumber!: string;
 
   @IsOptional()
   @IsEnum(Gender)
-  gender: Gender;
+  gender!: Gender;
 }
